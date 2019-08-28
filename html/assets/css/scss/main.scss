@@ -1,0 +1,111 @@
+@import 'normalize';
+
+
+
+
+/*=====================================================*/
+/* COLORS
+/*=====================================================*/
+
+$color-black: #000;
+$color-white: #fff;
+
+
+
+
+/*=====================================================*/
+/* MIXINS
+/*=====================================================*/
+
+@mixin visually-hidden                                  { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+                                                        
+@mixin clearfix                                         {
+                                                            &:before,
+                                                            &:after { content:''; display:table; }
+                                                            &:after { clear:both; }
+                                                            & { *zoom:1; }
+                                                        }
+                                                        
+@mixin hide-text                                        { text-indent: -9999px; }
+
+@mixin caps                                             { text-transform: uppercase; letter-spacing: 0.04em; }
+                                                       
+@mixin reset($type: null)                               {
+                                                            @if $type == spacing { margin: 0; padding: 0; }
+                                                            @if $type == list { margin: 0; padding: 0; list-style: none; 
+                                                                & li { margin: 0; padding: 0; }
+                                                            } 
+                                                            @if $type == everything { float: none; position: static; height: auto; width: auto; margin: 0; padding: 0; background-color: transparent; border: none; list-style: none; } 
+                                                        }
+                                                        
+@mixin mq($direction,$width)                            {
+                                                            @if $direction == above {
+                                                                @media only screen and (min-width: $width) { @content; }
+                                                            }
+                                                            @if $direction == below {
+                                                                @media only screen and (max-width: $width) { @content; }
+                                                            }
+                                                        }
+                                                        
+@function tint($color, $percentage)                     {
+                                                            @return mix(white, $color, $percentage);
+                                                        }
+
+@function shade($color, $percentage)                    {
+                                                            @return mix(black, $color, $percentage);
+                                                        }
+                                                        
+@mixin placeholder                                      {
+                                                            &:-moz-placeholder { @content; }
+                                                            &::-moz-placeholder { @content; }
+                                                            &:-ms-input-placeholder { @content; }
+                                                            &::-webkit-input-placeholder { @content; } 
+                                                        }
+
+
+
+
+/**********************************************************************************************************/
+/*
+/*
+/* THE BASICS
+/*
+/*
+/**********************************************************************************************************/
+
+
+
+
+.font-1                                                 { font-family: 'Gill Sans Nova W01', Arial, sans-serif; line-height: 1.4; }
+.font-2                                                 { font-family: 'ITC Galliard eText W01', Georgia, serif; line-height: 1.5; }
+
+*, :before, :after                                      { box-sizing: border-box; }
+body                                                    { -webkit-font-smoothing: antialiased; @extend .font-1; color: $color-black; background-color: $color-white; }
+a,
+a:link,
+a:visited,
+a:hover                                                 { text-decoration: none; color: inherit; }
+a:focus                                                 { outline: none; }
+::selection                                             { background-color: $color-grey-medium; }
+::-moz-selection                                        { background-color: $color-grey-medium; }
+:focus                                                  { outline: none; border: 0; }
+input, textarea                                         { /* Remove rounded corners on iOS */ border-radius: 0; 
+                                                            @include placeholder { opacity: 1.0; color: $color-grey-lightest; }
+                                                        }
+img                                                     { display: block; width: 100%; max-width: 100%; }
+.hidden                                                 { display: none; }
+
+
+
+
+
+
+
+
+/**********************************************************************************************************/
+/*
+/*
+/* MAKE IT PRETTY
+/*
+/*
+/**********************************************************************************************************/
