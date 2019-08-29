@@ -369,11 +369,11 @@ th {
 /*
 /*
 /**********************************************************************************************************/
-.font-1, .header, .projects-list .entry h4, .header-big, .subhead, .subtitle-small, .masthead .primary-nav a {
+.font-1, .header, .projects-list .entry h4, .project-credits h4, .header-big, .project-header .title h1, .subhead, .subhead-small, .project-header .title p, .project-credits ul h5, .masthead .primary-nav a {
   font-family: Verdana, sans-serif;
   line-height: 1.4; }
 
-.font-2, body, .lead, .body, .body-big, .body-small, .projects-filter a {
+.font-2, body, .lede, .project-header .description p, .body, .project-credits ul p, .body-big, .body-small, .projects-filter a {
   font-family: Arial, sans-serif;
   line-height: 1.4; }
 
@@ -442,20 +442,20 @@ a.social-button {
       fill: #Ed2d8c; }
 
 /* Type System */
-.header, .projects-list .entry h4 {
+.header, .projects-list .entry h4, .project-credits h4 {
   font-size: 18px;
   font-weight: normal;
   color: #Ed2d8c; }
-  @media only screen and (max-width: 700px) {
-    .header, .projects-list .entry h4 {
+  @media only screen and (max-width: 600px) {
+    .header, .projects-list .entry h4, .project-credits h4 {
       font-size: 16px; } }
 
-.header-big {
+.header-big, .project-header .title h1 {
   font-size: 28px;
   font-weight: normal;
   color: #Ed2d8c; }
-  @media only screen and (max-width: 700px) {
-    .header-big {
+  @media only screen and (max-width: 600px) {
+    .header-big, .project-header .title h1 {
       font-size: 24px; } }
 
 .subhead {
@@ -465,19 +465,19 @@ a.social-button {
   letter-spacing: 0.04em;
   color: #Ed2d8c; }
 
-.subtitle-small {
+.subhead-small, .project-header .title p, .project-credits ul h5 {
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #999; }
 
-.lead {
+.lede, .project-header .description p {
   font-size: 21px;
   font-weight: normal;
   color: #999; }
 
-.body {
+.body, .project-credits ul p {
   font-size: 15px;
   font-weight: normal;
   color: #999; }
@@ -516,7 +516,7 @@ body.has-overlay {
   height: 100px;
   padding: 0 40px;
   background-color: #fff; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .masthead {
       padding: 0 30px; } }
 
@@ -526,7 +526,7 @@ body.has-overlay {
 
 .masthead .primary-nav {
   display: block; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .masthead .primary-nav {
       display: none;
       position: fixed;
@@ -551,7 +551,7 @@ body.has-overlay {
     margin-right: 0; }
   .no-touch .masthead .primary-nav a:hover {
     color: #Ed2d8c; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .masthead .primary-nav a {
       display: block;
       padding: 20px 0;
@@ -561,7 +561,7 @@ body.has-overlay {
 
 .masthead .overlay-toggle {
   display: none; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .masthead .overlay-toggle {
       display: block;
       position: relative;
@@ -597,7 +597,7 @@ body.has-overlay {
   margin: 0 auto;
   padding: 0 40px 20px;
   margin-top: 80px; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer {
       margin-top: 60px; } }
 
@@ -605,7 +605,7 @@ body.has-overlay {
   display: flex;
   flex-basis: 50%;
   flex-wrap: wrap; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer .footer-contact {
       flex-basis: 100%; } }
 
@@ -615,7 +615,7 @@ body.has-overlay {
   flex-basis: 50%;
   font-size: 14px;
   color: #999; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer .footer-contact p {
       flex-basis: 100%;
       margin-bottom: 20px;
@@ -624,14 +624,14 @@ body.has-overlay {
 
 .footer .footer-social {
   flex-basis: 50%; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer .footer-social {
       flex-basis: 100%; } }
 
 .footer .footer-social.social-buttons {
   display: flex;
   justify-content: flex-end; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer .footer-social.social-buttons {
       justify-content: center; } }
 
@@ -645,7 +645,7 @@ body.has-overlay {
   font-size: 10px;
   color: #999;
   text-align: right; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .footer .footer-legal p {
       text-align: center; } }
 
@@ -654,7 +654,10 @@ body.has-overlay {
 /*=====================================================*/
 .hero {
   height: calc(100vh - 100px);
-  background-color: #ccc; }
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed; }
 
 /*=====================================================*/
 /* Hero Slider
@@ -717,7 +720,7 @@ body.has-overlay {
   max-width: 1400px;
   padding: 0 40px;
   margin: 80px auto; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .section {
       padding: 0 30px;
       margin: 60px auto; } }
@@ -736,7 +739,7 @@ hr {
   height: 1px;
   padding: 0 40px;
   margin: 80px auto; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     hr {
       padding: 0 30px;
       margin: 60px auto; } }
@@ -754,7 +757,7 @@ hr {
 
 .projects-filter a {
   color: #999; }
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 600px) {
     .projects-filter a {
       font-size: 12px; } }
   .projects-filter a:after {
@@ -762,7 +765,7 @@ hr {
     display: inline-block;
     margin: 0 10px;
     color: #ccc; }
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width: 600px) {
       .projects-filter a:after {
         margin: 0 5px; } }
   .projects-filter a:last-child:after {
@@ -798,3 +801,106 @@ hr {
 
 .no-touch .projects-list .entry a:hover h4 {
   text-decoration: underline; }
+
+/*=====================================================*/
+/* Project Header
+/*=====================================================*/
+.project-header {
+  display: flex;
+  flex-wrap: wrap; }
+
+.project-header .title {
+  flex-basis: 33.33%;
+  padding-right: 20px; }
+  @media only screen and (max-width: 600px) {
+    .project-header .title {
+      flex-basis: 100%;
+      padding: 0;
+      margin-bottom: 40px; } }
+
+.project-header .title h1 {
+  margin: 0;
+  padding: 0; }
+
+.project-header .title p {
+  margin: 0;
+  padding: 0;
+  margin-top: 4px; }
+
+.project-header .description {
+  flex-basis: 66.66%;
+  padding-left: 20px; }
+  @media only screen and (max-width: 600px) {
+    .project-header .description {
+      flex-basis: 100%;
+      padding: 0; } }
+
+.project-header .description p {
+  margin: 0;
+  padding: 0; }
+
+/*=====================================================*/
+/* Project Images
+/*=====================================================*/
+.project-images img {
+  display: block;
+  min-width: 200px;
+  margin-bottom: 40px; }
+
+/* min-width prevents weird flexbox+img sizing issues */
+.project-images .group {
+  display: flex;
+  margin: 0 -20px; }
+  @media only screen and (max-width: 600px) {
+    .project-images .group.is-2 {
+      flex-wrap: wrap; } }
+  @media only screen and (max-width: 800px) {
+    .project-images .group.is-3 {
+      flex-wrap: wrap; } }
+
+.project-images .group img {
+  padding: 0 20px 0 20px; }
+
+/*=====================================================*/
+/* Project Credits
+/*=====================================================*/
+.project-credits {
+  display: flex;
+  flex-wrap: wrap; }
+
+.project-credits h4 {
+  margin: 0;
+  padding: 0;
+  flex-basis: 33.33%;
+  padding-right: 20px; }
+  @media only screen and (max-width: 600px) {
+    .project-credits h4 {
+      flex-basis: 100%;
+      padding: 0;
+      margin-bottom: 40px; } }
+
+.project-credits ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-basis: 66.66%;
+  padding-left: 20px;
+  column-count: 2; }
+  .project-credits ul li {
+    margin: 0;
+    padding: 0; }
+  @media only screen and (max-width: 600px) {
+    .project-credits ul {
+      flex-basis: 100%;
+      padding: 0; } }
+  .project-credits ul li {
+    margin-bottom: 20px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid; }
+  .project-credits ul h5 {
+    margin: 0;
+    padding: 0; }
+  .project-credits ul p {
+    margin: 0;
+    padding: 0; }
