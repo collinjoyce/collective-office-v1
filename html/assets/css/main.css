@@ -369,11 +369,11 @@ th {
 /*
 /*
 /**********************************************************************************************************/
-.font-1, .masthead .primary-nav a {
+.font-1, .header, .projects-list .entry h4, .header-big, .subhead, .subtitle-small, .masthead .primary-nav a {
   font-family: Verdana, sans-serif;
   line-height: 1.4; }
 
-.font-2, body {
+.font-2, body, .lead, .body, .body-big, .body-small, .projects-filter a {
   font-family: Arial, sans-serif;
   line-height: 1.4; }
 
@@ -441,6 +441,57 @@ a.social-button {
     a.social-button svg:hover {
       fill: #Ed2d8c; }
 
+/* Type System */
+.header, .projects-list .entry h4 {
+  font-size: 18px;
+  font-weight: normal;
+  color: #Ed2d8c; }
+  @media only screen and (max-width: 700px) {
+    .header, .projects-list .entry h4 {
+      font-size: 16px; } }
+
+.header-big {
+  font-size: 28px;
+  font-weight: normal;
+  color: #Ed2d8c; }
+  @media only screen and (max-width: 700px) {
+    .header-big {
+      font-size: 24px; } }
+
+.subhead {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #Ed2d8c; }
+
+.subtitle-small {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #999; }
+
+.lead {
+  font-size: 21px;
+  font-weight: normal;
+  color: #999; }
+
+.body {
+  font-size: 15px;
+  font-weight: normal;
+  color: #999; }
+
+.body-big {
+  font-size: 18px;
+  font-weight: normal;
+  color: #999; }
+
+.body-small {
+  font-size: 13px;
+  font-weight: normal;
+  color: #999; }
+
 /**********************************************************************************************************/
 /*
 /*
@@ -465,6 +516,9 @@ body.has-overlay {
   height: 100px;
   padding: 0 40px;
   background-color: #fff; }
+  @media only screen and (max-width: 700px) {
+    .masthead {
+      padding: 0 30px; } }
 
 .masthead .logo {
   position: relative;
@@ -539,7 +593,13 @@ body.has-overlay {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 80px 40px 20px 40px; }
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px 20px;
+  margin-top: 80px; }
+  @media only screen and (max-width: 700px) {
+    .footer {
+      margin-top: 60px; } }
 
 .footer .footer-contact {
   display: flex;
@@ -559,6 +619,7 @@ body.has-overlay {
     .footer .footer-contact p {
       flex-basis: 100%;
       margin-bottom: 20px;
+      font-size: 12px;
       text-align: center; } }
 
 .footer .footer-social {
@@ -589,7 +650,7 @@ body.has-overlay {
       text-align: center; } }
 
 /*=====================================================*/
-/* Hero
+/* Hero Image
 /*=====================================================*/
 .hero {
   height: calc(100vh - 100px);
@@ -648,3 +709,92 @@ body.has-overlay {
 
 .hero-slider .slider_tabs li.slider_here a {
   background-color: #Ed2d8c; }
+
+/*=====================================================*/
+/* Layout
+/*=====================================================*/
+.section {
+  max-width: 1400px;
+  padding: 0 40px;
+  margin: 80px auto; }
+  @media only screen and (max-width: 700px) {
+    .section {
+      padding: 0 30px;
+      margin: 60px auto; } }
+
+hr {
+  float: none;
+  position: static;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  list-style: none;
+  display: block;
+  height: 1px;
+  padding: 0 40px;
+  margin: 80px auto; }
+  @media only screen and (max-width: 700px) {
+    hr {
+      padding: 0 30px;
+      margin: 60px auto; } }
+  hr:after {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: #ccc; }
+
+/*=====================================================*/
+/* Projects Filter
+/*=====================================================*/
+.projects-filter {
+  display: flex; }
+
+.projects-filter a {
+  color: #999; }
+  @media only screen and (max-width: 700px) {
+    .projects-filter a {
+      font-size: 12px; } }
+  .projects-filter a:after {
+    content: '/';
+    display: inline-block;
+    margin: 0 10px;
+    color: #ccc; }
+    @media only screen and (max-width: 700px) {
+      .projects-filter a:after {
+        margin: 0 5px; } }
+  .projects-filter a:last-child:after {
+    display: none; }
+  .projects-filter a.active {
+    color: #Ed2d8c; }
+
+/*=====================================================*/
+/* Projects List
+/*=====================================================*/
+.projects-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -20px -40px -20px; }
+
+.projects-list .entry {
+  flex-basis: 33.33%;
+  padding: 0 20px 40px 20px; }
+  @media only screen and (max-width: 900px) {
+    .projects-list .entry {
+      flex-basis: 50%; } }
+  @media only screen and (max-width: 600px) {
+    .projects-list .entry {
+      flex-basis: 100%; } }
+
+.projects-list .entry h4 {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px; }
+
+.no-touch .projects-list .entry a:hover img {
+  filter: brightness(105%); }
+
+.no-touch .projects-list .entry a:hover h4 {
+  text-decoration: underline; }

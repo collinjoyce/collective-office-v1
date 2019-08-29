@@ -152,7 +152,9 @@ body.has-overlay                                        { overflow: hidden; }
 /* Masthead
 /*=====================================================*/
 
-.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 40px; background-color: $color-white; }
+.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 40px; background-color: $color-white; 
+                                                            @include mq(below,700px) { padding: 0 30px; }
+                                                        }
 .masthead .logo                                         { position: relative; z-index: 1001; }
 .masthead .primary-nav                                  { display: block; 
                                                             @include mq(below,700px) { display: none; position: fixed; z-index: 999; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 40px 40px 40px; background-color: rgba($color-white, 0.8); overflow: hidden; }
@@ -181,8 +183,8 @@ body.has-overlay                                        { overflow: hidden; }
 /* Footer
 /*=====================================================*/
 
-.footer                                                 { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 80px 40px 20px 40px;
-                                                            @include mq(below,700px) { }
+.footer                                                 { display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 0 40px 20px; margin-top: 80px; 
+                                                            @include mq(below,700px) { margin-top: 60px; }
                                                         }
 
 .footer .footer-contact                                 { display: flex; flex-basis: 50%; flex-wrap: wrap;
@@ -190,7 +192,7 @@ body.has-overlay                                        { overflow: hidden; }
                                                         }
 
 .footer .footer-contact p                               { @include reset(spacing); flex-basis: 50%; font-size: 14px; color: $color-grey; 
-                                                            @include mq(below,700px) { flex-basis: 100%; margin-bottom: 20px; text-align: center; }
+                                                            @include mq(below,700px) { flex-basis: 100%; margin-bottom: 20px; font-size: 12px; text-align: center; }
                                                         }
                                                         
 .footer .footer-social                                  { flex-basis: 50%;
@@ -210,10 +212,13 @@ body.has-overlay                                        { overflow: hidden; }
 
 
 /*=====================================================*/
-/* Hero
+/* Hero Image
 /*=====================================================*/
 
 .hero                                                   { height: calc(100vh - 100px); background-color: $color-grey-light; }
+
+
+
 
 
 
@@ -231,3 +236,53 @@ body.has-overlay                                        { overflow: hidden; }
                                                         }
 .hero-slider .slider_tabs li a                          { @include hide-text; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: rgba($color-white, .5); }
 .hero-slider .slider_tabs li.slider_here a              { background-color: $color-magenta; }
+
+
+
+
+/*=====================================================*/
+/* Layout
+/*=====================================================*/
+
+.section                                                { max-width: 1400px; padding: 0 40px; margin: 80px auto; 
+                                                            @include mq(below,700px) { padding: 0 30px; margin: 60px auto; }
+                                                        }
+hr                                                      { @include reset(everything); display: block; height: 1px; padding: 0 40px; margin: 80px auto; 
+                                                            @include mq(below,700px) { padding: 0 30px; margin: 60px auto; }
+                                                            &:after { content: ''; display: block; height: 1px; background-color: $color-grey-light; }
+                                                        }
+
+
+
+
+/*=====================================================*/
+/* Projects Filter
+/*=====================================================*/
+
+.projects-filter                                        { display: flex; }
+.projects-filter a                                      { @extend .font-2; color: $color-grey;
+                                                            @include mq(below,700px) { font-size: 12px; }
+                                                            &:after { content: '/'; display: inline-block; margin: 0 10px; color: $color-grey-light;
+                                                                @include mq(below,700px) { margin: 0 5px; }
+                                                            }
+                                                            &:last-child:after { display: none; }
+                                                            &.active { color: $color-magenta; }
+                                                        }
+
+
+
+/*=====================================================*/
+/* Projects List
+/*=====================================================*/
+
+.projects-list                                          { display: flex; flex-wrap: wrap; margin: 0 -20px -40px -20px; 
+                                                        }
+.projects-list .entry                                   { flex-basis: 33.33%; padding: 0 20px 40px 20px; 
+                                                            @include mq(below,900px) { flex-basis: 50%; }
+                                                            @include mq(below,600px) { flex-basis: 100%; }
+                                                        }
+.projects-list .entry h4                                { @include reset(spacing); @extend .header; margin-top: 20px; }
+.no-touch .projects-list .entry a:hover                 { 
+                                                            img { filter: brightness(105%); }
+                                                            h4 { text-decoration: underline; }
+                                                        }
