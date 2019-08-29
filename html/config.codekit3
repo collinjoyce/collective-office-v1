@@ -9,6 +9,16 @@
 	],
 "creatorBuild": "31491",
 "files": {
+	"/assets/css/main.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "/assets/css/main-min.css",
+		"oF": 0,
+		"oS": 3
+		},
 	"/assets/css/scss/main.scss": {
 		"aP": 0,
 		"bl": 0,
@@ -34,6 +44,37 @@
 		"oF": 0,
 		"oS": 0,
 		"uL": 1
+		},
+	"/assets/img/collective-logo.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "/assets/img/collective-logo.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 52780316221407,
+		"prP": 0
+		},
+	"/assets/img/social-sprite.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "/assets/img/social-sprite.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 52780316221407,
+		"prP": 0
+		},
+	"/assets/js/main-min.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/main-min-min.js",
+		"oF": 0,
+		"sC": 1,
+		"tS": 0
 		},
 	"/assets/js/main.js": {
 		"bF": 0,
