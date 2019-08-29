@@ -16,5 +16,15 @@ $(document).ready(function(){
     }
     $('.masthead').click(handler);
     
+    
+    // Hero Slider
+    $("#slider").responsiveSlides({
+        auto: true,
+        speed: 750,
+        timeout: 6000,
+        pager: true,
+        namespace: "slider"
+    });
+    
         
 });

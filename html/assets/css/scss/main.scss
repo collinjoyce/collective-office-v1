@@ -131,6 +131,8 @@ a.social-button                                         { height: 40px; width: 4
 body.has-overlay                                        { overflow: hidden; }
 
 
+
+
 /*=====================================================*/
 /* Masthead
 /*=====================================================*/
@@ -156,6 +158,8 @@ body.has-overlay                                        { overflow: hidden; }
                                                             body.has-overlay & .line:nth-child(1) { transform: translateY(5px) rotate(45deg); }
                                                             body.has-overlay & .line:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
                                                         }
+
+
 
 
 /*=====================================================*/
@@ -188,8 +192,27 @@ body.has-overlay                                        { overflow: hidden; }
 
 
 
+
+
 /*=====================================================*/
 /* Hero
 /*=====================================================*/
 
 .hero                                                   { height: calc(100vh - 100px); background-color: $color-grey-light; }
+
+
+
+/*=====================================================*/
+/* Hero Slider
+/*=====================================================*/
+
+.hero-slider                                            { position: relative; height: calc(100vh - 100px); background-color: $color-grey-light; }
+.hero-slider .slides                                    { height: 100%; width: 100%; overflow: hidden; }
+.hero-slider .slide                                     { -webkit-backface-visibility: hidden; display: block; height: 100%; width: 100%; background-repeat: no-repeat; background-size: cover; background-position: center center; }
+/* For ResponsiveSlides.js */
+.hero-slider .slider_tabs                               { display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 998; @include reset(list); }
+.hero-slider .slider_tabs li                            { margin-right: 5px;
+                                                            &:last-child { margin-right: 0; }
+                                                        }
+.hero-slider .slider_tabs li a                          { @include hide-text; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: rgba($color-white, .5); }
+.hero-slider .slider_tabs li.slider_here a              { background-color: $color-magenta; }

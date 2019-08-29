@@ -103,7 +103,7 @@
 		"ft": 64,
 		"ma": 0,
 		"mi": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "/assets/js/vendor/jquery.visible-min.js",
 		"oF": 0,
 		"sC": 1,
@@ -125,7 +125,7 @@
 		"ft": 64,
 		"ma": 0,
 		"mi": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "/assets/js/vendor/responsiveslides-min.js",
 		"oF": 0,
 		"sC": 1,
@@ -142,6 +142,50 @@
 		"sC": 1,
 		"tS": 0
 		},
+	"/static-templates/fpo/covers/1.jpg": {
+		"ft": 16384,
+		"iS": 311503,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/1.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/2.jpg": {
+		"ft": 16384,
+		"iS": 403799,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/2.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/3.jpg": {
+		"ft": 16384,
+		"iS": 273745,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/3.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/4.jpg": {
+		"ft": 16384,
+		"iS": 318306,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/4.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
 	"/static-templates/index.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -154,6 +198,20 @@
 "hooks": [
 	],
 "manualImportLinks": {
+	"/assets/js/main.js": [
+		{
+			"followForSyntaxChecking": 1,
+			"linkedFileAbbreviatedPath": "/assets/js/vendor/jquery.visible.js",
+			"position": 0,
+			"type": 0
+			},
+		{
+			"followForSyntaxChecking": 1,
+			"linkedFileAbbreviatedPath": "/assets/js/vendor/responsiveslides.js",
+			"position": 1,
+			"type": 0
+			}
+		]
 	},
 "projectAttributes": {
 	"creationDate": 588723343.49876297,
