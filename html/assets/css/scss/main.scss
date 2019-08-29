@@ -108,6 +108,21 @@ a.social-button                                         { height: 40px; width: 4
                                                             &.is-twitter { }
                                                             &.is-houzz { }
                                                         }
+                                                        
+
+/* Type System */
+.header                                                 { @extend .font-1; font-size: 18px; font-weight: normal; color: $color-magenta; 
+                                                            @include mq(below,700px) { font-size: 16px; }
+                                                        }
+.header-big                                             { @extend .font-1; font-size: 28px; font-weight: normal; color: $color-magenta; 
+                                                            @include mq(below,700px) { font-size: 24px; }
+                                                        }
+.subhead                                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-magenta; }
+.subtitle-small                                         { @extend .font-1; font-size: 12px; font-weight: 500; @include caps; color: $color-grey; }
+.lead                                                   { @extend .font-2; font-size: 21px; font-weight: normal; color: $color-grey; }
+.body                                                   { @extend .font-2; font-size: 15px; font-weight: normal; color: $color-grey; }
+.body-big                                               { @extend .font-2; font-size: 18px; font-weight: normal; color: $color-grey; }
+.body-small                                             { @extend .font-2; font-size: 13px; font-weight: normal; color: $color-grey; }
 
 
 
