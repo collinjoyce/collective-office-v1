@@ -99,7 +99,7 @@ img                                                     { display: block; width:
 .hidden                                                 { display: none; }
 
 
-/* Social Buttons */
+/* Social */
 a.social-button                                         { height: 40px; width: 40px; padding: 8px;
                                                             svg { height: 24px; width: 24px; fill: #ccc;
                                                                 &:hover { fill: $color-magenta; }
@@ -120,10 +120,35 @@ a.social-button                                         { height: 40px; width: 4
 .subhead                                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-magenta; }
 .subhead-small                                          { @extend .font-1; font-size: 12px; font-weight: 500; @include caps; color: $color-grey; }
 .lede                                                   { @extend .font-2; font-size: 21px; font-weight: normal; color: $color-grey; }
-.body                                                   { @extend .font-2; font-size: 15px; font-weight: normal; color: $color-grey; }
-.body-big                                               { @extend .font-2; font-size: 18px; font-weight: normal; color: $color-grey; }
+.body                                                   { @extend .font-2; font-size: 15px; font-weight: normal; color: $color-grey; 
+                                                            a { border-bottom: 1px solid $color-grey-light; 
+                                                                .no-touch &:hover { border-color: $color-magenta; }
+                                                            }
+                                                        }
+.body-big                                               { @extend .font-2; font-size: 18px; font-weight: normal; color: $color-grey; 
+                                                            a { border-bottom: 1px solid $color-grey-light; 
+                                                                .no-touch &:hover { border-color: $color-magenta; }
+                                                            }
+                                                        }
 .body-small                                             { @extend .font-2; font-size: 13px; font-weight: normal; color: $color-grey; }
 
+
+/* Buttons */
+a.button                                                { @include reset(everything); @extend .font-2; display: block; width: 100%; max-width: 300px; margin: 20px 0; padding: 10px; background-color: $color-magenta; font-weight: bold; text-decoration: none; font-size: 12px; @include caps; text-align: center; color: $color-white; }
+
+
+/* Forms */
+form                                                    { max-width: 300px; margin: 40px 0; }
+form .form-item                                         { margin: 20px 0; }
+form label                                              { display: none; }
+form input[type="email"],
+form input[type="password"],
+form input[type="text"]                                 { @include reset(everything); @extend .font-2; width: 100%; padding: 4px; background-color: transparent; border-bottom: 1px solid $color-grey-light; color: $color-grey; font-size: 14px;
+                                                            &:focus { border-color: $color-magenta }
+                                                        }
+form input[type="submit"]                               { @include reset(everything); @extend .font-2; display: block; width: 100%; padding: 10px; background-color: $color-magenta; font-weight: bold; text-decoration: none; font-size: 12px; @include caps; text-align: center; color: $color-white; 
+                                                            &:disabled { background-color: $color-grey; }
+                                                        }
 
 
 
@@ -209,6 +234,28 @@ body.has-overlay                                        { overflow: hidden; }
 
 
 
+/*=====================================================*/
+/* Layout
+/*=====================================================*/
+
+.section                                                { max-width: 1400px; padding: 0 40px; margin: 80px auto; 
+                                                            @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
+                                                        }
+hr                                                      { @include reset(everything); display: block; max-width: 1400px; height: 1px; padding: 0 40px; margin: 80px auto; 
+                                                            @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
+                                                            &:after { content: ''; display: block; height: 1px; background-color: $color-grey-light; }
+                                                        }
+
+.columns                                                { display: flex; flex-wrap: wrap; margin: 0 -20px -40px -20px; }
+.columns.is-3 .column                                   { flex-basis: 33.33%; padding: 0 20px 40px 20px;
+                                                            @include mq(below,800px) { flex-basis: 100%; }
+                                                        }
+.columns.is-4 .column                                   { flex-basis: 25%; padding: 0 20px 40px 20px;
+                                                            @include mq(below,900px) { flex-basis: 50%; }
+                                                            @include mq(below,600px) { flex-basis: 100%; }
+                                                        }
+        
+
 
 
 /*=====================================================*/
@@ -216,7 +263,6 @@ body.has-overlay                                        { overflow: hidden; }
 /*=====================================================*/
 
 .hero                                                   { height: calc(100vh - 100px); background-repeat: no-repeat; background-size: cover; background-position: center center; background-attachment: fixed; }
-
 
 
 
@@ -236,21 +282,6 @@ body.has-overlay                                        { overflow: hidden; }
                                                         }
 .hero-slider .slider_tabs li a                          { @include hide-text; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: rgba($color-white, .5); }
 .hero-slider .slider_tabs li.slider_here a              { background-color: $color-magenta; }
-
-
-
-
-/*=====================================================*/
-/* Layout
-/*=====================================================*/
-
-.section                                                { max-width: 1400px; padding: 0 40px; margin: 80px auto; 
-                                                            @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
-                                                        }
-hr                                                      { @include reset(everything); display: block; height: 1px; padding: 0 40px; margin: 80px auto; 
-                                                            @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
-                                                            &:after { content: ''; display: block; height: 1px; background-color: $color-grey-light; }
-                                                        }
 
 
 
@@ -335,3 +366,22 @@ hr                                                      { @include reset(everyth
                                                             h5 { @extend .subhead-small; @include reset(spacing); }
                                                             p { @extend .body; @include reset(spacing); }
                                                         }
+
+
+
+/*=====================================================*/
+/* About
+/*=====================================================*/
+
+.about-content .lede                                    { @extend .lede; @include reset(spacing); margin-bottom: 40px; }
+.about-content h2                                       { @extend .header-big; @include reset(spacing); margin-bottom: 40px; }
+.about-content h3                                       { @extend .subhead; @include reset(spacing); margin-bottom: 20px; }
+.about-content h5                                       { @extend .subhead-small; @include reset(spacing); margin-bottom: 5px; }
+.about-content h3 + h5                                  { margin-top: -15px; }
+.about-content p + h5                                   { margin-top: 20px; }
+.about-content p                                        { @extend .body; }
+.about-content p.small                                  { @extend .body-small; @include reset(spacing); }
+.about-content img                                      { margin-bottom: 40px; }
+
+.about-content p.partners                               { margin-top: 40px }
+.about-content p.partners strong                        { color: $color-magenta; font-weight: normal; }

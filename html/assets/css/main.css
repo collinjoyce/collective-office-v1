@@ -369,11 +369,13 @@ th {
 /*
 /*
 /**********************************************************************************************************/
-.font-1, .header, .projects-list .entry h4, .project-credits h4, .header-big, .project-header .title h1, .subhead, .subhead-small, .project-header .title p, .project-credits ul h5, .masthead .primary-nav a {
+.font-1, .header, .projects-list .entry h4, .project-credits h4, .header-big, .project-header .title h1, .about-content h2, .subhead, .about-content h3, .subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5, .masthead .primary-nav a {
   font-family: Verdana, sans-serif;
   line-height: 1.4; }
 
-.font-2, body, .lede, .project-header .description p, .body, .project-credits ul p, .body-big, .body-small, .projects-filter a {
+.font-2, body, .lede, .project-header .description p, .about-content .lede, .body, .project-credits ul p, .about-content p, .body-big, .body-small, .about-content p.small, a.button, form input[type="email"],
+form input[type="password"],
+form input[type="text"], form input[type="submit"], .projects-filter a {
   font-family: Arial, sans-serif;
   line-height: 1.4; }
 
@@ -429,7 +431,7 @@ img {
 .hidden {
   display: none; }
 
-/* Social Buttons */
+/* Social */
 a.social-button {
   height: 40px;
   width: 40px;
@@ -450,47 +452,138 @@ a.social-button {
     .header, .projects-list .entry h4, .project-credits h4 {
       font-size: 16px; } }
 
-.header-big, .project-header .title h1 {
+.header-big, .project-header .title h1, .about-content h2 {
   font-size: 28px;
   font-weight: normal;
   color: #Ed2d8c; }
   @media only screen and (max-width: 600px) {
-    .header-big, .project-header .title h1 {
+    .header-big, .project-header .title h1, .about-content h2 {
       font-size: 24px; } }
 
-.subhead {
+.subhead, .about-content h3 {
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #Ed2d8c; }
 
-.subhead-small, .project-header .title p, .project-credits ul h5 {
+.subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5 {
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #999; }
 
-.lede, .project-header .description p {
+.lede, .project-header .description p, .about-content .lede {
   font-size: 21px;
   font-weight: normal;
   color: #999; }
 
-.body, .project-credits ul p {
+.body, .project-credits ul p, .about-content p {
   font-size: 15px;
   font-weight: normal;
   color: #999; }
+  .body a, .project-credits ul p a, .about-content p a {
+    border-bottom: 1px solid #ccc; }
+    .no-touch .body a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover, .no-touch .about-content p a:hover, .about-content .no-touch p a:hover {
+      border-color: #Ed2d8c; }
 
 .body-big {
   font-size: 18px;
   font-weight: normal;
   color: #999; }
+  .body-big a {
+    border-bottom: 1px solid #ccc; }
+    .no-touch .body-big a:hover {
+      border-color: #Ed2d8c; }
 
-.body-small {
+.body-small, .about-content p.small {
   font-size: 13px;
   font-weight: normal;
   color: #999; }
+
+/* Buttons */
+a.button {
+  float: none;
+  position: static;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  list-style: none;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #Ed2d8c;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #fff; }
+
+/* Forms */
+form {
+  max-width: 300px;
+  margin: 40px 0; }
+
+form .form-item {
+  margin: 20px 0; }
+
+form label {
+  display: none; }
+
+form input[type="email"],
+form input[type="password"],
+form input[type="text"] {
+  float: none;
+  position: static;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  list-style: none;
+  width: 100%;
+  padding: 4px;
+  background-color: transparent;
+  border-bottom: 1px solid #ccc;
+  color: #999;
+  font-size: 14px; }
+  form input[type="email"]:focus,
+  form input[type="password"]:focus,
+  form input[type="text"]:focus {
+    border-color: #Ed2d8c; }
+
+form input[type="submit"] {
+  float: none;
+  position: static;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  list-style: none;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #Ed2d8c;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #fff; }
+  form input[type="submit"]:disabled {
+    background-color: #999; }
 
 /**********************************************************************************************************/
 /*
@@ -650,6 +743,65 @@ body.has-overlay {
       text-align: center; } }
 
 /*=====================================================*/
+/* Layout
+/*=====================================================*/
+.section {
+  max-width: 1400px;
+  padding: 0 40px;
+  margin: 80px auto; }
+  @media only screen and (max-width: 600px) {
+    .section {
+      padding: 0 30px;
+      margin: 60px auto; } }
+
+hr {
+  float: none;
+  position: static;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  list-style: none;
+  display: block;
+  max-width: 1400px;
+  height: 1px;
+  padding: 0 40px;
+  margin: 80px auto; }
+  @media only screen and (max-width: 600px) {
+    hr {
+      padding: 0 30px;
+      margin: 60px auto; } }
+  hr:after {
+    content: '';
+    display: block;
+    height: 1px;
+    background-color: #ccc; }
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -20px -40px -20px; }
+
+.columns.is-3 .column {
+  flex-basis: 33.33%;
+  padding: 0 20px 40px 20px; }
+  @media only screen and (max-width: 800px) {
+    .columns.is-3 .column {
+      flex-basis: 100%; } }
+
+.columns.is-4 .column {
+  flex-basis: 25%;
+  padding: 0 20px 40px 20px; }
+  @media only screen and (max-width: 900px) {
+    .columns.is-4 .column {
+      flex-basis: 50%; } }
+  @media only screen and (max-width: 600px) {
+    .columns.is-4 .column {
+      flex-basis: 100%; } }
+
+/*=====================================================*/
 /* Hero Image
 /*=====================================================*/
 .hero {
@@ -712,42 +864,6 @@ body.has-overlay {
 
 .hero-slider .slider_tabs li.slider_here a {
   background-color: #Ed2d8c; }
-
-/*=====================================================*/
-/* Layout
-/*=====================================================*/
-.section {
-  max-width: 1400px;
-  padding: 0 40px;
-  margin: 80px auto; }
-  @media only screen and (max-width: 600px) {
-    .section {
-      padding: 0 30px;
-      margin: 60px auto; } }
-
-hr {
-  float: none;
-  position: static;
-  height: auto;
-  width: auto;
-  margin: 0;
-  padding: 0;
-  background-color: transparent;
-  border: none;
-  list-style: none;
-  display: block;
-  height: 1px;
-  padding: 0 40px;
-  margin: 80px auto; }
-  @media only screen and (max-width: 600px) {
-    hr {
-      padding: 0 30px;
-      margin: 60px auto; } }
-  hr:after {
-    content: '';
-    display: block;
-    height: 1px;
-    background-color: #ccc; }
 
 /*=====================================================*/
 /* Projects Filter
@@ -904,3 +1020,46 @@ hr {
   .project-credits ul p {
     margin: 0;
     padding: 0; }
+
+/*=====================================================*/
+/* About
+/*=====================================================*/
+.about-content .project-header .description p, .project-header .description .about-content p, .about-content .lede {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 40px; }
+
+.about-content h2 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 40px; }
+
+.about-content h3 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px; }
+
+.about-content h5 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 5px; }
+
+.about-content h3 + h5 {
+  margin-top: -15px; }
+
+.about-content p + h5 {
+  margin-top: 20px; }
+
+.about-content p.small {
+  margin: 0;
+  padding: 0; }
+
+.about-content img {
+  margin-bottom: 40px; }
+
+.about-content p.partners {
+  margin-top: 40px; }
+
+.about-content p.partners strong {
+  color: #Ed2d8c;
+  font-weight: normal; }
