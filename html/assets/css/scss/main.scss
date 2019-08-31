@@ -306,16 +306,16 @@ hr                                                      { @include reset(everyth
 
 
 /*=====================================================*/
-/* Projects List
+/* Projects
 /*=====================================================*/
 
-.projects-list                                          { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
-.projects-list .entry                                   { flex-basis: 33.33%; padding: 0 20px 80px 20px; 
+.projects                                               { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
+.projects .entry                                        { flex-basis: 33.33%; padding: 0 20px 80px 20px; 
                                                             @include mq(below,900px) { flex-basis: 50%; }
                                                             @include mq(below,600px) { flex-basis: 100%; }
                                                         }
-.projects-list .entry h4                                { @include reset(spacing); @extend .header; margin-top: 20px; }
-.no-touch .projects-list .entry a:hover                 { 
+.projects .entry h4                                     { @include reset(spacing); @extend .header; margin-top: 20px; }
+.no-touch .projects .entry a:hover                      { 
                                                             img { filter: brightness(105%); }
                                                             h4 { text-decoration: underline; }
                                                         }
@@ -360,7 +360,7 @@ hr                                                      { @include reset(everyth
 /*=====================================================*/
 
 .project-credits                                        { display: flex; flex-wrap: wrap; }
-.project-credits h4                                     { @extend .header; @include reset(spacing); flex-basis: 33.33%; padding-right: 20px; 
+.project-credits h4                                     { @extend .subhead; @include reset(spacing); flex-basis: 33.33%; padding-right: 20px; 
                                                             @include mq(below,600px) { flex-basis: 100%; padding: 0; margin-bottom: 40px; }
                                                         }
 .project-credits ul                                     { @include reset(list); flex-basis: 66.66%; padding-left: 20px; column-count: 2; 
@@ -377,7 +377,7 @@ hr                                                      { @include reset(everyth
 /* Related Projects
 /*=====================================================*/
 
-.related-projects h2                                    { @extend .header; @include reset(spacing); margin-bottom: 40px; }
+.related-projects h2                                    { @extend .subhead; @include reset(spacing); margin-bottom: 40px; }
 .related-projects .entries                              { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
 .related-projects .entries .entry                       { flex-basis: 50%; padding: 0 20px 80px 20px; 
                                                             @include mq(below,600px) { flex-basis: 100%; }

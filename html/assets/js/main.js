@@ -44,5 +44,24 @@ $(document).ready(function(){
         });
     });
     
+    
+    // Filter Projects
+    $('#projects-filter a').click(function(){
+        $('#projects-filter a').removeClass('active');
+        $(this).addClass('active');
+        $('.projects .entry').hide();
+        var type = $(this).attr('href').replace('#', '');
+        if (type == "all") {
+            $('.projects .entry').each(function(i) {
+                $(this).fadeIn(200);
+            });
+        } else {
+            $('.projects .entry.is-' + type).each(function(i) {
+                $(this).fadeIn(200);
+            });
+        }
+        return false;
+    });
+    
         
 });
