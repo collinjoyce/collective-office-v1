@@ -359,6 +359,50 @@
 		"opt": 0,
 		"q": 100
 		},
+	"/static-templates/fpo/project-thumbnails/10.jpg": {
+		"ft": 16384,
+		"iS": 145948,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/project-thumbnails/10.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/project-thumbnails/11.jpg": {
+		"ft": 16384,
+		"iS": 182000,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/project-thumbnails/11.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/project-thumbnails/12.jpg": {
+		"ft": 16384,
+		"iS": 150504,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/project-thumbnails/12.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/project-thumbnails/13.jpg": {
+		"ft": 16384,
+		"iS": 226473,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/project-thumbnails/13.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
 	"/static-templates/fpo/project-thumbnails/2.jpg": {
 		"ft": 16384,
 		"iS": 90217,
@@ -444,7 +488,7 @@
 		"oAP": "/static-templates/fpo/project-thumbnails/9.jpg",
 		"oF": 0,
 		"oIPL": 0,
-		"opt": 0,
+		"opt": 1,
 		"q": 100
 		},
 	"/static-templates/index.html": {
@@ -453,6 +497,14 @@
 		"hM": 0,
 		"oA": 0,
 		"oAP": "/static-templates/index.html",
+		"oF": 0
+		},
+	"/static-templates/news.html": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/static-templates/news.html",
 		"oF": 0
 		},
 	"/static-templates/project.html": {

@@ -130,7 +130,11 @@ a.social-button                                         { height: 40px; width: 4
                                                                 .no-touch &:hover { border-color: $color-magenta; }
                                                             }
                                                         }
-.body-small                                             { @extend .font-2; font-size: 13px; font-weight: normal; color: $color-grey; }
+.body-small                                             { @extend .font-2; font-size: 13px; font-weight: normal; color: $color-grey; 
+                                                            a { border-bottom: 1px solid $color-grey-light; 
+                                                                .no-touch &:hover { border-color: $color-magenta; }
+                                                            }
+                                                        }
 
 
 /* Buttons */
@@ -352,6 +356,7 @@ hr                                                      { @include reset(everyth
 
 
 
+
 /*=====================================================*/
 /* Project Credits
 /*=====================================================*/
@@ -366,6 +371,7 @@ hr                                                      { @include reset(everyth
                                                             h5 { @extend .subhead-small; @include reset(spacing); }
                                                             p { @extend .body; @include reset(spacing); }
                                                         }
+
 
 
 
@@ -385,3 +391,20 @@ hr                                                      { @include reset(everyth
 
 .about-content p.partners                               { margin-top: 40px }
 .about-content p.partners strong                        { color: $color-magenta; font-weight: normal; }
+
+
+
+
+/*=====================================================*/
+/* News
+/*=====================================================*/
+
+.news                                                   { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
+.news .entry                                            { flex-basis: 33.33%; padding: 0 20px 80px 20px;
+                                                            @include mq(below,800px) { flex-basis: 100%; }
+                                                        }
+.news h3                                                { @extend .header; @include reset(spacing); margin-bottom: 5px; }
+.news h5                                                { @extend .subhead-small; @include reset(spacing); margin-bottom: 20px; }
+.news p                                                 { @extend .body; }
+.news p.small                                           { @extend .body-small; @include reset(spacing); }
+.news img                                               { margin-bottom: 40px; }

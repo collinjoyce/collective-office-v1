@@ -369,11 +369,11 @@ th {
 /*
 /*
 /**********************************************************************************************************/
-.font-1, .header, .projects-list .entry h4, .project-credits h4, .header-big, .project-header .title h1, .about-content h2, .subhead, .about-content h3, .subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5, .masthead .primary-nav a {
+.font-1, .header, .projects-list .entry h4, .project-credits h4, .news h3, .header-big, .project-header .title h1, .about-content h2, .subhead, .about-content h3, .subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5, .news h5, .masthead .primary-nav a {
   font-family: Verdana, sans-serif;
   line-height: 1.4; }
 
-.font-2, body, .lede, .project-header .description p, .about-content .lede, .body, .project-credits ul p, .about-content p, .body-big, .body-small, .about-content p.small, a.button, form input[type="email"],
+.font-2, body, .lede, .project-header .description p, .about-content .lede, .body, .project-credits ul p, .about-content p, .news p, .body-big, .body-small, .about-content p.small, .news p.small, a.button, form input[type="email"],
 form input[type="password"],
 form input[type="text"], form input[type="submit"], .projects-filter a {
   font-family: Arial, sans-serif;
@@ -444,12 +444,12 @@ a.social-button {
       fill: #Ed2d8c; }
 
 /* Type System */
-.header, .projects-list .entry h4, .project-credits h4 {
+.header, .projects-list .entry h4, .project-credits h4, .news h3 {
   font-size: 18px;
   font-weight: normal;
   color: #Ed2d8c; }
   @media only screen and (max-width: 600px) {
-    .header, .projects-list .entry h4, .project-credits h4 {
+    .header, .projects-list .entry h4, .project-credits h4, .news h3 {
       font-size: 16px; } }
 
 .header-big, .project-header .title h1, .about-content h2 {
@@ -467,7 +467,7 @@ a.social-button {
   letter-spacing: 0.04em;
   color: #Ed2d8c; }
 
-.subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5 {
+.subhead-small, .project-header .title p, .project-credits ul h5, .about-content h5, .news h5 {
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
@@ -479,13 +479,13 @@ a.social-button {
   font-weight: normal;
   color: #999; }
 
-.body, .project-credits ul p, .about-content p {
+.body, .project-credits ul p, .about-content p, .news p {
   font-size: 15px;
   font-weight: normal;
   color: #999; }
-  .body a, .project-credits ul p a, .about-content p a {
+  .body a, .project-credits ul p a, .about-content p a, .news p a {
     border-bottom: 1px solid #ccc; }
-    .no-touch .body a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover, .no-touch .about-content p a:hover, .about-content .no-touch p a:hover {
+    .no-touch .body a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover, .no-touch .about-content p a:hover, .about-content .no-touch p a:hover, .no-touch .news p a:hover, .news .no-touch p a:hover {
       border-color: #Ed2d8c; }
 
 .body-big {
@@ -497,10 +497,14 @@ a.social-button {
     .no-touch .body-big a:hover {
       border-color: #Ed2d8c; }
 
-.body-small, .about-content p.small {
+.body-small, .about-content p.small, .news p.small {
   font-size: 13px;
   font-weight: normal;
   color: #999; }
+  .body-small a, .about-content p.small a, .news p.small a {
+    border-bottom: 1px solid #ccc; }
+    .no-touch .body-small a:hover, .no-touch .about-content p.small a:hover, .about-content .no-touch p.small a:hover, .no-touch .news p.small a:hover, .news .no-touch p.small a:hover {
+      border-color: #Ed2d8c; }
 
 /* Buttons */
 a.button {
@@ -1063,3 +1067,35 @@ hr {
 .about-content p.partners strong {
   color: #Ed2d8c;
   font-weight: normal; }
+
+/*=====================================================*/
+/* News
+/*=====================================================*/
+.news {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -20px -80px -20px; }
+
+.news .entry {
+  flex-basis: 33.33%;
+  padding: 0 20px 80px 20px; }
+  @media only screen and (max-width: 800px) {
+    .news .entry {
+      flex-basis: 100%; } }
+
+.news h3 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 5px; }
+
+.news h5 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px; }
+
+.news p.small {
+  margin: 0;
+  padding: 0; }
+
+.news img {
+  margin-bottom: 40px; }
