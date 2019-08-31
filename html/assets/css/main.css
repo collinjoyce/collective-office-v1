@@ -379,7 +379,7 @@ form input[type="text"], form input[type="submit"], .projects-filter a {
   font-family: Arial, sans-serif;
   line-height: 1.4; }
 
-*, :before, :after {
+*, :before, :after, hr {
   box-sizing: border-box; }
 
 body {
