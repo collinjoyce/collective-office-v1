@@ -621,6 +621,18 @@ body.has-overlay {
   position: relative;
   z-index: 1001; }
 
+.masthead .logo svg {
+  height: 20px;
+  width: 168px;
+  fill: #Ed2d8c;
+  color: #999; }
+  @media only screen and (max-width: 600px) {
+    .masthead .logo svg {
+      /* Ref: https://tympanus.net/codrops/2015/07/16/styling-svg-use-content-css/ */ }
+      body.has-overlay .masthead .logo svg {
+        fill: #fff;
+        color: #fff; } }
+
 .masthead .primary-nav {
   display: block; }
   @media only screen and (max-width: 600px) {
@@ -633,7 +645,7 @@ body.has-overlay {
       left: 0;
       right: 0;
       padding: 120px 40px 40px 40px;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(237, 45, 140, 0.9);
       overflow: hidden; } }
   body.has-overlay .masthead .primary-nav {
     display: block; }
@@ -646,15 +658,17 @@ body.has-overlay {
   margin-right: 20px; }
   .masthead .primary-nav a:last-child {
     margin-right: 0; }
-  .no-touch .masthead .primary-nav a:hover {
-    color: #Ed2d8c; }
+  @media only screen and (min-width: 600px) {
+    .no-touch .masthead .primary-nav a:hover {
+      color: #Ed2d8c; } }
   @media only screen and (max-width: 600px) {
     .masthead .primary-nav a {
       display: block;
       padding: 20px 0;
       font-size: 24px;
       text-transform: none;
-      letter-spacing: 0; } }
+      letter-spacing: 0;
+      color: #fff; } }
 
 .masthead .overlay-toggle {
   display: none; }
@@ -676,6 +690,8 @@ body.has-overlay {
     transition: all 0.25s ease-in-out; }
   .no-touch .masthead .overlay-toggle .menu-icon:hover {
     cursor: pointer; }
+  body.has-overlay .masthead .overlay-toggle .menu-icon .line {
+    background-color: #fff; }
   body.has-overlay .masthead .overlay-toggle .menu-icon .line:nth-child(2) {
     opacity: 0; }
   body.has-overlay .masthead .overlay-toggle .menu-icon .line:nth-child(1) {
