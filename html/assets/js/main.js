@@ -26,5 +26,23 @@ $(document).ready(function(){
         namespace: "slider"
     });
     
+    
+    // Fade Images
+    var images = $('.section img');
+    images.each(function(i, image) {
+        var image = $(image);
+        if (image.visible(true)) {
+            image.addClass('is-visible'); 
+        }
+    });
+    $(window).scroll(function(event) {
+        images.each(function(i, image) {
+            var image = $(image);
+            if (image.visible(true)) {
+                image.addClass('is-visible'); 
+            }
+        });
+    });
+    
         
 });

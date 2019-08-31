@@ -245,20 +245,14 @@ body.has-overlay                                        { overflow: hidden; }
 .section                                                { max-width: 1400px; padding: 0 40px; margin: 80px auto; 
                                                             @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
                                                         }
+.section img                                            { opacity: 0.1; transition: 0.65s opacity ease-in-out;
+                                                            &.is-visible { opacity: 1.0; }
+                                                        }
 hr                                                      { @include reset(everything); display: block; max-width: 1400px; height: 1px; padding: 0 40px; margin: 80px auto; 
                                                             @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
                                                             &:after { content: ''; display: block; height: 1px; background-color: $color-grey-light; }
                                                         }
 
-.columns                                                { display: flex; flex-wrap: wrap; margin: 0 -20px -40px -20px; }
-.columns.is-3 .column                                   { flex-basis: 33.33%; padding: 0 20px 40px 20px;
-                                                            @include mq(below,800px) { flex-basis: 100%; }
-                                                        }
-.columns.is-4 .column                                   { flex-basis: 25%; padding: 0 20px 40px 20px;
-                                                            @include mq(below,900px) { flex-basis: 50%; }
-                                                            @include mq(below,600px) { flex-basis: 100%; }
-                                                        }
-        
 
 
 
@@ -347,12 +341,12 @@ hr                                                      { @include reset(everyth
 /* Project Images
 /*=====================================================*/
 
-.project-images img                                  { display: block; min-width: 200px; margin-bottom: 40px; } /* min-width prevents weird flexbox+img sizing issues */
+.project-images img                                     { display: block; min-width: 200px; margin-bottom: 40px; } /* min-width prevents weird flexbox+img sizing issues */
 .project-images .group                                  { display: flex; margin: 0 -20px; 
                                                             &.is-2 { @include mq(below,600px) { flex-wrap: wrap; } }
                                                             &.is-3 { @include mq(below,800px) { flex-wrap: wrap; } }
                                                         }
-.project-images .group img                           { padding: 0 20px 0 20px; }
+.project-images .group img                              { padding: 0 20px 0 20px; }
 
 
 
@@ -379,18 +373,27 @@ hr                                                      { @include reset(everyth
 /* About
 /*=====================================================*/
 
-.about-content .lede                                    { @extend .lede; @include reset(spacing); margin-bottom: 40px; }
-.about-content h2                                       { @extend .header-big; @include reset(spacing); margin-bottom: 40px; }
-.about-content h3                                       { @extend .subhead; @include reset(spacing); margin-bottom: 20px; }
-.about-content h5                                       { @extend .subhead-small; @include reset(spacing); margin-bottom: 5px; }
-.about-content h3 + h5                                  { margin-top: -15px; }
-.about-content p + h5                                   { margin-top: 20px; }
-.about-content p                                        { @extend .body; }
-.about-content p.small                                  { @extend .body-small; @include reset(spacing); }
-.about-content img                                      { margin-bottom: 40px; }
 
-.about-content p.partners                               { margin-top: 40px }
-.about-content p.partners strong                        { color: $color-magenta; font-weight: normal; }
+.about .columns                                         { display: flex; flex-wrap: wrap; margin: 0 -20px -40px -20px; }
+.about .columns.is-3 .column                            { flex-basis: 33.33%; padding: 0 20px 40px 20px;
+                                                            @include mq(below,800px) { flex-basis: 100%; }
+                                                        }
+.about .columns.is-4 .column                            { flex-basis: 25%; padding: 0 20px 40px 20px;
+                                                            @include mq(below,900px) { flex-basis: 50%; }
+                                                            @include mq(below,600px) { flex-basis: 100%; }
+                                                        }
+.about .lede                                            { @extend .lede; @include reset(spacing); margin-bottom: 40px; }
+.about h2                                               { @extend .header-big; @include reset(spacing); margin-bottom: 40px; }
+.about h3                                               { @extend .subhead; @include reset(spacing); margin-bottom: 20px; }
+.about h5                                               { @extend .subhead-small; @include reset(spacing); margin-bottom: 5px; }
+.about h3 + h5                                          { margin-top: -15px; }
+.about p + h5                                           { margin-top: 20px; }
+.about p                                                { @extend .body; }
+.about p.small                                          { @extend .body-small; @include reset(spacing); }
+.about img                                              { margin-bottom: 40px; }
+
+.about p.partners                                       { margin-top: 40px }
+.about p.partners strong                                { color: $color-magenta; font-weight: normal; }
 
 
 
