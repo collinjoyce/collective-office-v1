@@ -486,7 +486,8 @@ a.social-button {
   .body a, .project-credits ul p a, .about p a, .news p a {
     border-bottom: 1px solid #ccc; }
     .no-touch .body a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover, .no-touch .about p a:hover, .about .no-touch p a:hover, .no-touch .news p a:hover, .news .no-touch p a:hover {
-      border-color: #Ed2d8c; }
+      border-color: #Ed2d8c;
+      color: #Ed2d8c; }
 
 .body-big {
   font-size: 18px;
@@ -495,7 +496,8 @@ a.social-button {
   .body-big a {
     border-bottom: 1px solid #ccc; }
     .no-touch .body-big a:hover {
-      border-color: #Ed2d8c; }
+      border-color: #Ed2d8c;
+      color: #Ed2d8c; }
 
 .body-small, .about p.small, .news p.small {
   font-size: 13px;
@@ -504,7 +506,8 @@ a.social-button {
   .body-small a, .about p.small a, .news p.small a {
     border-bottom: 1px solid #ccc; }
     .no-touch .body-small a:hover, .no-touch .about p.small a:hover, .about .no-touch p.small a:hover, .no-touch .news p.small a:hover, .news .no-touch p.small a:hover {
-      border-color: #Ed2d8c; }
+      border-color: #Ed2d8c;
+      color: #Ed2d8c; }
 
 /* Buttons */
 a.button {
@@ -892,6 +895,8 @@ hr {
         margin: 0 5px; } }
   .projects-filter a:last-child:after {
     display: none; }
+  .no-touch .projects-filter a:hover {
+    color: #Ed2d8c; }
   .projects-filter a.active {
     color: #Ed2d8c; }
 
@@ -917,12 +922,13 @@ hr {
   margin: 0;
   padding: 0;
   margin-top: 20px; }
+  .no-touch .projects .entry h4:hover {
+    text-decoration: underline; }
 
-.no-touch .projects .entry a:hover img {
-  filter: brightness(105%); }
-
-.no-touch .projects .entry a:hover h4 {
-  text-decoration: underline; }
+.projects .entry img {
+  transition: .25s ease-in-out; }
+  .no-touch .projects .entry img:hover {
+    filter: brightness(105%); }
 
 /*=====================================================*/
 /* Project Header
@@ -1051,12 +1057,13 @@ hr {
   margin: 0;
   padding: 0;
   margin-top: 20px; }
+  .no-touch .related-projects .entries .entry h4:hover {
+    text-decoration: underline; }
 
-.no-touch .related-projects .entries .entry a:hover img {
-  filter: brightness(105%); }
-
-.no-touch .related-projects .entries .entry a:hover h4 {
-  text-decoration: underline; }
+.related-projects .entries .entry img {
+  transition: .65s ease-in-out; }
+  .no-touch .related-projects .entries .entry img:hover {
+    filter: brightness(105%); }
 
 /*=====================================================*/
 /* About
