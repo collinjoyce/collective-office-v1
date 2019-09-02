@@ -27,24 +27,6 @@ $(document).ready(function(){
     });
     
     
-    // Fade Images
-    var images = $('.section img');
-    images.each(function(i, image) {
-        var image = $(image);
-        if (image.visible(true)) {
-            image.addClass('is-visible'); 
-        }
-    });
-    $(window).scroll(function(event) {
-        images.each(function(i, image) {
-            var image = $(image);
-            if (image.visible(true)) {
-                image.addClass('is-visible'); 
-            }
-        });
-    });
-    
-    
     // Filter Projects
     $('#projects-filter a').click(function(){
         $('#projects-filter a').removeClass('active');
@@ -61,6 +43,32 @@ $(document).ready(function(){
             });
         }
         return false;
+    });
+    
+    
+    // Fade Images
+    var images = $('.section img');
+    images.each(function(i, image) {
+        var image = $(image);
+        if (image.visible(true)) {
+            image.addClass('is-visible'); 
+        }
+    });
+    $(window).scroll(function(event) {
+        images.each(function(i, image) {
+            var image = $(image);
+            if (image.visible(true)) {
+                image.addClass('is-visible'); 
+            }
+        });
+    });
+    $('#projects-filter a').click(function(event) {
+        images.each(function(i, image) {
+            var image = $(image);
+            if (image.visible(true)) {
+                image.addClass('is-visible'); 
+            }
+        });
     });
     
         
