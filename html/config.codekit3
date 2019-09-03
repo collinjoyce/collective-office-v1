@@ -150,6 +150,22 @@
 		"sC": 1,
 		"tS": 0
 		},
+	"/cpresources/.gitignore": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/cpresources/.gitignore",
+		"oF": 0
+		},
+	"/index.php": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/index.php",
+		"oF": 0
+		},
 	"/static-templates/about.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -702,6 +718,14 @@
 		"hM": 0,
 		"oA": 0,
 		"oAP": "/static-templates/projects.html",
+		"oF": 0
+		},
+	"/web.config": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/web.config",
 		"oF": 0
 		}
 	},
