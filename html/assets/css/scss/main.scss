@@ -293,12 +293,9 @@ hr                                                      { @include reset(everyth
 /*=====================================================*/
 
 .projects-filter                                        { display: flex; }
-.projects-filter a                                      { @extend .font-2; color: $color-grey;
-                                                            @include mq(below,600px) { font-size: 12px; }
-                                                            &:after { content: '/'; display: inline-block; margin: 0 10px; color: $color-grey-light;
-                                                                @include mq(below,600px) { margin: 0 5px; }
-                                                            }
-                                                            &:last-child:after { display: none; }
+.projects-filter a                                      { @extend .font-2; margin-right: 15px; color: $color-grey;
+                                                            @include mq(below,600px) { margin-right: 10px; font-size: 12px; }
+                                                            &:last-child { margin-right: 0; }
                                                             .no-touch &:hover { color: $color-magenta; }
                                                             &.active { color: $color-magenta; }
                                                         }

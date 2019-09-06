@@ -881,20 +881,14 @@ hr {
   display: flex; }
 
 .projects-filter a {
+  margin-right: 15px;
   color: #999; }
   @media only screen and (max-width: 600px) {
     .projects-filter a {
+      margin-right: 10px;
       font-size: 12px; } }
-  .projects-filter a:after {
-    content: '/';
-    display: inline-block;
-    margin: 0 10px;
-    color: #ccc; }
-    @media only screen and (max-width: 600px) {
-      .projects-filter a:after {
-        margin: 0 5px; } }
-  .projects-filter a:last-child:after {
-    display: none; }
+  .projects-filter a:last-child {
+    margin-right: 0; }
   .no-touch .projects-filter a:hover {
     color: #Ed2d8c; }
   .projects-filter a.active {
