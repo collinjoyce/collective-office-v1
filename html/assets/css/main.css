@@ -1045,8 +1045,11 @@ hr {
   margin: 0 -20px -80px -20px; }
 
 .related-projects .entries .entry {
-  flex-basis: 50%;
+  flex-basis: 25%;
   padding: 0 20px 80px 20px; }
+  @media only screen and (max-width: 900px) {
+    .related-projects .entries .entry {
+      flex-basis: 50%; } }
   @media only screen and (max-width: 600px) {
     .related-projects .entries .entry {
       flex-basis: 100%; } }

@@ -381,7 +381,8 @@ hr                                                      { @include reset(everyth
 
 .related-projects h2                                    { @extend .subhead; @include reset(spacing); margin-bottom: 40px; }
 .related-projects .entries                              { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
-.related-projects .entries .entry                       { flex-basis: 50%; padding: 0 20px 80px 20px; 
+.related-projects .entries .entry                       { flex-basis: 25%; padding: 0 20px 80px 20px; 
+                                                            @include mq(below,900px) { flex-basis: 50%; }
                                                             @include mq(below,600px) { flex-basis: 100%; }
                                                         }
 .related-projects .entries .entry h4                    { @include reset(spacing); @extend .header; margin-top: 20px; color: $color-grey; }
