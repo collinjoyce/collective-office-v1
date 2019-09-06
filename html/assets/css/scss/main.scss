@@ -420,7 +420,7 @@ hr                                                      { @include reset(everyth
 
 .about p.partners                                       { margin-top: 40px }
 .about p.partners strong                                { color: $color-magenta; font-weight: normal; }
-
+.about p.partners a                                     { border-bottom: none; }
 
 
 
