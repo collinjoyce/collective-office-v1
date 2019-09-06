@@ -220,8 +220,10 @@ body.has-overlay                                        { overflow: hidden; }
 /* Footer
 /*=====================================================*/
 
-.footer                                                 { display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1400px; margin: 0 auto; padding: 0 40px 20px; margin-top: 80px; 
-                                                            @include mq(below,600px) { margin-top: 60px; }
+.footer                                                 { display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1600px; margin: 0 auto; padding: 0 100px 20px 100px; margin-top: 80px; 
+                                                            @include mq(below,1200px) { padding: 0 80px 20px 80px; }
+                                                            @include mq(below,900px) { padding: 0 60px 20px 60px; } 
+                                                            @include mq(below,600px) { padding: 0 30px 10px 30px; margin-top: 60px; }
                                                         }
 
 .footer .footer-contact                                 { display: flex; flex-basis: 50%; flex-wrap: wrap;
