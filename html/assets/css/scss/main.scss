@@ -357,7 +357,7 @@ hr                                                      { @include reset(everyth
 /* Project Images
 /*=====================================================*/
 
-.project-images img                                     { display: block; min-width: 200px; margin-bottom: 40px; } /* min-width prevents weird flexbox+img sizing issues */
+.project-images img                                     { display: block; align-self: center; min-width: 200px; margin-bottom: 40px; } /* min-width prevents weird flexbox+img sizing issues */
 .project-images .group                                  { display: flex; margin: 0 -20px; 
                                                             &.is-2 { @include mq(below,600px) { flex-wrap: wrap; } }
                                                             &.is-3 { @include mq(below,800px) { flex-wrap: wrap; } }

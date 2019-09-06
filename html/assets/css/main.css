@@ -999,6 +999,7 @@ hr {
 /*=====================================================*/
 .project-images img {
   display: block;
+  align-self: center;
   min-width: 200px;
   margin-bottom: 40px; }
 
