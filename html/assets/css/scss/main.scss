@@ -184,14 +184,16 @@ body.has-overlay                                        { overflow: hidden; }
 .masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 40px; background-color: $color-white; 
                                                             @include mq(below,600px) { padding: 0 30px; }
                                                         }
-.masthead .logo                                         { position: relative; z-index: 1001; }
-.masthead .logo svg                                     { height: 20px; width: 168px; fill: $color-magenta; color: #999;
+.masthead .logo                                         { position: relative; z-index: 1001; align-self: center; }
+.masthead .logo a                                       { display: block; }
+.masthead .logo svg                                     { height: 20px; width: 140px; fill: $color-magenta; color: #999;
                                                             @include mq(below,600px) {
                                                                 body.has-overlay & { fill: #fff; color: #fff; } /* Ref: https://tympanus.net/codrops/2015/07/16/styling-svg-use-content-css/ */
                                                             }
                                                         }
-.masthead .primary-nav                                  { display: block; 
-                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 999; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 40px 40px 40px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
+.masthead .nav                                          { align-self: center; }
+.masthead .primary-nav                                  { display: block;
+                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 999; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 30px 30px 30px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
                                                             body.has-overlay & { display: block; }
                                                         }
 .masthead .primary-nav a                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-grey; margin-right: 20px;

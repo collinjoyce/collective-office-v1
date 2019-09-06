@@ -625,11 +625,15 @@ body.has-overlay {
 
 .masthead .logo {
   position: relative;
-  z-index: 1001; }
+  z-index: 1001;
+  align-self: center; }
+
+.masthead .logo a {
+  display: block; }
 
 .masthead .logo svg {
   height: 20px;
-  width: 168px;
+  width: 140px;
   fill: #Ed2d8c;
   color: #999; }
   @media only screen and (max-width: 600px) {
@@ -638,6 +642,9 @@ body.has-overlay {
       body.has-overlay .masthead .logo svg {
         fill: #fff;
         color: #fff; } }
+
+.masthead .nav {
+  align-self: center; }
 
 .masthead .primary-nav {
   display: block; }
@@ -650,7 +657,7 @@ body.has-overlay {
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 120px 40px 40px 40px;
+      padding: 120px 30px 30px 30px;
       background-color: rgba(237, 45, 140, 0.9);
       overflow: hidden; } }
   body.has-overlay .masthead .primary-nav {
