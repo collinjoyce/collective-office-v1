@@ -478,6 +478,9 @@ a.social-button {
   font-size: 21px;
   font-weight: normal;
   color: #999; }
+  @media only screen and (max-width: 900px) {
+    .lede, .project-header .description p, .about .lede {
+      font-size: 18px; } }
 
 .body, .project-credits ul p, .about p, .news p {
   font-size: 15px;
@@ -770,9 +773,15 @@ body.has-overlay {
 /* Layout
 /*=====================================================*/
 .section {
-  max-width: 1400px;
-  padding: 0 40px;
+  max-width: 1600px;
+  padding: 0 100px;
   margin: 80px auto; }
+  @media only screen and (max-width: 1200px) {
+    .section {
+      padding: 0 80px; } }
+  @media only screen and (max-width: 900px) {
+    .section {
+      padding: 0 60px; } }
   @media only screen and (max-width: 600px) {
     .section {
       padding: 0 30px;
@@ -795,10 +804,16 @@ hr {
   border: none;
   list-style: none;
   display: block;
-  max-width: 1400px;
+  max-width: 1600px;
   height: 1px;
-  padding: 0 40px;
+  padding: 0 100px;
   margin: 80px auto; }
+  @media only screen and (max-width: 1200px) {
+    hr {
+      padding: 0 80px; } }
+  @media only screen and (max-width: 900px) {
+    hr {
+      padding: 0 60px; } }
   @media only screen and (max-width: 600px) {
     hr {
       padding: 0 30px;

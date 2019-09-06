@@ -117,7 +117,9 @@ a.social-button                                         { height: 40px; width: 4
                                                         }
 .subhead                                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-magenta; }
 .subhead-small                                          { @extend .font-1; font-size: 12px; font-weight: 500; @include caps; color: $color-grey; }
-.lede                                                   { @extend .font-2; font-size: 21px; font-weight: normal; color: $color-grey; }
+.lede                                                   { @extend .font-2; font-size: 21px; font-weight: normal; color: $color-grey; 
+                                                            @include mq(below,900px) { font-size: 18px; }
+                                                        }
 .body                                                   { @extend .font-2; font-size: 15px; font-weight: normal; color: $color-grey; 
                                                             a { border-bottom: 1px solid $color-grey-light; 
                                                                 .no-touch &:hover { border-color: $color-magenta; color: $color-magenta; }
@@ -246,13 +248,17 @@ body.has-overlay                                        { overflow: hidden; }
 /* Layout
 /*=====================================================*/
 
-.section                                                { max-width: 1400px; padding: 0 40px; margin: 80px auto; 
+.section                                                { max-width: 1600px; padding: 0 100px; margin: 80px auto;
+                                                            @include mq(below,1200px) { padding: 0 80px; }
+                                                            @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
                                                         }
 .section img                                            { opacity: 0.1; transition: 0.65s opacity ease-in-out;
                                                             &.is-visible { opacity: 1.0; }
                                                         }
-hr                                                      { @include reset(everything); display: block; max-width: 1400px; height: 1px; padding: 0 40px; margin: 80px auto; 
+hr                                                      { @include reset(everything); display: block; max-width: 1600px; height: 1px; padding: 0 100px; margin: 80px auto; 
+                                                            @include mq(below,1200px) { padding: 0 80px; }
+                                                            @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
                                                             &:after { content: ''; display: block; height: 1px; background-color: $color-grey-light; }
                                                         }
