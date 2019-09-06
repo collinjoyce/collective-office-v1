@@ -312,8 +312,8 @@ hr                                                      { @include reset(everyth
                                                             @include mq(below,900px) { flex-basis: 50%; }
                                                             @include mq(below,600px) { flex-basis: 100%; }
                                                         }
-.projects .entry h4                                     { @include reset(spacing); @extend .header; margin-top: 20px; 
-                                                            .no-touch &:hover { text-decoration: underline; }
+.projects .entry h4                                     { @include reset(spacing); @extend .header; margin-top: 20px; color: $color-grey; 
+                                                            .no-touch &:hover { text-decoration: underline; color: $color-magenta; }
                                                         }
 .projects .entry img                                    { transition: .25s ease-in-out;
                                                             .no-touch &:hover { filter: brightness(105%); }
@@ -380,8 +380,8 @@ hr                                                      { @include reset(everyth
 .related-projects .entries .entry                       { flex-basis: 50%; padding: 0 20px 80px 20px; 
                                                             @include mq(below,600px) { flex-basis: 100%; }
                                                         }
-.related-projects .entries .entry h4                    { @include reset(spacing); @extend .header; margin-top: 20px; 
-                                                            .no-touch &:hover { text-decoration: underline; }
+.related-projects .entries .entry h4                    { @include reset(spacing); @extend .header; margin-top: 20px; color: $color-grey;
+                                                            .no-touch &:hover { text-decoration: underline; color: $color-magenta; }
                                                         }
 .related-projects .entries .entry img                   { transition: .65s ease-in-out;
                                                             .no-touch &:hover { filter: brightness(105%); }

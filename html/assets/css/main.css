@@ -915,9 +915,11 @@ hr {
 .projects .entry h4 {
   margin: 0;
   padding: 0;
-  margin-top: 20px; }
+  margin-top: 20px;
+  color: #999; }
   .no-touch .projects .entry h4:hover {
-    text-decoration: underline; }
+    text-decoration: underline;
+    color: #Ed2d8c; }
 
 .projects .entry img {
   transition: .25s ease-in-out; }
@@ -1050,9 +1052,11 @@ hr {
 .related-projects .entries .entry h4 {
   margin: 0;
   padding: 0;
-  margin-top: 20px; }
+  margin-top: 20px;
+  color: #999; }
   .no-touch .related-projects .entries .entry h4:hover {
-    text-decoration: underline; }
+    text-decoration: underline;
+    color: #Ed2d8c; }
 
 .related-projects .entries .entry img {
   transition: .65s ease-in-out; }
