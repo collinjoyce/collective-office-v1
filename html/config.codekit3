@@ -150,6 +150,14 @@
 		"sC": 1,
 		"tS": 0
 		},
+	"/cpresources/.gitignore": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/cpresources/.gitignore",
+		"oF": 0
+		},
 	"/cpresources/158f6ff9/css/_cp.scss": {
 		"aP": 0,
 		"bl": 0,
@@ -1248,67 +1256,6 @@
 		"opt": 0,
 		"plM": 52780316221407,
 		"prP": 0
-		},
-	"/cpresources/22dc660b/rebrand.css": {
-		"aP": 1,
-		"bl": 0,
-		"ft": 16,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand-min.css",
-		"oF": 0,
-		"oS": 3
-		},
-	"/cpresources/22dc660b/rebrand.css.map": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand.css.map",
-		"oF": 0
-		},
-	"/cpresources/22dc660b/rebrand.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/22dc660b/rebrand.min.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand.min-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/22dc660b/rebrand.min.js.map": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand.min.js.map",
-		"oF": 0
-		},
-	"/cpresources/22dc660b/rebrand.scss": {
-		"aP": 0,
-		"bl": 0,
-		"dP": 10,
-		"dS": 0,
-		"ft": 4,
-		"ma": 0,
-		"oA": 0,
-		"oAP": "/cpresources/22dc660b/rebrand.css",
-		"oF": 0,
-		"oS": 0,
-		"uL": 1
 		},
 	"/cpresources/36780a1a/UpdatesWidget.js": {
 		"bF": 0,
@@ -3137,36 +3084,6 @@
 		"oAP": "/cpresources/79906322/velocity.js.map",
 		"oF": 0
 		},
-	"/cpresources/876d96df/editsection.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/876d96df/editsection-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/876d96df/editsection.min.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/876d96df/editsection.min-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/876d96df/editsection.min.js.map": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/cpresources/876d96df/editsection.min.js.map",
-		"oF": 0
-		},
 	"/cpresources/8c24874/RecentEntriesWidget.js": {
 		"bF": 0,
 		"ft": 64,
@@ -3404,36 +3321,6 @@
 		"oAP": "/cpresources/ea108889/d3.js.map",
 		"oF": 0
 		},
-	"/cpresources/f954797a/sites.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/f954797a/sites-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/f954797a/sites.min.js": {
-		"bF": 0,
-		"ft": 64,
-		"ma": 0,
-		"mi": 1,
-		"oA": 0,
-		"oAP": "/cpresources/f954797a/sites.min-min.js",
-		"oF": 0,
-		"sC": 1,
-		"tS": 0
-		},
-	"/cpresources/f954797a/sites.min.js.map": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/cpresources/f954797a/sites.min.js.map",
-		"oF": 0
-		},
 	"/cpresources/fc5da926/jquery.fileupload.js": {
 		"bF": 0,
 		"ft": 64,
@@ -3451,6 +3338,14 @@
 		"hM": 0,
 		"oA": 0,
 		"oAP": "/cpresources/fc5da926/jquery.fileupload.js.map",
+		"oF": 0
+		},
+	"/index.php": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/index.php",
 		"oF": 0
 		},
 	"/static-templates/about.html": {
@@ -4005,6 +3900,14 @@
 		"hM": 0,
 		"oA": 0,
 		"oAP": "/static-templates/projects.html",
+		"oF": 0
+		},
+	"/web.config": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/web.config",
 		"oF": 0
 		}
 	},
