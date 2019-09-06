@@ -917,14 +917,16 @@ hr {
   padding: 0;
   margin-top: 20px;
   color: #999; }
-  .no-touch .projects .entry h4:hover {
-    text-decoration: underline;
-    color: #Ed2d8c; }
 
 .projects .entry img {
   transition: .25s ease-in-out; }
-  .no-touch .projects .entry img:hover {
-    filter: brightness(105%); }
+
+.no-touch .projects .entry a:hover h4 {
+  text-decoration: underline;
+  color: #Ed2d8c; }
+
+.no-touch .projects .entry a:hover img {
+  filter: brightness(105%); }
 
 /*=====================================================*/
 /* Project Header
@@ -1054,14 +1056,16 @@ hr {
   padding: 0;
   margin-top: 20px;
   color: #999; }
-  .no-touch .related-projects .entries .entry h4:hover {
-    text-decoration: underline;
-    color: #Ed2d8c; }
 
 .related-projects .entries .entry img {
   transition: .65s ease-in-out; }
-  .no-touch .related-projects .entries .entry img:hover {
-    filter: brightness(105%); }
+
+.no-touch .related-projects .entries .entry a:hover h4 {
+  text-decoration: underline;
+  color: #Ed2d8c; }
+
+.no-touch .related-projects .entries .entry a:hover img {
+  filter: brightness(105%); }
 
 /*=====================================================*/
 /* About
