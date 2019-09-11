@@ -935,17 +935,21 @@ hr {
 .projects {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -20px -80px -20px; }
+  margin: 0 -20px -60px -20px; }
+  @media only screen and (max-width: 600px) {
+    .projects {
+      margin-bottom: -40px; } }
 
 .projects .entry {
   flex-basis: 33.33%;
-  padding: 0 20px 80px 20px; }
+  padding: 0 20px 60px 20px; }
   @media only screen and (max-width: 900px) {
     .projects .entry {
       flex-basis: 50%; } }
   @media only screen and (max-width: 600px) {
     .projects .entry {
-      flex-basis: 100%; } }
+      flex-basis: 100%;
+      padding-bottom: 40px; } }
 
 .projects .entry h4 {
   margin: 0;
@@ -1078,17 +1082,21 @@ hr {
 .related-projects .entries {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -20px -80px -20px; }
+  margin: 0 -20px -60px -20px; }
+  @media only screen and (max-width: 600px) {
+    .related-projects .entries {
+      margin-bottom: -40px; } }
 
 .related-projects .entries .entry {
   flex-basis: 25%;
-  padding: 0 20px 80px 20px; }
+  padding: 0 20px 60px 20px; }
   @media only screen and (max-width: 900px) {
     .related-projects .entries .entry {
       flex-basis: 50%; } }
   @media only screen and (max-width: 600px) {
     .related-projects .entries .entry {
-      flex-basis: 100%; } }
+      flex-basis: 100%;
+      padding-bottom: 40px; } }
 
 .related-projects .entries .entry h4 {
   margin: 0;
@@ -1180,11 +1188,11 @@ hr {
 .news {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -20px -80px -20px; }
+  margin: 0 -20px -60px -20px; }
 
 .news .entry {
   flex-basis: 33.33%;
-  padding: 0 20px 80px 20px; }
+  padding: 0 20px 60px 20px; }
   @media only screen and (max-width: 800px) {
     .news .entry {
       flex-basis: 100%; } }

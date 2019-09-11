@@ -319,10 +319,12 @@ hr                                                      { @include reset(everyth
 /* Projects
 /*=====================================================*/
 
-.projects                                               { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
-.projects .entry                                        { flex-basis: 33.33%; padding: 0 20px 80px 20px; 
+.projects                                               { display: flex; flex-wrap: wrap; margin: 0 -20px -60px -20px; 
+                                                            @include mq(below,600px) { margin-bottom: -40px; }
+                                                        }
+.projects .entry                                        { flex-basis: 33.33%; padding: 0 20px 60px 20px; 
                                                             @include mq(below,900px) { flex-basis: 50%; }
-                                                            @include mq(below,600px) { flex-basis: 100%; }
+                                                            @include mq(below,600px) { flex-basis: 100%; padding-bottom: 40px; }
                                                         }
 .projects .entry h4                                     { @include reset(spacing); @extend .header; margin-top: 20px; color: $color-grey; 
                                                         }
@@ -392,10 +394,12 @@ hr                                                      { @include reset(everyth
 /*=====================================================*/
 
 .related-projects h2                                    { @extend .subhead; @include reset(spacing); margin-bottom: 40px; }
-.related-projects .entries                              { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
-.related-projects .entries .entry                       { flex-basis: 25%; padding: 0 20px 80px 20px; 
+.related-projects .entries                              { display: flex; flex-wrap: wrap; margin: 0 -20px -60px -20px; 
+                                                            @include mq(below,600px) { margin-bottom: -40px; }
+                                                        }
+.related-projects .entries .entry                       { flex-basis: 25%; padding: 0 20px 60px 20px; 
                                                             @include mq(below,900px) { flex-basis: 50%; }
-                                                            @include mq(below,600px) { flex-basis: 100%; }
+                                                            @include mq(below,600px) { flex-basis: 100%; padding-bottom: 40px; }
                                                         }
 .related-projects .entries .entry h4                    { @include reset(spacing); @extend .header; margin-top: 20px; color: $color-grey; }
 .related-projects .entries .entry img                   { transition: .65s ease-in-out; }
@@ -440,8 +444,8 @@ hr                                                      { @include reset(everyth
 /* News
 /*=====================================================*/
 
-.news                                                   { display: flex; flex-wrap: wrap; margin: 0 -20px -80px -20px; }
-.news .entry                                            { flex-basis: 33.33%; padding: 0 20px 80px 20px;
+.news                                                   { display: flex; flex-wrap: wrap; margin: 0 -20px -60px -20px; }
+.news .entry                                            { flex-basis: 33.33%; padding: 0 20px 60px 20px;
                                                             @include mq(below,800px) { flex-basis: 100%; }
                                                         }
 .news h3                                                { @extend .header; @include reset(spacing); margin-bottom: 5px; }
