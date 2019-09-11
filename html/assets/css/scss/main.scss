@@ -181,7 +181,9 @@ body.has-overlay                                        { overflow: hidden; }
 /* Masthead
 /*=====================================================*/
 
-.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 40px; background-color: $color-white; 
+.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 100px; background-color: $color-white; 
+                                                            @include mq(below,1200px) { padding: 0 80px; }
+                                                            @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; }
                                                         }
 .masthead .logo                                         { position: relative; z-index: 1001; align-self: center; }
