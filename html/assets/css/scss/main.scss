@@ -172,6 +172,7 @@ form input[type="submit"]                               { @include reset(everyth
 /* BODY
 /*=====================================================*/
 
+body                                                    { padding-top: 100px; }
 body.has-overlay                                        { overflow: hidden; }
 
 
@@ -181,11 +182,12 @@ body.has-overlay                                        { overflow: hidden; }
 /* Masthead
 /*=====================================================*/
 
-.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; padding: 0 100px; background-color: $color-white; 
+.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; position: fixed; top: 0; width: 100%; height: 100px; padding: 0 100px; background-color: $color-white; border-bottom: 1px solid rgba($color-grey, 0.2); transition: top 0.1s ease-in-out;
                                                             @include mq(below,1200px) { padding: 0 80px; }
                                                             @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; }
                                                         }
+.masthead.is-up                                         { top: -100px; }
 .masthead .logo                                         { position: relative; z-index: 1001; align-self: center; }
 .masthead .logo a                                       { display: block; }
 .masthead .logo svg                                     { height: 20px; width: 140px; fill: $color-magenta; color: #999;
