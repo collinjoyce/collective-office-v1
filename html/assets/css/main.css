@@ -1088,7 +1088,7 @@ hr {
       margin-bottom: -40px; } }
 
 .related-projects .entries .entry {
-  flex-basis: 25%;
+  flex-basis: 33.33%;
   padding: 0 20px 60px 20px; }
   @media only screen and (max-width: 900px) {
     .related-projects .entries .entry {
@@ -1097,6 +1097,10 @@ hr {
     .related-projects .entries .entry {
       flex-basis: 100%;
       padding-bottom: 40px; } }
+
+@media only screen and (max-width: 900px) {
+  .related-projects .entries .entry:nth-child(n+3) {
+    display: none; } }
 
 .related-projects .entries .entry h4 {
   margin: 0;
