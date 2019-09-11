@@ -167,6 +167,17 @@ form input[type="submit"]                               { @include reset(everyth
 
 
 
+/*=====================================================*/
+/* Z-INDEX Map
+/*
+/* .hero-slider .slider_tabs = 900
+/* .masthead = 1000
+/* .masthead .primary-nav = 1100
+/* .masthead .logo = 1200
+/* .masthead .overlay-toggle = 1300
+/*=====================================================*/
+
+
 
 /*=====================================================*/
 /* BODY
@@ -182,13 +193,13 @@ body.has-overlay                                        { overflow: hidden; }
 /* Masthead
 /*=====================================================*/
 
-.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; position: fixed; top: 0; width: 100%; height: 100px; padding: 0 100px; background-color: $color-white; border-bottom: 1px solid rgba($color-grey, 0.2); transition: top 0.1s ease-in-out;
+.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; position: fixed; top: 0; z-index: 1000; width: 100%; height: 100px; padding: 0 100px; background-color: $color-white; border-bottom: 1px solid rgba($color-grey, 0.2); transition: top 0.1s ease-in-out;
                                                             @include mq(below,1200px) { padding: 0 80px; }
                                                             @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; }
                                                         }
 .masthead.is-up                                         { top: -100px; }
-.masthead .logo                                         { position: relative; z-index: 1001; align-self: center; }
+.masthead .logo                                         { position: relative; z-index: 1200; align-self: center; }
 .masthead .logo a                                       { display: block; }
 .masthead .logo svg                                     { height: 20px; width: 140px; fill: $color-magenta; color: #999;
                                                             @include mq(below,600px) {
@@ -197,7 +208,7 @@ body.has-overlay                                        { overflow: hidden; }
                                                         }
 .masthead .nav                                          { align-self: center; }
 .masthead .primary-nav                                  { display: block;
-                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 999; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 30px 30px 30px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
+                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 1100; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 30px 30px 30px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
                                                             body.has-overlay & { display: block; }
                                                         }
 .masthead .primary-nav a                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-grey; margin-right: 20px;
@@ -206,7 +217,7 @@ body.has-overlay                                        { overflow: hidden; }
                                                             @include mq(below,600px) { display: block; padding: 20px 0; font-size: 24px; text-transform: none; letter-spacing: 0; color: $color-white; }
                                                         }
 .masthead .overlay-toggle                               { display: none;
-                                                            @include mq(below,600px) { display: block; position: relative; z-index: 1000; }
+                                                            @include mq(below,600px) { display: block; position: relative; z-index: 1300; }
                                                         }
 .masthead .overlay-toggle .menu-icon                    { width: 18px; margin-right: 8px; 
                                                             .line { width: 18px; height: 2px; background-color: $color-grey; display: block; margin: 3px auto; transition: all 0.25s ease-in-out; }
@@ -295,7 +306,7 @@ hr                                                      { @include reset(everyth
 .hero-slider .slides                                    { height: 100%; width: 100%; overflow: hidden; }
 .hero-slider .slide                                     { -webkit-backface-visibility: hidden; display: block; height: 100%; width: 100%; background-repeat: no-repeat; background-size: cover; background-position: center center; background-attachment: fixed; }
 /* For ResponsiveSlides.js */
-.hero-slider .slider_tabs                               { display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 998; @include reset(list); }
+.hero-slider .slider_tabs                               { display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 900; @include reset(list); }
 .hero-slider .slider_tabs li                            { margin-right: 5px;
                                                             &:last-child { margin-right: 0; }
                                                         }
