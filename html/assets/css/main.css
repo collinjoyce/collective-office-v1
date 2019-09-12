@@ -904,6 +904,9 @@ hr {
   background-size: cover;
   background-position: center center;
   background-attachment: fixed; }
+  @media only screen and (max-width: 900px) {
+    .hero-slider .slide {
+      background-attachment: scroll; } }
 
 /* For ResponsiveSlides.js */
 .hero-slider .slider_tabs {

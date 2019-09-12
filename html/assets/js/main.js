@@ -28,6 +28,7 @@ $(document).ready(function(){
     
     
     // Masthead Reveal on Scroll Up
+    // Ref: https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c
     var didScroll;
     var lastScrollTop = 0;
     var delta = 5;

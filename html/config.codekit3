@@ -4787,6 +4787,105 @@
 		"opt": 0,
 		"q": 100
 		},
+	"/static-templates/fpo/covers/home/1.jpg": {
+		"ft": 16384,
+		"iS": 144422,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/1.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/2.jpg": {
+		"ft": 16384,
+		"iS": 606735,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/2.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/3.jpg": {
+		"ft": 16384,
+		"iS": 370783,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/3.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/4.jpg": {
+		"ft": 16384,
+		"iS": 672124,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/4.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 1,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/5.jpg": {
+		"ft": 16384,
+		"iS": 148821,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/5.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/6.jpg": {
+		"ft": 16384,
+		"iS": 509576,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/6.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/7.jpg": {
+		"ft": 16384,
+		"iS": 160614,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/7.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/8.jpg": {
+		"ft": 16384,
+		"iS": 196045,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/8.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/static-templates/fpo/covers/home/9.jpg": {
+		"ft": 16384,
+		"iS": 210245,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/static-templates/fpo/covers/home/9.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
 	"/static-templates/fpo/project-1/1.jpg": {
 		"ft": 16384,
 		"iS": 947168,
