@@ -1,0 +1,14 @@
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-contact">
+                <p>{{ siteSettings.studioAddress|nl2br }}</p>
+                <p><a href="tel:{{ siteSettings.phoneNumber }}">{{ siteSettings.phoneNumber }}</a><br><a href="{{ siteSettings.emailAddress }}">{{ siteSettings.emailAddress }}</a></p>
+            </div>
+            <div class="footer-social social-buttons">
+                <a href="{{ siteSettings.instagramUrl }}" target="_blank" class="social-button is-instagram"><svg><use xlink:href="/assets/img/social-sprite.svg#instagram"></use></svg></a>
+                <a href="siteSettings.linkedInUrl" target="_blank" class="social-button is-linkedin"><svg><use xlink:href="/assets/img/social-sprite.svg#linkedin"></use></svg></a>
+            </div>
+            <div class="footer-legal">
+                <p>&copy; {{ now.year }} Collective Office. Crafted by <a href="http://philzelnar.com">Phil Zelnar</a>.</p>
+            </div>
+        </div>

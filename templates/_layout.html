@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{% if pageTitle is defined %}{{ pageTitle }} | {% endif %}{{ siteSettings.siteTitle }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{% if pageDescription is defined %}{{ pageDescription }}{% else %}{{ siteSettings.siteDescription }}{% endif %}">
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:title" content="{% if pageTitle is defined %}{{ pageTitle }} | {% endif %}{{ siteSettings.siteTitle }}" />
+        <meta property="og:image" content="{% if pageImage is defined %}{{ pageImage }}{% else %}{{ siteUrl }}assets/icons/site/og-1200x630.png{% endif %}" />
+        <meta property="og:description" content="{% if pageDescription is defined %}{{ pageDescription }}{% else %}{{ siteSettings.siteDescription }}{% endif %}" />
+        <meta property="og:url" content="{{ craft.app.request.absoluteUrl }}" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{% if pageTitle is defined %}{{ pageTitle }} | {% endif %}{{ siteSettings.siteTitle }}">
+        <meta name="twitter:description" content="{% if pageDescription is defined %}{{ pageDescription }}{% else %}{{ siteSettings.siteDescription }}{% endif %}">
+        <meta name="twitter:image" content="{% if pageImage is defined %}{{ pageImage }}{% else %}{{ siteUrl }}assets/icons/site/og-1200x630.png{% endif %}">
+        <meta name="robots" content="{% if hidePage is defined %}noindex,nofollow{% else %}index,follow{% endif %}">
+        <meta name="google-site-verification" content="LRhrFVNUXJVi5RuWNIb5_N3K5K0yxVy_3TkBpe2ufbg" />
+        <link rel="icon" type="image/png" href="/assets/icons/site/favicon-32x32.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="/assets/icons/site/favicon-16x16.png" sizes="16x16" />
+        <link rel="icon" href="/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="//fast.fonts.net/cssapi/a57aaf16-a9da-4e1f-b4e3-2f69e29148ad.css"/>
+        <link rel="stylesheet" href="/assets/css/main.css">
+        <script src="/assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+    
+    <body>
+        
+        {% include '_partials/masthead.html' %}
+                
+        {% block content %}
+        {% endblock %}
+        
+        {% include '_partials/footer.html' %}
+        
+        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+        <script src="/assets/js/main-min.js"></script>
+                
+        {% if not craft.app.request.isLivePreview %}
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','{{ siteSettings.googleAnalyticsId }}','auto');ga('send','pageview');
+        </script>
+        {% endif %}
+        
+    </body>
+</html>
