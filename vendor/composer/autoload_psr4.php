@@ -24,6 +24,8 @@ return array(
     'voku\\tests\\' => array($vendorDir . '/voku/portable-utf8/tests'),
     'voku\\helper\\' => array($vendorDir . '/voku/anti-xss/src/voku/helper', $vendorDir . '/voku/email-check/src/voku/helper', $vendorDir . '/voku/urlify/src/voku/helper'),
     'voku\\' => array($vendorDir . '/voku/portable-utf8/src/voku', $vendorDir . '/voku/stop-words/src/voku'),
+    'verbb\\supertable\\' => array($vendorDir . '/verbb/super-table/src'),
+    'typedlinkfield\\' => array($vendorDir . '/sebastianlenz/linkfield/src'),
     'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'modules\\' => array($baseDir . '/modules'),
     'mikehaertl\\shellcommand\\' => array($vendorDir . '/mikehaertl/php-shellcommand/src'),
