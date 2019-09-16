@@ -73,6 +73,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         array (
             'creocoder\\nestedsets\\' => 21,
             'craftcms\\oauth2\\client\\' => 23,
+            'craft\\redactor\\' => 15,
             'craft\\composer\\' => 15,
             'craft\\' => 6,
             'cebe\\markdown\\' => 14,
@@ -273,6 +274,10 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craftcms\\oauth2\\client\\' => 
         array (
             0 => __DIR__ . '/..' . '/craftcms/oauth2-craftid/src',
+        ),
+        'craft\\redactor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/craftcms/redactor/src',
         ),
         'craft\\composer\\' => 
         array (
@@ -2973,6 +2978,17 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craft\\records\\Volume' => __DIR__ . '/..' . '/craftcms/cms/src/records/Volume.php',
         'craft\\records\\VolumeFolder' => __DIR__ . '/..' . '/craftcms/cms/src/records/VolumeFolder.php',
         'craft\\records\\Widget' => __DIR__ . '/..' . '/craftcms/cms/src/records/Widget.php',
+        'craft\\redactor\\Field' => __DIR__ . '/..' . '/craftcms/redactor/src/Field.php',
+        'craft\\redactor\\FieldData' => __DIR__ . '/..' . '/craftcms/redactor/src/FieldData.php',
+        'craft\\redactor\\Plugin' => __DIR__ . '/..' . '/craftcms/redactor/src/Plugin.php',
+        'craft\\redactor\\assets\\field\\FieldAsset' => __DIR__ . '/..' . '/craftcms/redactor/src/assets/field/FieldAsset.php',
+        'craft\\redactor\\assets\\redactor\\RedactorAsset' => __DIR__ . '/..' . '/craftcms/redactor/src/assets/redactor/RedactorAsset.php',
+        'craft\\redactor\\controllers\\DefaultController' => __DIR__ . '/..' . '/craftcms/redactor/src/controllers/DefaultController.php',
+        'craft\\redactor\\events\\RegisterLinkOptionsEvent' => __DIR__ . '/..' . '/craftcms/redactor/src/events/RegisterLinkOptionsEvent.php',
+        'craft\\redactor\\events\\RegisterPluginPathsEvent' => __DIR__ . '/..' . '/craftcms/redactor/src/events/RegisterPluginPathsEvent.php',
+        'craft\\redactor\\migrations\\Install' => __DIR__ . '/..' . '/craftcms/redactor/src/migrations/Install.php',
+        'craft\\redactor\\migrations\\m180430_204710_remove_old_plugins' => __DIR__ . '/..' . '/craftcms/redactor/src/migrations/m180430_204710_remove_old_plugins.php',
+        'craft\\redactor\\migrations\\m190225_003922_split_cleanup_html_settings' => __DIR__ . '/..' . '/craftcms/redactor/src/migrations/m190225_003922_split_cleanup_html_settings.php',
         'craft\\search\\SearchQuery' => __DIR__ . '/..' . '/craftcms/cms/src/search/SearchQuery.php',
         'craft\\search\\SearchQueryTerm' => __DIR__ . '/..' . '/craftcms/cms/src/search/SearchQueryTerm.php',
         'craft\\search\\SearchQueryTermGroup' => __DIR__ . '/..' . '/craftcms/cms/src/search/SearchQueryTermGroup.php',
