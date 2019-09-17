@@ -1,0 +1,143 @@
+{% extends "_layout" %}
+{% set pageTitle, pageDescription = entry.title, entry.seoTeaser %}
+{% set pageImage = "" %}{% for image in entry.seoImage.limit(1).all() %}{% set pageImage = image.url('ratioCropLarge') %}{% endfor %}
+
+{% block content %}
+
+
+        <!-- Hero -->
+        {% for image in entry.aboutHero.limit(1).all() %}
+        <div class="hero" style="background-image: url('{{ image.url('ratioCropLarge') }}')"></div>
+        {% endfor %}
+        
+        
+        <!-- Page Title -->
+        <h1 class="hidden">About</h1>
+        
+        
+        <!-- Lede -->
+        <div class="section">
+            <div class="about">
+                <p class="lede">{{ entry.aboutLede }}</p>
+            </div>
+        </div>
+        
+        
+        <!-- Services -->
+        <div class="section">
+            <div class="about">
+                <h2>Services</h2>
+                
+                {% set rows = entry.services|length %}
+                <div class="columns is-{% if rows == 3 or rows == 5 or rows == 9 %}3{% else %}4{% endif %}">
+                    
+                    {% for row in entry.services.all() %}
+                    <div class="column">
+                        <img src="{% for image in row.image.all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                        <h3>{{ row.service }}</h3>
+                        <p>{{ row.description }}</p>
+                        {% if row.services|length %}
+                        <h5>Services</h5>
+                        <p class="small">{{ row.services }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Breaker Image -->
+        <div class="section">
+            {% for image in entry.teamImage.limit(1).all() %}
+            <img src="{{ image.url('ratioCropLarge') }}" srcset="{{ image.url('ratioCropMedium') }} {{ image.getWidth('ratioCropMedium') }}w, {{ image.url('ratioCropLarge') }} {{ image.getWidth('ratioCropLarge') }}w" alt="">
+            {% endfor %}
+        </div>
+        
+        
+        <!-- Team -->
+        <div class="section">
+            <div class="about">
+                <h2>Team</h2>
+                
+                {% set rows = entry.team|length %}
+                <div class="columns is-{% if rows == 3 or rows == 5 or rows == 9 %}3{% else %}4{% endif %}">
+                    
+                    {% for row in entry.team.all() %}
+                    <div class="column">
+                        <h3>{{ row.bioName }}{% if row.credentials|length %}, {{ row.credentials }}{% endif %}</h3>
+                        <h5>{{ row.role }}</h5>
+                        {{ row.biography }}
+                    </div>
+                    {% endfor %}
+ 
+                </div>
+                <p class="small partners"><strong>Partners & Consultants:</strong> 
+                    {% for row in entry.partners.all() %}
+                    {% if not row.linkHref.isEmpty() %}<a href="{{ row.linkHref }}" target="_blank">{% endif %}{{ row.partner }}{% if not row.linkHref.isEmpty() %}</a>{% endif %}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                    / <strong>Past Collaborators:</strong> 
+                    {% for row in entry.collaborators.all() %}
+                    {% if not row.linkHref.isEmpty() %}<a href="{{ row.linkHref }}" target="_blank">{% endif %}{{ row.collaborator }}{% if not row.linkHref.isEmpty() %}</a>{% endif %}{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        
+        
+        <!-- Breaker Image -->
+        <div class="section">
+            {% for image in entry.contactImage.limit(1).all() %}
+            <img src="{{ image.url('ratioCropLarge') }}" srcset="{{ image.url('ratioCropMedium') }} {{ image.getWidth('ratioCropMedium') }}w, {{ image.url('ratioCropLarge') }} {{ image.getWidth('ratioCropLarge') }}w" alt="">
+            {% endfor %}
+        </div>
+        
+        
+        <!-- Contact -->
+        <div class="section">
+            <div class="about">
+                <h2>Contact</h2>
+                <p class="lede">Think we&rsquo;d be a good fit for your project? Great! Send us an email to <a href="{{ siteSettings.emailAddress }}">{{ siteSettings.emailAddress }}</a>, we can&rsquo;t wait to connect with you. </p>
+                <div class="columns is-4">
+                    <div class="column">
+                        <h3>Studio</h3>
+                        <p>{{ siteSettings.studioAddress|nl2br }}</p>
+                        <p><a href="tel:{{ siteSettings.phoneNumber }}">{{ siteSettings.phoneNumber }}</a><br><a href="{{ siteSettings.emailAddress }}">{{ siteSettings.emailAddress }}</a></p>
+                    </div>
+                    <div class="column">
+                        <h3>Employment</h3>
+                        <p>We are always interested in meeting candidates that might be a good fit for our team. Submit work samples, a statement of intent and your resume to <a href="mailto:careers@collectiveoffice.com">careers@collectiveoffice.com</a> (1 mb max. size). No phone calls please.</p>
+                    </div>
+                    <div class="column">
+                        <h3>Basecamp</h3>
+                        <p>Collective clients and partners with access to our Basecamp can log in below to access projects.</p>
+                        <form action="https://launchpad.37signals.com/authenticate" method="post" target="_blank" class="basecamp">
+                            <input id="product" name="product" type="hidden" value="basecamp">
+                            <input id="subdomain" name="subdomain" type="hidden" value="collectiveoffice">
+                            <div class="form-item">
+                                <label for="email">Username</label>
+                                <input name="email" type="email" placeholder="Username&hellip;" required="required" />
+                            </div>
+                            <div class="form-item">
+                                <label for="email">Password</label>
+                                <input name="email" type="password" placeholder="Password&hellip;" required="required" />
+                            </div>
+                            <div class="form-item">
+                                <input type="submit" name="submit" id="submit" value="Submit">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="column">
+                        <h3>Webmail</h3>
+                        <p>Collective&rsquo;s team members and partners can access their accounts by logging into our webmail system.</p>
+                        <a href="https://s138105.gridserver.com/.tools/webmail/" target="_blank" class="button">Login</a>
+                    </div>    
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+
+
+{% endblock %}
