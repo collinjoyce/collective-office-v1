@@ -1,4 +1,9 @@
 {
-  "buttons": ["bold", "italic"],
-  "toolbarFixed": true
+  "buttons": ["bold", "italic", "link", "html"],
+  "toolbarFixed": true,
+  "pastePlainText": true,
+  "paragraphize": false,
+  "replaceDivs": false,
+  "linebreaks": true,
+  "enterKey": false
 }
