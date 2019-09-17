@@ -1,0 +1,40 @@
+{% extends "_layout" %}
+{% set pageTitle, pageDescription = entry.title, entry.seoTeaser %}
+{% set pageImage = "" %}{% for image in entry.seoImage.limit(1).all() %}{% set pageImage = image.url('ratioCropLarge') %}{% endfor %}
+
+{% block content %}
+
+
+        <!-- Page Title -->
+        <h1 class="hidden">{{ entry.title }}</h1>
+        
+        
+        <!-- News -->
+        <div class="section">
+            <div class="news">
+                
+                {% set query = craft.entries.section('newsPosts').orderBy('postDate desc') %}
+                {% for entry in query.all() %}
+                <div class="entry">
+                    <img src="{% for image in entry.image.limit(1).all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                    <h3>{{ entry.title }}</h3>
+                    <h5>{{ entry.postDate|date("M Y") }}</h5>
+                    {{ entry.body }}
+                    {% if entry.links|length %}                 
+                    <p class="small">
+                        {% for row in entry.links.all() %}
+                        <a href="{{ row.linkHref }}"{% if row.linkHref.getTarget()|length %} target="_blank"{% endif %}>{{ row.label }}</a>{{ not loop.last ? ' / ' }}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+        
+                
+        <hr>
+
+
+{% endblock %}
