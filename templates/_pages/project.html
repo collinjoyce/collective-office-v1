@@ -67,7 +67,7 @@
                     {% for entry in entry.relatedProjects.all() %}
                     <div class="entry">
                         <a href="{{ entry.url }}">
-                            <img src="{% for image in entry.thumbnailImage.all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                            <img src="{% for image in entry.thumbnailImage.limit(1).all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
                             <h4>{{ entry.title }}</h4>
                         </a>
                     </div>

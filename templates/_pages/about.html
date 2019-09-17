@@ -33,7 +33,7 @@
                     
                     {% for row in entry.services.all() %}
                     <div class="column">
-                        <img src="{% for image in row.image.all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                        <img src="{% for image in row.image.limit(1).all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
                         <h3>{{ row.service }}</h3>
                         <p>{{ row.description }}</p>
                         {% if row.services|length %}
