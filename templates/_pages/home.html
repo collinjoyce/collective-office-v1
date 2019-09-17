@@ -1,0 +1,14 @@
+{% extends "_layout" %}
+
+{% block content %}
+
+        <!-- Hero Slider -->
+        <div class="hero-slider">
+            <div class="slides" id="slider">
+                {% for row in entry.slides.all() %}
+                <a href="{{ row.linkHref }}" class="slide" style="background-image: url('{% for image in row.image.limit(1).all() %}{{ image.url('ratioCropLarge') }}{% endfor %}')"></a>
+                {% endfor %}
+            </div>
+        </div>
+   
+{% endblock %}
