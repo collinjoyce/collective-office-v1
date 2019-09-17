@@ -1,0 +1,85 @@
+{% extends "_layout" %}
+{% set pageTitle, pageDescription = entry.title, entry.seoTeaser %}
+{% set pageImage = "" %}{% for image in entry.seoImage.limit(1).all() %}{% set pageImage = image.url('ratioCropLarge') %}{% endfor %}
+
+{% block content %}
+
+
+        <!-- Hero -->
+        {% for image in entry.projectHero.limit(1).all() %}
+        <div class="hero" style="background-image: url('{{ image.url('ratioCropLarge') }}')"></div>
+        {% endfor %}
+        
+        <!-- Header -->
+        <div class="section">
+            <div class="project-header">
+                <div class="title">
+                    <h1>{{ entry.title }}</h1>
+                    <p>{{ entry.location }} / {{ entry.yearStarted }}{% if entry.yearCompleted|length and entry.yearCompleted != entry.yearStarted %}&ndash;{{ entry.yearCompleted }}{% endif%}</p>
+                </div>
+                <div class="description">
+                    {{ entry.description }}
+                </div>
+            </div>
+        </div>        
+        
+        <!-- Project Images -->
+        <div class="section">
+            <div class="project-images">
+                {% for row in entry.imageGrid.all() %}
+                    <div class="group is-{{ row.images|length }}">
+                        {% for image in row.images.all() %}
+                        <img src="{{ image.url('cropLarge') }}" srcset="{{ image.url('cropMedium') }} {{ image.getWidth('cropMedium') }}w, {{ image.url('cropLarge') }} {{ image.getWidth('cropLarge') }}w" alt="">
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% if entry.credits|length %}
+        <!-- Credits -->
+        <div class="section">
+            <div class="project-credits">
+                <h4>Credits</h4>
+                <ul>
+                    {% for row in entry.credits.all() %}
+                    <li>
+                        <h5>{{ row.label }}</h5>
+                        <p>{% if not row.linkHref.isEmpty() %}<a href="{{ row.linkHref }}" target="_blank">{% endif %}{{ row.creditName }}{% if not row.linkHref.isEmpty() %}</a>{% endif %}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif%}
+        
+        
+        <hr>
+        
+        
+        {% if entry.relatedProjects|length %}
+        <!-- Related Projects -->
+        <div class="section">
+            <div class="related-projects">
+                <h2>Related Projects</h2>
+                <div class="entries">
+                    
+                    {% for entry in entry.relatedProjects.all() %}
+                    <div class="entry">
+                        <a href="{{ entry.url }}">
+                            <img src="{% for image in entry.thumbnailImage.all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                            <h4>{{ entry.title }}</h4>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+        <hr>
+        {% endif%}
+
+
+{% endblock %}
