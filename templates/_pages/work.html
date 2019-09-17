@@ -1,0 +1,44 @@
+{% extends "_layout" %}
+{% set pageTitle, pageDescription = entry.title, entry.seoTeaser %}
+{% set pageImage = "" %}{% for image in entry.seoImage.limit(1).all() %}{% set pageImage = image.url('ratioCropLarge') %}{% endfor %}
+
+{% block content %}
+
+
+        <h1 class="hidden">Projects</h1>
+        
+        
+        <!-- Projects Filter -->
+        <div class="section">
+            <div class="projects-filter" id="projects-filter">
+                <a href="#all" class="active">All</a>
+                {% set query = craft.categories.group('projectSections') %}
+                {% for category in query.all() %}
+                <a href="#{{ category.slug }}">{{ category.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        
+        <!-- Projects List -->
+        <div class="section">
+            <div class="projects">
+                
+                {% set query = craft.entries.section('projectPages').orderBy('postDate desc') %}
+                {% for entry in query.all() %}
+                
+                <div class="entry{% for category in entry.projectType.all() %} is-{{ category.slug }}{% endfor %}">
+                    <a href="{{ entry.url }}">
+                        <img src="{% for image in entry.thumbnailImage.all() %}{{ image.url('ratioCropMedium') }}{% endfor %}" alt="">
+                        <h4>{{ entry.title }}</h4>
+                    </a>
+                </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+        
+        <hr>
+        
+        
+{% endblock %}
