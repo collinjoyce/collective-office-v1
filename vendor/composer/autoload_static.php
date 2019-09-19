@@ -12,7 +12,6 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'b46ad4fe52f4d1899a2951c7e6ea56b0' => __DIR__ . '/..' . '/voku/portable-utf8/bootstrap.php',
@@ -21,6 +20,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         '65380ab4d81167209b0a4fac46641984' => __DIR__ . '/..' . '/voku/arrayy/src/Create.php',
         'c88a6f0dbb89a32bf4e283d3a7d626ab' => __DIR__ . '/..' . '/voku/stringy/src/Create.php',
@@ -72,6 +72,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'c' => 
         array (
             'creocoder\\nestedsets\\' => 21,
+            'crafttests\\fixtures\\' => 20,
             'craftcms\\oauth2\\client\\' => 23,
             'craft\\redactor\\' => 15,
             'craft\\composer\\' => 15,
@@ -228,7 +229,8 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         ),
         'voku\\tests\\' => 
         array (
-            0 => __DIR__ . '/..' . '/voku/portable-utf8/tests',
+            0 => __DIR__ . '/..' . '/voku/portable-ascii/tests',
+            1 => __DIR__ . '/..' . '/voku/portable-utf8/tests',
         ),
         'voku\\helper\\' => 
         array (
@@ -238,8 +240,9 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         ),
         'voku\\' => 
         array (
-            0 => __DIR__ . '/..' . '/voku/portable-utf8/src/voku',
-            1 => __DIR__ . '/..' . '/voku/stop-words/src/voku',
+            0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
+            1 => __DIR__ . '/..' . '/voku/portable-utf8/src/voku',
+            2 => __DIR__ . '/..' . '/voku/stop-words/src/voku',
         ),
         'verbb\\supertable\\' => 
         array (
@@ -270,6 +273,10 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'creocoder\\nestedsets\\' => 
         array (
             0 => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src',
+        ),
+        'crafttests\\fixtures\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures',
         ),
         'craftcms\\oauth2\\client\\' => 
         array (
@@ -2338,6 +2345,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craft\\console\\controllers\\ClearCachesController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/ClearCachesController.php',
         'craft\\console\\controllers\\FixtureController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/FixtureController.php',
         'craft\\console\\controllers\\GcController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/GcController.php',
+        'craft\\console\\controllers\\GraphqlController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/GraphqlController.php',
         'craft\\console\\controllers\\IndexAssetsController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/IndexAssetsController.php',
         'craft\\console\\controllers\\InstallController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/InstallController.php',
         'craft\\console\\controllers\\MailerController' => __DIR__ . '/..' . '/craftcms/cms/src/console/controllers/MailerController.php',
@@ -2620,6 +2628,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craft\\fields\\data\\SingleOptionFieldData' => __DIR__ . '/..' . '/craftcms/cms/src/fields/data/SingleOptionFieldData.php',
         'craft\\gql\\GqlEntityRegistry' => __DIR__ . '/..' . '/craftcms/cms/src/gql/GqlEntityRegistry.php',
         'craft\\gql\\TypeLoader' => __DIR__ . '/..' . '/craftcms/cms/src/gql/TypeLoader.php',
+        'craft\\gql\\arguments\\Transform' => __DIR__ . '/..' . '/craftcms/cms/src/gql/arguments/Transform.php',
         'craft\\gql\\arguments\\elements\\Asset' => __DIR__ . '/..' . '/craftcms/cms/src/gql/arguments/elements/Asset.php',
         'craft\\gql\\arguments\\elements\\Category' => __DIR__ . '/..' . '/craftcms/cms/src/gql/arguments/elements/Category.php',
         'craft\\gql\\arguments\\elements\\Entry' => __DIR__ . '/..' . '/craftcms/cms/src/gql/arguments/elements/Entry.php',
@@ -2639,6 +2648,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craft\\gql\\base\\Resolver' => __DIR__ . '/..' . '/craftcms/cms/src/gql/base/Resolver.php',
         'craft\\gql\\base\\StructureElementArguments' => __DIR__ . '/..' . '/craftcms/cms/src/gql/base/StructureElementArguments.php',
         'craft\\gql\\directives\\FormatDateTime' => __DIR__ . '/..' . '/craftcms/cms/src/gql/directives/FormatDateTime.php',
+        'craft\\gql\\directives\\Markdown' => __DIR__ . '/..' . '/craftcms/cms/src/gql/directives/Markdown.php',
         'craft\\gql\\directives\\Transform' => __DIR__ . '/..' . '/craftcms/cms/src/gql/directives/Transform.php',
         'craft\\gql\\interfaces\\Element' => __DIR__ . '/..' . '/craftcms/cms/src/gql/interfaces/Element.php',
         'craft\\gql\\interfaces\\Structure' => __DIR__ . '/..' . '/craftcms/cms/src/gql/interfaces/Structure.php',
@@ -3244,6 +3254,23 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'craft\\widgets\\Updates' => __DIR__ . '/..' . '/craftcms/cms/src/widgets/Updates.php',
         'craftcms\\oauth2\\client\\provider\\CraftId' => __DIR__ . '/..' . '/craftcms/oauth2-craftid/src/provider/CraftId.php',
         'craftcms\\oauth2\\client\\provider\\CraftIdUser' => __DIR__ . '/..' . '/craftcms/oauth2-craftid/src/provider/CraftIdUser.php',
+        'crafttests\\fixtures\\AssetsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/AssetsFixture.php',
+        'crafttests\\fixtures\\EntryFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/EntryFixture.php',
+        'crafttests\\fixtures\\EntryTypeFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/EntryTypeFixture.php',
+        'crafttests\\fixtures\\EntryWithFieldsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/EntryWithFieldsFixture.php',
+        'crafttests\\fixtures\\FieldLayoutFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/FieldLayoutFixture.php',
+        'crafttests\\fixtures\\FieldsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/FieldsFixture.php',
+        'crafttests\\fixtures\\GlobalSetFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/GlobalSetFixture.php',
+        'crafttests\\fixtures\\GqlSchemasFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/GqlSchemasFixture.php',
+        'crafttests\\fixtures\\SectionSettingFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/SectionSettingFixture.php',
+        'crafttests\\fixtures\\SectionsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/SectionsFixture.php',
+        'crafttests\\fixtures\\SessionsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/SessionsFixture.php',
+        'crafttests\\fixtures\\SitesFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/SitesFixture.php',
+        'crafttests\\fixtures\\TransformsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/TransformsFixture.php',
+        'crafttests\\fixtures\\UserGroupsFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/UserGroupsFixture.php',
+        'crafttests\\fixtures\\UsersFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/UsersFixture.php',
+        'crafttests\\fixtures\\VolumesFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/VolumesFixture.php',
+        'crafttests\\fixtures\\VolumesFolderFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/VolumesFolderFixture.php',
         'creocoder\\nestedsets\\NestedSetsBehavior' => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src/NestedSetsBehavior.php',
         'creocoder\\nestedsets\\NestedSetsQueryBehavior' => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src/NestedSetsQueryBehavior.php',
         'enshrined\\svgSanitize\\Sanitizer' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/Sanitizer.php',
@@ -3300,9 +3327,11 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'phpDocumentor\\Reflection\\ProjectFactory' => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src/ProjectFactory.php',
         'phpDocumentor\\Reflection\\Type' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Type.php',
         'phpDocumentor\\Reflection\\TypeResolver' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/TypeResolver.php',
+        'phpDocumentor\\Reflection\\Types\\AbstractList' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/AbstractList.php',
         'phpDocumentor\\Reflection\\Types\\Array_' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Array_.php',
         'phpDocumentor\\Reflection\\Types\\Boolean' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Boolean.php',
         'phpDocumentor\\Reflection\\Types\\Callable_' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Callable_.php',
+        'phpDocumentor\\Reflection\\Types\\Collection' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Collection.php',
         'phpDocumentor\\Reflection\\Types\\Compound' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Compound.php',
         'phpDocumentor\\Reflection\\Types\\Context' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Context.php',
         'phpDocumentor\\Reflection\\Types\\ContextFactory' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/ContextFactory.php',
@@ -3345,6 +3374,11 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'verbb\\supertable\\errors\\SuperTableBlockNotFoundException' => __DIR__ . '/..' . '/verbb/super-table/src/errors/SuperTableBlockNotFoundException.php',
         'verbb\\supertable\\errors\\SuperTableBlockTypeNotFoundException' => __DIR__ . '/..' . '/verbb/super-table/src/errors/SuperTableBlockTypeNotFoundException.php',
         'verbb\\supertable\\fields\\SuperTableField' => __DIR__ . '/..' . '/verbb/super-table/src/fields/SuperTableField.php',
+        'verbb\\supertable\\gql\\arguments\\elements\\SuperTableBlock' => __DIR__ . '/..' . '/verbb/super-table/src/gql/arguments/elements/SuperTableBlock.php',
+        'verbb\\supertable\\gql\\interfaces\\elements\\SuperTableBlock' => __DIR__ . '/..' . '/verbb/super-table/src/gql/interfaces/elements/SuperTableBlock.php',
+        'verbb\\supertable\\gql\\resolvers\\elements\\SuperTableBlock' => __DIR__ . '/..' . '/verbb/super-table/src/gql/resolvers/elements/SuperTableBlock.php',
+        'verbb\\supertable\\gql\\types\\elements\\SuperTableBlock' => __DIR__ . '/..' . '/verbb/super-table/src/gql/types/elements/SuperTableBlock.php',
+        'verbb\\supertable\\gql\\types\\generators\\SuperTableBlockType' => __DIR__ . '/..' . '/verbb/super-table/src/gql/types/generators/SuperTableBlockType.php',
         'verbb\\supertable\\helpers\\ProjectConfigData' => __DIR__ . '/..' . '/verbb/super-table/src/helpers/ProjectConfigData.php',
         'verbb\\supertable\\integrations\\schematic\\converters\\fields\\SuperTableSchematic' => __DIR__ . '/..' . '/verbb/super-table/src/integrations/schematic/converters/fields/SuperTableSchematic.php',
         'verbb\\supertable\\integrations\\schematic\\converters\\models\\SuperTableBlockTypeSchematic' => __DIR__ . '/..' . '/verbb/super-table/src/integrations/schematic/converters/models/SuperTableBlockTypeSchematic.php',
@@ -3369,6 +3403,7 @@ class ComposerStaticInit5bbdb3b2c505de1d403b5cdfc5f1775a
         'verbb\\supertable\\services\\SuperTableMatrixService' => __DIR__ . '/..' . '/verbb/super-table/src/services/SuperTableMatrixService.php',
         'verbb\\supertable\\services\\SuperTableService' => __DIR__ . '/..' . '/verbb/super-table/src/services/SuperTableService.php',
         'verbb\\supertable\\variables\\SuperTableVariable' => __DIR__ . '/..' . '/verbb/super-table/src/variables/SuperTableVariable.php',
+        'voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
         'voku\\helper\\AntiXSS' => __DIR__ . '/..' . '/voku/anti-xss/src/voku/helper/AntiXSS.php',
         'voku\\helper\\Bootup' => __DIR__ . '/..' . '/voku/portable-utf8/src/voku/helper/Bootup.php',
         'voku\\helper\\EmailCheck' => __DIR__ . '/..' . '/voku/email-check/src/voku/helper/EmailCheck.php',

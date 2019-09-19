@@ -10,6 +10,7 @@ namespace craft\controllers;
 use Craft;
 use craft\errors\GqlException;
 use craft\helpers\DateTimeHelper;
+use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 use craft\models\GqlSchema;
 use craft\web\assets\graphiql\GraphiqlAsset;
@@ -20,8 +21,6 @@ use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-
-Craft::$app->requireEdition(Craft::Pro);
 
 /**
  * The GqlController class is a controller that handles various GraphQL related tasks.
@@ -43,9 +42,16 @@ class GraphqlController extends Controller
 
     /**
      * @inheritdoc
+     * @throws NotFoundHttpException
      */
     public function beforeAction($action)
     {
+        if (!Craft::$app->getConfig()->getGeneral()->enableGql) {
+            throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'));
+        }
+
+        Craft::$app->requireEdition(Craft::Pro);
+
         if ($action->id === 'api') {
             $this->enableCsrfValidation = false;
         }
@@ -73,6 +79,7 @@ class GraphqlController extends Controller
 
         if ($request->getIsOptions()) {
             // This is just a preflight request, no need to run the actual query yet
+            $response->getHeaders()->add('Access-Control-Allow-Headers', 'Authorization, Content-Type');
             $response->format = Response::FORMAT_RAW;
             $response->data = '';
             return $response;
@@ -133,8 +140,7 @@ class GraphqlController extends Controller
         }
 
         try {
-            $devMode = Craft::$app->getConfig()->getGeneral()->devMode;
-            $schemaDef = $gqlService->getSchemaDef($schema, $devMode);
+            $schemaDef = $gqlService->getSchemaDef($schema, StringHelper::contains($query, '__schema'));
             $result = GraphQL::executeQuery($schemaDef, $query, null, null, $variables, $operationName)
                 ->toArray(true);
         } catch (\Throwable $e) {
@@ -152,7 +158,7 @@ class GraphqlController extends Controller
      */
     public function actionGraphiql(): Response
     {
-        $this->requireAdmin();
+        $this->requireAdmin(false);
         $this->getView()->registerAssetBundle(GraphiqlAsset::class);
 
         $schemaUid = Craft::$app->getRequest()->getQueryParam('schemaUid');
@@ -189,7 +195,7 @@ class GraphqlController extends Controller
      */
     public function actionViewSchemas(): Response
     {
-        $this->requireAdmin();
+        $this->requireAdmin(false);
         return $this->renderTemplate('graphql/schemas/_index');
     }
 
@@ -202,7 +208,7 @@ class GraphqlController extends Controller
      */
     public function actionEditSchema(int $schemaId = null, GqlSchema $schema = null): Response
     {
-        $this->requireAdmin();
+        $this->requireAdmin(false);
 
         $gqlService = Craft::$app->getGql();
         $accessToken = null;
@@ -245,7 +251,7 @@ class GraphqlController extends Controller
     public function actionSaveSchema()
     {
         $this->requirePostRequest();
-        $this->requireAdmin();
+        $this->requireAdmin(false);
         $this->requireElevatedSession();
 
         $gqlService = Craft::$app->getGql();
@@ -298,7 +304,7 @@ class GraphqlController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $this->requireAdmin();
+        $this->requireAdmin(false);
         $this->requireElevatedSession();
 
         $schemaUid = Craft::$app->getRequest()->getRequiredBodyParam('schemaUid');
@@ -321,7 +327,7 @@ class GraphqlController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $this->requireAdmin();
+        $this->requireAdmin(false);
 
         return $this->asJson([
             'accessToken' => $this->_generateToken(),
@@ -336,7 +342,7 @@ class GraphqlController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $this->requireAdmin();
+        $this->requireAdmin(false);
 
         $schemaId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 

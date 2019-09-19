@@ -99,7 +99,7 @@ class Matrix extends Component
         $this->_blockTypesByFieldId[$fieldId] = [];
 
         $results = $this->_createBlockTypeQuery()
-            ->where(['fieldId' => $fieldId])
+            ->where(['bt.fieldId' => $fieldId])
             ->all();
 
         foreach ($results as $result) {
@@ -122,6 +122,8 @@ class Matrix extends Component
     public function getAllBlockTypes(): array
     {
         $results = $this->_createBlockTypeQuery()
+            ->innerJoin(Table::FIELDS . ' f', '[[f.id]] = [[bt.fieldId]]')
+            ->where(['f.type' => MatrixField::class])
             ->all();
 
         foreach ($results as $key => $result) {
@@ -144,7 +146,7 @@ class Matrix extends Component
         }
 
         $result = $this->_createBlockTypeQuery()
-            ->where(['id' => $blockTypeId])
+            ->where(['bt.id' => $blockTypeId])
             ->one();
 
         return $this->_blockTypesById[$blockTypeId] = $result ? new MatrixBlockType($result) : null;
@@ -746,7 +748,10 @@ class Matrix extends Component
         /** @var MatrixBlockQuery $query */
         $query = $owner->getFieldValue($field->handle);
         /** @var MatrixBlock[] $blocks */
-        $blocks = $query->getCachedResult() ?? (clone $query)->anyStatus()->all();
+        if (($blocks = $query->getCachedResult()) === null) {
+            $blocksQuery = clone $query;
+            $blocks = $blocksQuery->anyStatus()->all();
+        }
         $blockIds = [];
         $collapsedBlockIds = [];
 
@@ -795,7 +800,8 @@ class Matrix extends Component
                     // Duplicate Matrix blocks, ensuring we don't process the same blocks more than once
                     $handledSiteIds = [];
 
-                    $cachedQuery = (clone $query)->anyStatus();
+                    $cachedQuery = clone $query;
+                    $cachedQuery->anyStatus();
                     $cachedQuery->setCachedResult($blocks);
                     $owner->setFieldValue($field->handle, $cachedQuery);
 
@@ -849,7 +855,10 @@ class Matrix extends Component
         /** @var MatrixBlockQuery $query */
         $query = $source->getFieldValue($field->handle);
         /** @var MatrixBlock[] $blocks */
-        $blocks = $query->getCachedResult() ?? (clone $query)->anyStatus()->all();
+        if (($blocks = $query->getCachedResult()) === null) {
+            $blocksQuery = clone $query;
+            $blocks = $blocksQuery->anyStatus()->all();
+        }
         $newBlockIds = [];
 
         $transaction = Craft::$app->getDb()->beginTransaction();
@@ -976,16 +985,16 @@ class Matrix extends Component
     {
         return (new Query())
             ->select([
-                'id',
-                'fieldId',
-                'fieldLayoutId',
-                'name',
-                'handle',
-                'sortOrder',
-                'uid'
+                'bt.id',
+                'bt.fieldId',
+                'bt.fieldLayoutId',
+                'bt.name',
+                'bt.handle',
+                'bt.sortOrder',
+                'bt.uid'
             ])
-            ->from([Table::MATRIXBLOCKTYPES])
-            ->orderBy(['sortOrder' => SORT_ASC]);
+            ->from(['bt' => Table::MATRIXBLOCKTYPES])
+            ->orderBy(['bt.sortOrder' => SORT_ASC]);
     }
 
     /**

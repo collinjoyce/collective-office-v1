@@ -124,7 +124,7 @@ class EntryRevisionsController extends BaseEntriesController
         // Save it and redirect to its edit page
         $entry->setScenario(Element::SCENARIO_ESSENTIALS);
         if (!Craft::$app->getDrafts()->saveElementAsDraft($entry, Craft::$app->getUser()->getId())) {
-            throw new Exception('Unable to save entry');
+            throw new Exception('Unable to save entry as a draft: ' . implode(', ', $entry->getErrorSummary(true)));
         }
 
         return $this->redirect(UrlHelper::url($entry->getCpEditUrl(), [
@@ -336,7 +336,7 @@ class EntryRevisionsController extends BaseEntriesController
         /** @var Entry|null $entry */
         $entry = ElementHelper::sourceElement($draft);
         $this->enforceEditEntryPermissions($entry);
-        $section = ($entry)->getSection();
+        $section = $entry->getSection();
 
         // Is this another user's entry (and it's not a Single)?
         $userId = Craft::$app->getUser()->getId();

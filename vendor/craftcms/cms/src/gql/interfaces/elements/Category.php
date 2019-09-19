@@ -8,6 +8,8 @@
 namespace craft\gql\interfaces\elements;
 
 use craft\elements\Category as CategoryElement;
+use craft\gql\arguments\elements\Category as CategoryArguments;
+use craft\gql\interfaces\elements\Category as CategoryInterface;
 use craft\gql\interfaces\Structure;
 use craft\gql\TypeLoader;
 use craft\gql\GqlEntityRegistry;
@@ -78,7 +80,18 @@ class Category extends Structure
                 'name' => 'groupHandle',
                 'type' => Type::string(),
                 'description' => 'The handle of the group that contains the category.'
-            ]
+            ],
+            'children' => [
+                'name' => 'children',
+                'args' => CategoryArguments::getArguments(),
+                'type' => Type::listOf(CategoryInterface::getType()),
+                'description' => 'The category’s children.'
+            ],
+            'parent' => [
+                'name' => 'parent',
+                'type' => CategoryInterface::getType(),
+                'description' => 'The category’s parent.'
+            ],
         ]);
     }
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+### 5.14.1 (2019-09-16)
+
+- optimize "array_last"-polyfill (php < 7.3)
+
+
+### 5.14.0 (2019-09-13)
+
+- add "Arrayy->diffKey" + "Arrayy->diffKeyAndValue"
+- add more test cases
+- update "phpdocumentor/reflection-docblock"
+
+
 ### 5.13.2 (2019-08-01)
 
 - fix "array_first()" + "array_last()" (move from global namespace into Arrayy)
