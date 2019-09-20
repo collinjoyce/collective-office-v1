@@ -2,10 +2,10 @@
 # Password protect stage
 # ----------------------------------------------------------------------
 
-SetEnvIf Host stage.collectiveoffice.com staging
+SetEnvIf Host craft.collectiveoffice.com staging
 AuthType Basic
 AuthName "Under Construction"
-AuthUserFile /home/138105/domains/stage.collectiveoffice.com/.htpasswd
+AuthUserFile /home/138105/domains/craft.collectiveoffice.com/.htpasswd
 Require valid-user
 Order allow,deny
 Allow from all
