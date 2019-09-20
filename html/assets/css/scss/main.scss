@@ -370,7 +370,10 @@ hr                                                      { @include reset(everyth
 .project-header .description                            { flex-basis: 66.66%; padding-left: 20px; 
                                                             @include mq(below,600px) { flex-basis: 100%; padding: 0; }
                                                         }
-.project-header .description p                          { @extend .lede; @include reset(spacing); }
+.project-header .description p                          { @extend .lede; @include reset(spacing); margin-bottom: 21px;
+                                                            @include mq(below,900px) { margin-bottom: 18px; }
+                                                            &:last-child { margin-bottom: 0; }
+                                                        }
 
 
 
