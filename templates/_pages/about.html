@@ -51,7 +51,7 @@
         <!-- Breaker Image -->
         <div class="section">
             {% for image in entry.teamImage.limit(1).all() %}
-            <img src="{{ image.url('ratioCropLarge') }}" srcset="{{ image.url('ratioCropMedium') }} {{ image.getWidth('ratioCropMedium') }}w, {{ image.url('ratioCropLarge') }} {{ image.getWidth('ratioCropLarge') }}w" alt="">
+            <img src="{{ image.url('cropLarge') }}" srcset="{{ image.url('cropMedium') }} {{ image.getWidth('cropMedium') }}w, {{ image.url('cropLarge') }} {{ image.getWidth('cropLarge') }}w" alt="">
             {% endfor %}
         </div>
         
@@ -89,7 +89,7 @@
         <!-- Breaker Image -->
         <div class="section">
             {% for image in entry.contactImage.limit(1).all() %}
-            <img src="{{ image.url('ratioCropLarge') }}" srcset="{{ image.url('ratioCropMedium') }} {{ image.getWidth('ratioCropMedium') }}w, {{ image.url('ratioCropLarge') }} {{ image.getWidth('ratioCropLarge') }}w" alt="">
+            <img src="{{ image.url('cropLarge') }}" srcset="{{ image.url('cropMedium') }} {{ image.getWidth('cropMedium') }}w, {{ image.url('cropLarge') }} {{ image.getWidth('cropLarge') }}w" alt="">
             {% endfor %}
         </div>
         
