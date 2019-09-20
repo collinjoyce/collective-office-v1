@@ -85,6 +85,17 @@
 		"oT": 1,
 		"q": 100
 		},
+	"/assets/icons/og-1200x630.png": {
+		"ft": 32768,
+		"iS": 10140,
+		"oA": 0,
+		"oAP": "/assets/icons/og-1200x630.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
 	"/assets/icons/social-sprite.svg": {
 		"ft": 2097152,
 		"miP": 0,
