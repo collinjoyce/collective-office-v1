@@ -106,6 +106,50 @@
 		"plM": 52780316221407,
 		"prP": 0
 		},
+	"/assets/img/about/_cropLarge/about-contact-breaker.jpg": {
+		"ft": 16384,
+		"iS": 207039,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/assets/img/about/_cropLarge/about-contact-breaker.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/assets/img/about/_cropLarge/about-team-breaker.jpg": {
+		"ft": 16384,
+		"iS": 164991,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/assets/img/about/_cropLarge/about-team-breaker.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/assets/img/about/_cropMedium/about-contact-breaker.jpg": {
+		"ft": 16384,
+		"iS": 75018,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/assets/img/about/_cropMedium/about-contact-breaker.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
+	"/assets/img/about/_cropMedium/about-team-breaker.jpg": {
+		"ft": 16384,
+		"iS": 60233,
+		"jF": 0,
+		"oA": 0,
+		"oAP": "/assets/img/about/_cropMedium/about-team-breaker.jpg",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"q": 100
+		},
 	"/assets/img/about/_ratioCropLarge/about-contact-breaker.jpg": {
 		"ft": 16384,
 		"iS": 235248,
