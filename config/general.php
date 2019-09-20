@@ -40,6 +40,9 @@ return [
 
     // Staging environment settings
     'staging' => [
+        // Dev Mode (see https://craftcms.com/guides/what-dev-mode-does)
+        'devMode' => true,
+        
         // Set this to `false` to prevent administrative changes from being made on staging
         'allowAdminChanges' => true,
     ],
