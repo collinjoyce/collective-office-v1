@@ -4,6 +4,22 @@ $vendorDir = dirname(__DIR__);
 $rootDir = dirname(dirname(__DIR__));
 
 return array (
+  'craftcms/redactor' => 
+  array (
+    'class' => 'craft\\redactor\\Plugin',
+    'basePath' => $vendorDir . '/craftcms/redactor/src',
+    'handle' => 'redactor',
+    'aliases' => 
+    array (
+      '@craft/redactor' => $vendorDir . '/craftcms/redactor/src',
+    ),
+    'name' => 'Redactor',
+    'version' => '2.4.0',
+    'description' => 'Edit rich text content in Craft CMS using Redactor by Imperavi.',
+    'developer' => 'Pixel & Tonic',
+    'developerUrl' => 'https://pixelandtonic.com/',
+    'documentationUrl' => 'https://github.com/craftcms/redactor/blob/v2/README.md',
+  ),
   'sebastianlenz/linkfield' => 
   array (
     'class' => 'typedlinkfield\\Plugin',
@@ -19,23 +35,6 @@ return array (
     'developer' => 'Sebastian Lenz',
     'developerUrl' => 'https://github.com/sebastian-lenz/',
   ),
-  'craftcms/redactor' => 
-  array (
-    'class' => 'craft\\redactor\\Plugin',
-    'basePath' => $vendorDir . '/craftcms/redactor/src',
-    'handle' => 'redactor',
-    'aliases' => 
-    array (
-      '@craft/redactor' => $vendorDir . '/craftcms/redactor/src',
-    ),
-    'name' => 'Redactor',
-    'version' => '2.4.0',
-    'description' => 'Edit rich text content in Craft CMS using Redactor by Imperavi.',
-    'developer' => 'Pixel & Tonic',
-    'developerUrl' => 'https://pixelandtonic.com/',
-    'developerEmail' => 'support@craftcms.com',
-    'documentationUrl' => 'https://github.com/craftcms/redactor/blob/v2/README.md',
-  ),
   'verbb/super-table' => 
   array (
     'class' => 'verbb\\supertable\\SuperTable',
@@ -50,7 +49,6 @@ return array (
     'description' => 'Super-charge your Craft workflow with Super Table. Use it to group fields together or build complex Matrix-in-Matrix solutions.',
     'developer' => 'Verbb',
     'developerUrl' => 'https://verbb.io',
-    'developerEmail' => 'support@verbb.io',
     'documentationUrl' => 'https://github.com/verbb/super-table',
     'changelogUrl' => 'https://raw.githubusercontent.com/verbb/super-table/craft-3/CHANGELOG.md',
   ),
