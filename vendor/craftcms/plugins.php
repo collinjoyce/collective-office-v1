@@ -52,4 +52,24 @@ return array (
     'documentationUrl' => 'https://github.com/verbb/super-table',
     'changelogUrl' => 'https://raw.githubusercontent.com/verbb/super-table/craft-3/CHANGELOG.md',
   ),
+  'dolphiq/redirect' => 
+  array (
+    'class' => 'dolphiq\\redirect\\RedirectPlugin',
+    'basePath' => $vendorDir . '/dolphiq/redirect/src',
+    'handle' => 'redirect',
+    'aliases' => 
+    array (
+      '@dolphiq/redirect' => $vendorDir . '/dolphiq/redirect/src',
+    ),
+    'name' => 'Redirect plugin for Craft 3',
+    'version' => '1.0.23',
+    'schemaVersion' => '1.0.5',
+    'description' => 'Craft redirect plugin provides an easy way to enter and maintain 301 and 302 redirects and 404 error pages.',
+    'developer' => 'Dolphiq',
+    'developerUrl' => 'https://dolphiq.nl/',
+    'documentationUrl' => 'https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/README.md',
+    'changelogUrl' => 'https://raw.githubusercontent.com/Dolphiq/craft3-plugin-redirect/master/CHANGELOG.md',
+    'hasCpSettings' => true,
+    'hasCpSection' => true,
+  ),
 );

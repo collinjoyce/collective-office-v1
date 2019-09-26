@@ -69,6 +69,10 @@ class ComposerStaticInit76fc54228390d70cef9aae12828d1e39
         array (
             'enshrined\\svgSanitize\\' => 22,
         ),
+        'd' => 
+        array (
+            'dolphiq\\redirect\\' => 17,
+        ),
         'c' => 
         array (
             'creocoder\\nestedsets\\' => 21,
@@ -269,6 +273,10 @@ class ComposerStaticInit76fc54228390d70cef9aae12828d1e39
         'enshrined\\svgSanitize\\' => 
         array (
             0 => __DIR__ . '/..' . '/enshrined/svg-sanitize/src',
+        ),
+        'dolphiq\\redirect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dolphiq/redirect/src',
         ),
         'creocoder\\nestedsets\\' => 
         array (
@@ -3273,6 +3281,27 @@ class ComposerStaticInit76fc54228390d70cef9aae12828d1e39
         'crafttests\\fixtures\\VolumesFolderFixture' => __DIR__ . '/..' . '/craftcms/cms/tests/fixtures/VolumesFolderFixture.php',
         'creocoder\\nestedsets\\NestedSetsBehavior' => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src/NestedSetsBehavior.php',
         'creocoder\\nestedsets\\NestedSetsQueryBehavior' => __DIR__ . '/..' . '/creocoder/yii2-nested-sets/src/NestedSetsQueryBehavior.php',
+        'dolphiq\\redirect\\RedirectPlugin' => __DIR__ . '/..' . '/dolphiq/redirect/src/RedirectPlugin.php',
+        'dolphiq\\redirect\\controllers\\RedirectController' => __DIR__ . '/..' . '/dolphiq/redirect/src/controllers/RedirectController.php',
+        'dolphiq\\redirect\\controllers\\SettingsController' => __DIR__ . '/..' . '/dolphiq/redirect/src/controllers/SettingsController.php',
+        'dolphiq\\redirect\\elements\\FeedMeRedirect' => __DIR__ . '/..' . '/dolphiq/redirect/src/elements/FeedMeRedirect.php',
+        'dolphiq\\redirect\\elements\\Redirect' => __DIR__ . '/..' . '/dolphiq/redirect/src/elements/Redirect.php',
+        'dolphiq\\redirect\\elements\\actions\\DeleteRedirects' => __DIR__ . '/..' . '/dolphiq/redirect/src/elements/actions/DeleteRedirects.php',
+        'dolphiq\\redirect\\elements\\db\\RedirectQuery' => __DIR__ . '/..' . '/dolphiq/redirect/src/elements/db/RedirectQuery.php',
+        'dolphiq\\redirect\\events\\RedirectEvent' => __DIR__ . '/..' . '/dolphiq/redirect/src/events/RedirectEvent.php',
+        'dolphiq\\redirect\\fields\\Redirects' => __DIR__ . '/..' . '/dolphiq/redirect/src/fields/Redirects.php',
+        'dolphiq\\redirect\\helpers\\UrlRule' => __DIR__ . '/..' . '/dolphiq/redirect/src/helpers/UrlRule.php',
+        'dolphiq\\redirect\\migrations\\Install' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/Install.php',
+        'dolphiq\\redirect\\migrations\\m170602_080218_redirect_1_0_1' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/m170602_080218_redirect_1_0_1.php',
+        'dolphiq\\redirect\\migrations\\m170707_211256_count_fix' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/m170707_211256_count_fix.php',
+        'dolphiq\\redirect\\migrations\\m171003_120604_createmultisiteurls' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/m171003_120604_createmultisiteurls.php',
+        'dolphiq\\redirect\\migrations\\m180104_143118_c_redirects_catch_all_urls' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/m180104_143118_c_redirects_catch_all_urls.php',
+        'dolphiq\\redirect\\migrations\\m190426_121317_change_url_size_to_1000' => __DIR__ . '/..' . '/dolphiq/redirect/src/migrations/m190426_121317_change_url_size_to_1000.php',
+        'dolphiq\\redirect\\models\\Settings' => __DIR__ . '/..' . '/dolphiq/redirect/src/models/Settings.php',
+        'dolphiq\\redirect\\records\\CatchAllUrl' => __DIR__ . '/..' . '/dolphiq/redirect/src/records/CatchAllUrl.php',
+        'dolphiq\\redirect\\records\\Redirect' => __DIR__ . '/..' . '/dolphiq/redirect/src/records/Redirect.php',
+        'dolphiq\\redirect\\services\\CatchAll' => __DIR__ . '/..' . '/dolphiq/redirect/src/services/CatchAll.php',
+        'dolphiq\\redirect\\services\\Redirects' => __DIR__ . '/..' . '/dolphiq/redirect/src/services/Redirects.php',
         'enshrined\\svgSanitize\\Sanitizer' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/Sanitizer.php',
         'enshrined\\svgSanitize\\data\\AllowedAttributes' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AllowedAttributes.php',
         'enshrined\\svgSanitize\\data\\AllowedTags' => __DIR__ . '/..' . '/enshrined/svg-sanitize/src/data/AllowedTags.php',

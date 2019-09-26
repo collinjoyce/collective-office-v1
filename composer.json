@@ -2,6 +2,7 @@
   "require": {
     "craftcms/cms": "3.3.4.1",
     "craftcms/redactor": "2.4.0",
+    "dolphiq/redirect": "1.0.23",
     "sebastianlenz/linkfield": "1.0.19",
     "verbb/super-table": "2.3.0",
     "vlucas/phpdotenv": "^3.4.0"
