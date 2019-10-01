@@ -193,11 +193,13 @@ body.has-overlay                                        { overflow: hidden; }
 /* Masthead
 /*=====================================================*/
 
-.masthead                                               { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; position: fixed; top: 0; z-index: 1000; width: 100%; height: 100px; padding: 0 100px; background-color: $color-white; border-bottom: 1px solid rgba($color-grey, 0.2); transition: top 0.1s ease-in-out;
+.masthead                                               { position: fixed; top: 0; z-index: 1000; width: 100%; background-color: $color-white; border-bottom: 1px solid rgba($color-grey, 0.2); transition: top 0.1s ease-in-out; }
+.masthead-inner                                         { display: flex; flex-wrap: wrap; justify-content: space-between; align-content: center; height: 100px; max-width: 1600px; margin: 0 auto; padding: 0 100px;
                                                             @include mq(below,1200px) { padding: 0 80px; }
                                                             @include mq(below,900px) { padding: 0 60px; } 
                                                             @include mq(below,600px) { padding: 0 30px; }
                                                         }
+                                                        
 .masthead.is-up                                         { top: -100px; }
 .masthead .logo                                         { position: relative; z-index: 1200; align-self: center; }
 .masthead .logo a                                       { display: block; }
