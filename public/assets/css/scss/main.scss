@@ -218,16 +218,16 @@ body.has-overlay                                        { overflow: hidden; }
                                                             .no-touch &:hover { @include mq(above,600px) { color: $color-magenta; } }
                                                             @include mq(below,600px) { display: block; padding: 20px 0; font-size: 24px; text-transform: none; letter-spacing: 0; color: $color-white; }
                                                         }
-.masthead .overlay-toggle                               { display: none;
+.masthead .overlay-toggle                               { display: none; padding: 8px;
                                                             @include mq(below,600px) { display: block; position: relative; z-index: 1300; }
                                                         }
-.masthead .overlay-toggle .menu-icon                    { width: 18px; margin-right: 8px; 
-                                                            .line { width: 18px; height: 2px; background-color: $color-grey; display: block; margin: 3px auto; transition: all 0.25s ease-in-out; }
+.masthead .overlay-toggle .menu-icon                    { width: 16px; 
+                                                            .line { width: 16px; height: 2px; background-color: $color-grey; display: block; margin: 2px auto; transition: all 0.25s ease-in-out; }
                                                             .no-touch &:hover { cursor: pointer; }
                                                             body.has-overlay & .line { background-color: $color-white; }
                                                             body.has-overlay & .line:nth-child(2) { opacity: 0; }
-                                                            body.has-overlay & .line:nth-child(1) { transform: translateY(5px) rotate(45deg); }
-                                                            body.has-overlay & .line:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+                                                            body.has-overlay & .line:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+                                                            body.has-overlay & .line:nth-child(3) { transform: translateY(-4px) rotate(-45deg); }
                                                         }
 
 

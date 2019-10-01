@@ -716,7 +716,8 @@ body.has-overlay {
       color: #fff; } }
 
 .masthead .overlay-toggle {
-  display: none; }
+  display: none;
+  padding: 8px; }
   @media only screen and (max-width: 600px) {
     .masthead .overlay-toggle {
       display: block;
@@ -724,14 +725,13 @@ body.has-overlay {
       z-index: 1300; } }
 
 .masthead .overlay-toggle .menu-icon {
-  width: 18px;
-  margin-right: 8px; }
+  width: 16px; }
   .masthead .overlay-toggle .menu-icon .line {
-    width: 18px;
+    width: 16px;
     height: 2px;
     background-color: #999;
     display: block;
-    margin: 3px auto;
+    margin: 2px auto;
     transition: all 0.25s ease-in-out; }
   .no-touch .masthead .overlay-toggle .menu-icon:hover {
     cursor: pointer; }
@@ -740,9 +740,9 @@ body.has-overlay {
   body.has-overlay .masthead .overlay-toggle .menu-icon .line:nth-child(2) {
     opacity: 0; }
   body.has-overlay .masthead .overlay-toggle .menu-icon .line:nth-child(1) {
-    transform: translateY(5px) rotate(45deg); }
+    transform: translateY(4px) rotate(45deg); }
   body.has-overlay .masthead .overlay-toggle .menu-icon .line:nth-child(3) {
-    transform: translateY(-5px) rotate(-45deg); }
+    transform: translateY(-4px) rotate(-45deg); }
 
 /*=====================================================*/
 /* Footer
