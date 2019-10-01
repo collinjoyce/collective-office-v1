@@ -112,8 +112,8 @@ a.social-button                                         { height: 40px; width: 4
 .header                                                 { @extend .font-1; font-size: 18px; font-weight: normal; color: $color-magenta; 
                                                             @include mq(below,600px) { font-size: 16px; }
                                                         }
-.header-big                                             { @extend .font-1; font-size: 28px; font-weight: normal; color: $color-magenta; 
-                                                            @include mq(below,600px) { font-size: 24px; }
+.header-big                                             { @extend .font-1; font-size: 24px; font-weight: normal; color: $color-magenta; 
+                                                            @include mq(below,600px) { font-size: 21px; }
                                                         }
 .subhead                                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-magenta; }
 .subhead-small                                          { @extend .font-1; font-size: 12px; font-weight: 500; @include caps; color: $color-grey; }
