@@ -17,13 +17,17 @@ $(document).ready(function(){
     $('.masthead').click(handler);
     
     
-    // Hero Slider
-    $("#slider").responsiveSlides({
-        auto: true,
-        speed: 750,
-        timeout: 6000,
-        pager: true,
-        namespace: "slider"
+    // Hero Slider - FlexSlider
+    // Ref: https://gist.github.com/warrendholmes/9481310
+    $('#slider').flexslider({
+        animation: "fade",
+        selector: ".slides > a",
+        slideshow: true,
+        slideshowSpeed: 6000,
+        animationSpeed: 750,
+        directionNav: false,
+        namespace: "slider-",
+        touch: true
     });
     
     

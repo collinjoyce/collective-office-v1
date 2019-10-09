@@ -912,28 +912,28 @@ hr {
     .hero-slider .slide {
       background-attachment: scroll; } }
 
-/* For ResponsiveSlides.js */
-.hero-slider .slider_tabs {
+/* Written for FlexSlider */
+.hero-slider .slider-control-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   justify-content: flex-end;
   position: absolute;
   bottom: 40px;
   left: 40px;
   right: 40px;
-  z-index: 900;
-  margin: 0;
-  padding: 0;
-  list-style: none; }
-  .hero-slider .slider_tabs li {
+  z-index: 900; }
+  .hero-slider .slider-control-nav li {
     margin: 0;
     padding: 0; }
 
-.hero-slider .slider_tabs li {
+.hero-slider .slider-control-nav li {
   margin-right: 5px; }
-  .hero-slider .slider_tabs li:last-child {
+  .hero-slider .slider-control-nav li:last-child {
     margin-right: 0; }
 
-.hero-slider .slider_tabs li a {
+.hero-slider .slider-control-nav li a {
   text-indent: -9999px;
   display: block;
   width: 12px;
@@ -941,7 +941,7 @@ hr {
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.5); }
 
-.hero-slider .slider_tabs li.slider_here a {
+.hero-slider .slider-control-nav li a.slider-active {
   background-color: #Ed2d8c; }
 
 /*=====================================================*/

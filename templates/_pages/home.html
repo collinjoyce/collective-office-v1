@@ -3,8 +3,8 @@
 {% block content %}
 
         <!-- Hero Slider -->
-        <div class="hero-slider">
-            <div class="slides" id="slider">
+        <div class="hero-slider" id="slider">
+            <div class="slides">
                 {% for row in entry.slides.all() %}
                 <a href="{{ row.linkHref }}" class="slide" style="background-image: url('{% for image in row.image.limit(1).all() %}{{ image.url('ratioCropLarge') }}{% endfor %}')"></a>
                 {% endfor %}

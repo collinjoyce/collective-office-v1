@@ -309,13 +309,13 @@ hr                                                      { @include reset(everyth
 .hero-slider .slide                                     { -webkit-backface-visibility: hidden; display: block; height: 100%; width: 100%; background-repeat: no-repeat; background-size: cover; background-position: center center; background-attachment: fixed; 
                                                             @include mq(below,900px) { background-attachment: scroll; }
                                                         }
-/* For ResponsiveSlides.js */
-.hero-slider .slider_tabs                               { display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 900; @include reset(list); }
-.hero-slider .slider_tabs li                            { margin-right: 5px;
+/* Written for FlexSlider */
+.hero-slider .slider-control-nav                        { @include reset(list); display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 900; }
+.hero-slider .slider-control-nav li                     { margin-right: 5px;
                                                             &:last-child { margin-right: 0; }
                                                         }
-.hero-slider .slider_tabs li a                          { @include hide-text; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: rgba($color-white, .5); }
-.hero-slider .slider_tabs li.slider_here a              { background-color: $color-magenta; }
+.hero-slider .slider-control-nav li a                   { @include hide-text; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: rgba($color-white, .5); }
+.hero-slider .slider-control-nav li a.slider-active     { background-color: $color-magenta; }
 
 
 
