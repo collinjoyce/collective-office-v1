@@ -20,7 +20,7 @@ $(document).ready(function(){
     // Hero Slider - FlexSlider
     // Ref: https://gist.github.com/warrendholmes/9481310
     $('#slider').flexslider({
-        animation: "fade",
+        animation: "slide",
         selector: ".slides > a",
         slideshow: true,
         slideshowSpeed: 6000,

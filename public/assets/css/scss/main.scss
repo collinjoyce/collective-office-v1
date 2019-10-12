@@ -306,10 +306,11 @@ hr                                                      { @include reset(everyth
 
 .hero-slider                                            { position: relative; height: calc(100vh - 100px); background-color: $color-grey-light; }
 .hero-slider .slides                                    { height: 100%; width: 100%; overflow: hidden; }
-.hero-slider .slide                                     { -webkit-backface-visibility: hidden; display: block; height: 100%; width: 100%; background-repeat: no-repeat; background-size: cover; background-position: center center; background-attachment: fixed; 
+.hero-slider .slide                                     { -webkit-backface-visibility: hidden; display: block; height: 100%; width: 100%; background-repeat: no-repeat; background-size: cover; background-position: center center;
                                                             @include mq(below,900px) { background-attachment: scroll; }
                                                         }
 /* Written for FlexSlider */
+.hero-slider .slider-viewport                           { height: calc(100vh - 100px); } /* Otherwise the slider will collapse. */
 .hero-slider .slider-control-nav                        { @include reset(list); display: flex; justify-content: flex-end; position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 900; }
 .hero-slider .slider-control-nav li                     { margin-right: 5px;
                                                             &:last-child { margin-right: 0; }

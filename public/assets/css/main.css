@@ -906,13 +906,16 @@ hr {
   width: 100%;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
-  background-attachment: fixed; }
+  background-position: center center; }
   @media only screen and (max-width: 900px) {
     .hero-slider .slide {
       background-attachment: scroll; } }
 
 /* Written for FlexSlider */
+.hero-slider .slider-viewport {
+  height: calc(100vh - 100px); }
+
+/* Otherwise the slider will collapse. */
 .hero-slider .slider-control-nav {
   margin: 0;
   padding: 0;
