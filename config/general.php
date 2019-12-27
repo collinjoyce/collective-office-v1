@@ -26,6 +26,9 @@ return [
         // Whether to save the project config out to config/project.yaml
         // (see https://docs.craftcms.com/v3/project-config.html)
         'useProjectConfigFile' => false,
+        
+        // Don't transform gifs (there is quality loss and it might crash the server
+        'transformGifs' => false,
     ],
 
     // Dev environment settings
