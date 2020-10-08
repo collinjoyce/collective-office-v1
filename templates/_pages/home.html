@@ -6,7 +6,7 @@
         <div class="hero-slider" id="slider">
             <div class="slides">
                 {% for row in entry.slides.all() %}
-                <a href="{{ row.linkHref }}" class="slide" style="background-image: url('{% for image in row.image.limit(1).all() %}{{ image.url('ratioCropLarge') }}{% endfor %}')"></a>
+                <a href="{{ row.linkHref }}" class="slide" style="background-image: url('{% for image in row.image.limit(1).all() %}{{ image.url('ratioCropLarge') }}{% endfor %}'); background-position: {% if row.position == "centerTop" %}center top{% elseif row.position == "leftTop" %}left top{% elseif row.position == "rightTop" %}right top{% elseif row.position == "centerCenter" %}center center{% elseif row.position == "leftCenter" %}left center{% elseif row.position == "rightCenter" %}right center{% elseif row.position == "centerBottom" %}center bottom{% elseif row.position == "leftBottom" %}left bottom{% elseif row.position == "rightBottom" %}right bottom{% endif %};"></a>
                 {% endfor %}
             </div>
         </div>
