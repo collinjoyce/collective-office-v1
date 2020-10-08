@@ -8,7 +8,6 @@
 namespace craft\web;
 
 use Craft;
-use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\App;
@@ -20,16 +19,13 @@ use yii\web\UrlRule as YiiUrlRule;
 /**
  * @inheritdoc
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class UrlManager extends \yii\web\UrlManager
 {
-    // Constants
-    // =========================================================================
-
     /**
      * @event RegisterUrlRulesEvent The event that is triggered when registering
-     * URL rules for the Control Panel.
+     * URL rules for the control panel.
      *
      * ::: warning
      * This event gets called during class initialization, so you should always
@@ -69,11 +65,9 @@ class UrlManager extends \yii\web\UrlManager
      */
     const EVENT_REGISTER_SITE_URL_RULES = 'registerSiteUrlRules';
 
-    // Properties
-    // =========================================================================
-
     /**
      * @var bool Whether [[parseRequest()]] should check for a token on the request and route the request based on that.
+     * @since 3.2.0
      */
     public $checkToken = true;
 
@@ -91,9 +85,6 @@ class UrlManager extends \yii\web\UrlManager
      * @var
      */
     private $_matchedElementRoute;
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * Constructor.
@@ -119,22 +110,19 @@ class UrlManager extends \yii\web\UrlManager
             return false;
         }
 
-        if (($route = $this->_getRequestRoute($request)) !== false) {
-            // Merge in any additional route params
-            if (!empty($this->_routeParams)) {
-                if (isset($route[1])) {
-                    $route[1] = ArrayHelper::merge($route[1], $this->_routeParams);
-                } else {
-                    $route[1] = $this->_routeParams;
-                }
-            } else {
-                $this->_routeParams = $route[1];
-            }
-
-            return $route;
+        if (($route = $this->_getRequestRoute($request)) === false) {
+            return false;
         }
 
-        return false;
+        // Make sure there's a params array
+        if (!isset($route[1])) {
+            $route[1] = [];
+        }
+
+        // Merge in any additional route params
+        $route[1] = $this->_routeParams = ArrayHelper::merge($route[1], $this->_routeParams);
+
+        return $route;
     }
 
     /**
@@ -264,9 +252,6 @@ class UrlManager extends \yii\web\UrlManager
         $this->_matchedElementRoute = $element;
     }
 
-    // Protected Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -301,9 +286,6 @@ class UrlManager extends \yii\web\UrlManager
 
         return parent::buildRules($rules);
     }
-
-    // Private Methods
-    // =========================================================================
 
     /**
      * Returns the rules that should be used for the current request.
@@ -392,13 +374,11 @@ class UrlManager extends \yii\web\UrlManager
             !$request->getIsSiteRequest() ||
             Craft::$app->getConfig()->getGeneral()->headlessMode
         ) {
-
             $this->setMatchedElement(false);
             return false;
         }
 
         $path = $request->getPathInfo();
-        /** @var Element $element */
         /** @noinspection PhpUnhandledExceptionInspection */
         $element = Craft::$app->getElements()->getElementByUri($path, Craft::$app->getSites()->getCurrentSite()->id, true);
         $this->setMatchedElement($element ?: false);
@@ -425,7 +405,6 @@ class UrlManager extends \yii\web\UrlManager
         // Code adapted from \yii\web\UrlManager::parseRequest()
         /** @var $rule YiiUrlRule */
         foreach ($this->rules as $rule) {
-
             $route = $rule->parseRequest($this, $request);
 
             if (YII_DEBUG) {

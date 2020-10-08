@@ -15,30 +15,21 @@ use yii\base\ArrayableTrait;
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @author Global Network Group | Giel Tettelaar <giel@yellowflash.net>
- * @since 3.2
+ * @since 3.2.0
  */
 class ExampleArrayble implements Arrayable
 {
-    // Traits
-    // =========================================================================
-
     use ArrayableTrait;
 
-    // Public Properties
-    // =========================================================================
-
     /**
-     * @var
+     * @var string
      */
     public $exampleArrayableParam;
 
     /**
-     * @var
+     * @var string
      */
     public $extraField;
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * @return array
@@ -49,5 +40,4 @@ class ExampleArrayble implements Arrayable
             'extraField'
         ];
     }
-
 }

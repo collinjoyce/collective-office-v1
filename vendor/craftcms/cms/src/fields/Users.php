@@ -22,13 +22,10 @@ use GraphQL\Type\Definition\Type;
  * Users represents a Users field.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class Users extends BaseRelationField
 {
-    // Static
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -61,8 +58,6 @@ class Users extends BaseRelationField
         return UserQuery::class;
     }
 
-    // Public methods
-    // =========================================================================
     /**
      * @inheritdoc
      * @since 3.3.0
@@ -77,13 +72,14 @@ class Users extends BaseRelationField
         ];
     }
 
+
     /**
      * @inheritdoc
      * @since 3.3.0
      */
     public function getEagerLoadingGqlConditions()
     {
-        $allowedEntities = Gql::extractAllowedEntitiesFromToken();
+        $allowedEntities = Gql::extractAllowedEntitiesFromSchema();
         $allowedGroupUids = $allowedEntities['usergroups'] ?? [];
 
         if (in_array('everyone', $allowedGroupUids, false)) {

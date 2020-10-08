@@ -70,7 +70,6 @@ use craft\web\Session;
 use craft\web\UploadedFile;
 use craft\web\User;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Yaml\Yaml;
 use yii\base\ErrorException;
 use yii\base\Event;
 use yii\base\InvalidArgumentException;
@@ -91,8 +90,15 @@ use yii\mutex\Mutex;
  */
 class TestSetup
 {
-    // Public Methods
-    // =========================================================================
+    /**
+     * @var array Project Config data
+     */
+    private static $_parsedProjectConfig = [];
+
+    /**
+     * @var Config|null An instance of the config service.
+     */
+    private static $_configService = null;
 
     /**
      * Creates a craft object to play with. Ensures the Craft::$app service locator is working.
@@ -155,23 +161,40 @@ class TestSetup
     /**
      * @param string $class
      * @param array $params
-     * @return false|null
+     * @param bool $ignorePreviousMigrations
+     *
+     * @return bool
+     * @throws InvalidConfigException
+     * @throws \craft\errors\MigrationException
      */
-    public static function validateAndApplyMigration(string $class, array $params): bool
+    public static function validateAndApplyMigration(string $class, array $params, bool $ignorePreviousMigrations = false): bool
     {
         if (!class_exists($class)) {
-            throw new InvalidArgumentException('Class does not exist');
+            throw new InvalidArgumentException('Migration class: ' . $class . ' does not exist');
         }
 
         $migration = new $class($params);
 
         if (!$migration instanceof Migration) {
             throw new InvalidArgumentException(
-                'Migration class is not an instance of ' . Migration::class . ''
+                'Migration class is not an instance of: ' . Migration::class . ''
             );
         }
 
-        return $migration->safeUp();
+        $contentMigrator = Craft::$app->getContentMigrator();
+        // Should we ignore this migration?
+        if ($ignorePreviousMigrations) {
+            $history = $contentMigrator->getMigrationHistory();
+
+            // Technically... This migration is applied.
+            if (isset($history[$class])) {
+                return true;
+            }
+        }
+
+        $contentMigrator->migrateUp($migration);
+
+        return true;
     }
 
     /**
@@ -204,12 +227,12 @@ class TestSetup
         Craft::setAlias('@templates', CraftTest::normalizePathSeparators(Craft::getAlias('@templates')));
         Craft::setAlias('@translations', CraftTest::normalizePathSeparators(Craft::getAlias('@translations')));
 
-        $configService = self::createConfigService();
+        $configService = self::$_configService ?? self::createConfigService();
 
         $config = ArrayHelper::merge(
             [
                 'components' => [
-                'config' => $configService
+                    'config' => $configService
                 ],
             ],
             require $srcPath . '/config/app.php',
@@ -229,6 +252,7 @@ class TestSetup
         return ArrayHelper::merge($config, [
             'class' => $class,
             'id' => 'craft-test',
+            'env' => 'test',
             'basePath' => $srcPath
         ]);
     }
@@ -289,6 +313,7 @@ class TestSetup
         $contentMigrationsPath = realpath(CRAFT_MIGRATIONS_PATH);
         $storagePath = realpath(CRAFT_STORAGE_PATH);
         $templatesPath = realpath(CRAFT_TEMPLATES_PATH);
+        $testsPath = realpath(CRAFT_TESTS_PATH);
         $translationsPath = realpath(CRAFT_TRANSLATIONS_PATH);
 
         // Log errors to craft/storage/logs/phperrors.log
@@ -304,7 +329,6 @@ class TestSetup
         defined('CURLOPT_CONNECTTIMEOUT_MS') || define('CURLOPT_CONNECTTIMEOUT_MS', 156);
 
         $libPath = dirname(__DIR__, 2) . '/lib';
-
         $srcPath = dirname(__DIR__);
 
         require $libPath . '/yii2/Yii.php';
@@ -318,30 +342,77 @@ class TestSetup
         Craft::setAlias('@contentMigrations', $contentMigrationsPath);
         Craft::setAlias('@storage', $storagePath);
         Craft::setAlias('@templates', $templatesPath);
+        Craft::setAlias('@tests', $testsPath);
         Craft::setAlias('@translations', $translationsPath);
+
+        self::$_configService = self::createConfigService();
+        $generalConfig = self::$_configService->getConfigFromFile('general');
+
+        // Set any custom aliases
+        $customAliases = $generalConfig['aliases'] ?? $generalConfig['environmentVariables'] ?? null;
+        if (is_array($customAliases)) {
+            foreach ($customAliases as $name => $value) {
+                if (is_string($value)) {
+                    Craft::setAlias($name, $value);
+                }
+            }
+        }
 
         // Prevent `headers already sent` error when running tests in PhpStorm
         // https://stackoverflow.com/questions/31175636/headers-already-sent-running-unit-tests-in-phpstorm
-        ob_start ();
+        ob_start();
 
         return true;
     }
 
     /**
-     * @param string $projectConfigFile
+     * @param string $projectConfigFolder - Whether to override the folder specified in codeception.yml with a custom folder.
      * @throws ErrorException
      */
-    public static function setupProjectConfig(string $projectConfigFile)
+    public static function setupProjectConfig(string $projectConfigFolder = null)
     {
-        if (!is_file($projectConfigFile)) {
-            throw new InvalidArgumentException('Project config is not a file');
+        if (!$projectConfigFolder) {
+            $config = \craft\test\Craft::$instance->_getConfig('projectConfig');
+            $projectConfigFolder = dirname(CRAFT_TESTS_PATH) . DIRECTORY_SEPARATOR . $config['folder'];
         }
 
-        $testSuiteProjectConfigPath = CRAFT_CONFIG_PATH . '/project.yaml';
-        $contents = file_get_contents($projectConfigFile);
+        if (!is_dir($projectConfigFolder)) {
+            throw new InvalidArgumentException('Project config folder does not exist.');
+        }
 
-        // Write to the file.
-        FileHelper::writeToFile($testSuiteProjectConfigPath, $contents);
+        $dest = CRAFT_CONFIG_PATH . DIRECTORY_SEPARATOR . 'project';
+
+        // Remove any existing folders.
+        self::removeProjectConfigFolders($dest);
+
+        // Copy the data over.
+        FileHelper::copyDirectory($projectConfigFolder, $dest);
+    }
+
+    /**
+     * @param $path
+     * @throws ErrorException
+     */
+    public static function removeProjectConfigFolders($path)
+    {
+        // Clear any existing.
+        if (is_dir($path)) {
+            FileHelper::removeDirectory($path);
+        }
+    }
+
+    /**
+     * Returns the data from the project.yml file specified in the codeception.yml file.
+     *
+     * @return array The project config in either yaml or as an array.
+     */
+    public static function getSeedProjectConfigData()
+    {
+        if (!empty(self::$_parsedProjectConfig)) {
+            return self::$_parsedProjectConfig;
+        }
+
+        return self::$_parsedProjectConfig = Craft::$app->getProjectConfig()->get(null, true);
     }
 
     /**
@@ -353,18 +424,13 @@ class TestSetup
      */
     public static function useProjectConfig()
     {
-        if (!Craft::$app) {
+        $config = \craft\test\Craft::$instance->_getConfig('projectConfig');
+
+        if (!isset($config['folder'])) {
             return false;
         }
 
-        $projectConfig = \craft\test\Craft::$testConfig['projectConfig'] ?? [];
-        $useProjectConfig = Craft::$app->getConfig()->getGeneral();
-
-        if ($projectConfig && isset($projectConfig['file']) && $useProjectConfig) {
-            return $projectConfig;
-        }
-
-        return false;
+        return $config;
     }
 
     /**
@@ -388,15 +454,12 @@ class TestSetup
 
         // Replace the default site with what is desired by the project config. If project config is enabled.
         if ($projectConfig = self::useProjectConfig()) {
-            $existingProjectConfig = Yaml::parse(
-                file_get_contents($projectConfig['file']) ?: ''
-            );
+            $existingProjectConfig = self::getSeedProjectConfigData();
 
             if ($existingProjectConfig && isset($existingProjectConfig['sites'])) {
                 $doesConfigExist = ArrayHelper::firstWhere(
                     $existingProjectConfig['sites'],
-                    'primary',
-                    true
+                    'primary'
                 );
 
                 if ($doesConfigExist) {
@@ -416,9 +479,14 @@ class TestSetup
             'password' => 'craftcms2018!!',
             'email' => 'support@craftcms.com',
             'site' => $site,
+            'applyProjectConfigYaml' => false,
         ]);
 
         $migration->safeUp();
+
+        if ($projectConfig) {
+            Craft::$app->getProjectConfig()->applyYamlChanges();
+        }
     }
 
     /**
@@ -439,7 +507,7 @@ class TestSetup
 
         foreach ($serviceMap as $craftComponent) {
             $class = $craftComponent[0];
-            list ($accessMethod, $accessProperty) = $craftComponent[1];
+            [$accessMethod, $accessProperty] = $craftComponent[1];
 
             // Create a mock.
             $mock = self::getMock($test, $class);

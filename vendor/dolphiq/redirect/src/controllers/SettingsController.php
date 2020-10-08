@@ -16,6 +16,8 @@ use craft\helpers\UrlHelper;
 use dolphiq\redirect\RedirectPlugin;
 use dolphiq\redirect\elements\Redirect;
 
+use craft\records\Element as ElementRecord;
+
 use craft\db\Query;
 
 class SettingsController extends Controller
@@ -323,12 +325,18 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
         $redirect = new Redirect();
         $redirect->id = $request->getBodyParam('redirectId');
+        $redirect->uid = $request->getBodyParam('uid');
         $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
         $redirect->statusCode = $request->getBodyParam('statusCode');
         $siteId = $request->getBodyParam('siteId');
         if ($siteId == null) {
             $siteId = Craft::$app->getSites()->currentSite->id;
+        }
+
+        $elementRecord = ElementRecord::findOne($redirect->id);
+        if($elementRecord) {
+	        $redirect->uid = $elementRecord->uid;
         }
 
         $redirect->siteId = $siteId;
@@ -351,6 +359,15 @@ class SettingsController extends Controller
 
             return null;
         } else {
+          // remove form other sites
+          Craft::$app->getDb()->createCommand()
+            ->delete('{{%elements_sites}}', [
+              'AND',
+              ['elementId' => $redirect->id],
+              ['!=', 'siteId', $siteId]
+            ])
+            ->execute();
+
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,

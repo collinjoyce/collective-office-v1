@@ -11,7 +11,7 @@ use craft\gql\base\Arguments;
 use GraphQL\Type\Definition\Type;
 
 /**
- * Class Asset
+ * Class Transform
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.3.0
@@ -26,6 +26,11 @@ class Transform extends Arguments
         return [
             'handle' => [
                 'name' => 'handle',
+                'type' => Type::string(),
+                'description' => 'The handle of the named transform to use.'
+            ],
+            'transform' => [
+                'name' => 'transform',
                 'type' => Type::string(),
                 'description' => 'The handle of the named transform to use.'
             ],

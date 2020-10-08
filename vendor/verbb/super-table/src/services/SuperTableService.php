@@ -16,6 +16,7 @@ use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\db\Query;
 use craft\db\Table;
+use craft\elements\Entry;
 use craft\events\ConfigEvent;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Db;
@@ -247,10 +248,9 @@ class SuperTableService extends Component
     /**
      * Saves a block type.
      *
-     * @param SuperTableBlockTypeModel $blockType    The block type to be saved.
-     * @param bool            $validate       Whether the block type should be validated before being saved.
-     *                                        Defaults to `true`.
-     *
+     * @param SuperTableBlockTypeModel $blockType The block type to be saved.
+     * @param bool $runValidation Whether the block type should be validated before being saved.
+     * Defaults to `true`.
      * @return bool
      * @throws Exception if an error occurs when saving the block type
      * @throws \Throwable if reasons
@@ -261,57 +261,12 @@ class SuperTableService extends Component
             return false;
         }
 
-        $fieldsService = Craft::$app->getFields();
-
-        /** @var Field $parentField */
-        $parentField = $fieldsService->getFieldById($blockType->fieldId);
         $isNewBlockType = $blockType->getIsNew();
-
-        $projectConfig = Craft::$app->getProjectConfig();
-
-        $configData = [
-            'field' => $parentField->uid,
-        ];
-
-        // Now, take care of the field layout for this block type
-        // -------------------------------------------------------------
-        $fieldLayoutFields = [];
-        $sortOrder = 0;
-
-        $configData['fields'] = [];
-
-        foreach ($blockType->getFields() as $field) {
-            $configData['fields'][$field->uid] = $fieldsService->createFieldConfig($field);
-
-            $field->sortOrder = ++$sortOrder;
-            $fieldLayoutFields[] = $field;
-        }
-
-        $fieldLayoutTab = new FieldLayoutTab();
-        $fieldLayoutTab->name = 'Content';
-        $fieldLayoutTab->sortOrder = 1;
-        $fieldLayoutTab->setFields($fieldLayoutFields);
-
-        $fieldLayout = $blockType->getFieldLayout();
-
-        if ($fieldLayout->uid) {
-            $layoutUid = $fieldLayout->uid;
-        } else {
-            $layoutUid = StringHelper::UUID();
-            $fieldLayout->uid = $layoutUid;
-        }
-
-        $fieldLayout->setTabs([$fieldLayoutTab]);
-        $fieldLayout->setFields($fieldLayoutFields);
-
-        $fieldLayoutConfig = $fieldLayout->getConfig();
-
-        $configData['fieldLayouts'] = [
-            $layoutUid => $fieldLayoutConfig
-        ];
-
         $configPath = self::CONFIG_BLOCKTYPE_KEY . '.' . $blockType->uid;
-        $projectConfig->set($configPath, $configData);
+        $configData = $blockType->getConfig();
+        $field = $blockType->getField();
+
+        Craft::$app->getProjectConfig()->set($configPath, $configData, "Save super table block type for parent field “{$field->handle}”");
 
         if ($isNewBlockType) {
             $blockType->id = Db::idByUid('{{%supertableblocktypes}}', $blockType->uid);
@@ -342,18 +297,21 @@ class SuperTableService extends Component
             return;
         }
 
+        // Ensure any Matrix blocks are processed first, in the case of M-ST-M fields
+        Craft::$app->getProjectConfig()->processConfigChanges('matrixBlockTypes', false);
+
         $fieldsService = Craft::$app->getFields();
         $contentService = Craft::$app->getContent();
 
         $transaction = Craft::$app->getDb()->beginTransaction();
 
-        try {
-            // Store the current contexts.
-            $originalContentTable = $contentService->contentTable;
-            $originalFieldContext = $contentService->fieldContext;
-            $originalFieldColumnPrefix = $contentService->fieldColumnPrefix;
-            $originalOldFieldColumnPrefix = $fieldsService->oldFieldColumnPrefix;
+        // Store the current contexts.
+        $originalContentTable = $contentService->contentTable;
+        $originalFieldContext = $contentService->fieldContext;
+        $originalFieldColumnPrefix = $contentService->fieldColumnPrefix;
+        $originalOldFieldColumnPrefix = $fieldsService->oldFieldColumnPrefix;
 
+        try {
             // Get the block type record
             $blockTypeRecord = $this->_getBlockTypeRecord($blockTypeUid);
 
@@ -367,54 +325,63 @@ class SuperTableService extends Component
 
             /** @var SuperTableField $superTableField */
             $superTableField = $fieldsService->getFieldById($blockTypeRecord->fieldId);
-            $contentService->contentTable = $superTableField->contentTable;
-            $fieldsService->oldFieldColumnPrefix = 'field_';
 
-            $oldFields = $previousData['fields'] ?? [];
-            $newFields = $data['fields'] ?? [];
+            // Ignore it, if the parent field is not a SuperTable field.
+            if ($superTableField instanceof SuperTableField) {
+                $contentService->contentTable = $superTableField->contentTable;
+                $fieldsService->oldFieldColumnPrefix = 'field_';
 
-            // Remove fields that this block type no longer has
-            foreach ($oldFields as $fieldUid => $fieldData) {
-                if (!array_key_exists($fieldUid, $newFields)) {
-                    $fieldsService->applyFieldDelete($fieldUid);
+                $oldFields = $previousData['fields'] ?? [];
+                $newFields = $data['fields'] ?? [];
+
+                // Remove fields that this block type no longer has
+                foreach ($oldFields as $fieldUid => $fieldData) {
+                    if (!array_key_exists($fieldUid, $newFields)) {
+                        $fieldsService->applyFieldDelete($fieldUid);
+                    }
                 }
+
+                // (Re)save all the fields that now exist for this block.
+                foreach ($newFields as $fieldUid => $fieldData) {
+                    $fieldsService->applyFieldSave($fieldUid, $fieldData, 'superTableBlockType:' . $blockTypeUid);
+                }
+
+                // Refresh the schema cache
+                Craft::$app->getDb()->getSchema()->refresh();
+
+                if (
+                    !empty($data['fieldLayouts']) &&
+                    ($layoutConfig = reset($data['fieldLayouts']))
+                ) {
+                    // Save the field layout
+                    $layout = FieldLayout::createFromConfig($layoutConfig);
+                    $layout->id = $blockTypeRecord->fieldLayoutId;
+                    $layout->type = SuperTableBlockElement::class;
+                    $layout->uid = key($data['fieldLayouts']);
+
+                    $fieldsService->saveLayout($layout);
+                    $blockTypeRecord->fieldLayoutId = $layout->id;
+                } else if ($blockTypeRecord->fieldLayoutId) {
+                    // Delete the field layout
+                    $fieldsService->deleteLayoutById($blockTypeRecord->fieldLayoutId);
+                    $blockTypeRecord->fieldLayoutId = null;
+                }
+
+                // Save it
+                $blockTypeRecord->save(false);
             }
 
-            // (Re)save all the fields that now exist for this block.
-            foreach ($newFields as $fieldUid => $fieldData) {
-                $fieldsService->applyFieldSave($fieldUid, $fieldData, 'superTableBlockType:' . $blockTypeUid);
-            }
-
-            // Refresh the schema cache
-            Craft::$app->getDb()->getSchema()->refresh();
-
-            $contentService->fieldContext = $originalFieldContext;
-            $contentService->fieldColumnPrefix = $originalFieldColumnPrefix;
-            $contentService->contentTable = $originalContentTable;
-            $fieldsService->oldFieldColumnPrefix = $originalOldFieldColumnPrefix;
-
-            if (!empty($data['fieldLayouts'])) {
-                // Save the field layout
-                $layout = FieldLayout::createFromConfig(reset($data['fieldLayouts']));
-                $layout->id = $blockTypeRecord->fieldLayoutId;
-                $layout->type = SuperTableBlockElement::class;
-                $layout->uid = key($data['fieldLayouts']);
-
-                $fieldsService->saveLayout($layout);
-                $blockTypeRecord->fieldLayoutId = $layout->id;
-            } else if ($blockTypeRecord->fieldLayoutId) {
-                // Delete the field layout
-                $fieldsService->deleteLayoutById($blockTypeRecord->fieldLayoutId);
-                $blockTypeRecord->fieldLayoutId = null;
-            }
-
-            // Save it
-            $blockTypeRecord->save(false);
             $transaction->commit();
         } catch (\Throwable $e) {
             $transaction->rollBack();
             throw $e;
         }
+
+        // Restore the previous contexts.
+        $contentService->fieldContext = $originalFieldContext;
+        $contentService->fieldColumnPrefix = $originalFieldColumnPrefix;
+        $contentService->contentTable = $originalContentTable;
+        $fieldsService->oldFieldColumnPrefix = $originalOldFieldColumnPrefix;
 
         // Clear caches
         unset(
@@ -422,6 +389,9 @@ class SuperTableService extends Component
             $this->_blockTypesByFieldId[$blockTypeRecord->fieldId]
         );
         $this->_fetchedAllBlockTypesForFieldId[$blockTypeRecord->fieldId] = false;
+
+        // Invalidate Super Table block caches
+        Craft::$app->getElements()->invalidateCachesForElementType(SuperTableBlockElement::class);
     }
 
     /**
@@ -432,7 +402,7 @@ class SuperTableService extends Component
      */
     public function deleteBlockType(SuperTableBlockTypeModel $blockType): bool
     {
-        Craft::$app->getProjectConfig()->remove(self::CONFIG_BLOCKTYPE_KEY . '.' . $blockType->uid);
+        Craft::$app->getProjectConfig()->remove(self::CONFIG_BLOCKTYPE_KEY . '.' . $blockType->uid, "Delete super table block type for parent field “{$blockType->getField()->handle}”");
 
         return true;
     }
@@ -456,8 +426,7 @@ class SuperTableService extends Component
             return;
         }
 
-        $db = Craft::$app->getDb();
-        $transaction = $db->beginTransaction();
+        $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
             $blockType = $this->getBlockTypeById($blockTypeRecord->id);
@@ -485,35 +454,39 @@ class SuperTableService extends Component
 
             /** @var SuperTableField $superTableField */
             $superTableField = $fieldsService->getFieldById($blockType->fieldId);
-            $contentService->contentTable = $superTableField->contentTable;
+            
+            // Ignore it, if the parent field is not a Super Table field.
+            if ($superTableField instanceof SuperTableField) {
+                $contentService->contentTable = $superTableField->contentTable;
 
-            // Set the new fieldColumnPrefix
-            $originalFieldColumnPrefix = Craft::$app->getContent()->fieldColumnPrefix;
-            Craft::$app->getContent()->fieldColumnPrefix = 'field_';
+                // Set the new fieldColumnPrefix
+                $originalFieldColumnPrefix = Craft::$app->getContent()->fieldColumnPrefix;
+                Craft::$app->getContent()->fieldColumnPrefix = 'field_';
 
-            // Now delete the block type fields
-            foreach ($blockType->getFields() as $field) {
-                Craft::$app->getFields()->deleteField($field);
+                // Now delete the block type fields
+                foreach ($blockType->getFields() as $field) {
+                    Craft::$app->getFields()->deleteField($field);
+                }
+
+                // Restore the contentTable and the fieldColumnPrefix to original values.
+                Craft::$app->getContent()->fieldColumnPrefix = $originalFieldColumnPrefix;
+                $contentService->contentTable = $originalContentTable;
+
+                // Delete the field layout
+                $fieldLayoutId = (new Query())
+                    ->select(['fieldLayoutId'])
+                    ->from(['{{%supertableblocktypes}}'])
+                    ->where(['id' => $blockTypeRecord->id])
+                    ->scalar();
+
+                // Delete the field layout
+                Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
+
+                // Finally delete the actual block type
+                Db::delete('{{%supertableblocktypes}}', [
+                    'id' => $blockTypeRecord->id,
+                ]);
             }
-
-            // Restore the contentTable and the fieldColumnPrefix to original values.
-            Craft::$app->getContent()->fieldColumnPrefix = $originalFieldColumnPrefix;
-            $contentService->contentTable = $originalContentTable;
-
-            // Delete the field layout
-            $fieldLayoutId = (new Query())
-                ->select(['fieldLayoutId'])
-                ->from(['{{%supertableblocktypes}}'])
-                ->where(['id' => $blockTypeRecord->id])
-                ->scalar();
-
-            // Delete the field layout
-            Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
-
-            // Finally delete the actual block type
-            $db->createCommand()
-                ->delete('{{%supertableblocktypes}}', ['id' => $blockTypeRecord->id])
-                ->execute();
 
             $transaction->commit();
         } catch (\Throwable $e) {
@@ -528,6 +501,9 @@ class SuperTableService extends Component
             $this->_blockTypeRecordsById[$blockTypeRecord->id]
         );
         $this->_fetchedAllBlockTypesForFieldId[$blockTypeRecord->fieldId] = false;
+
+        // Invalidate Super Table block caches
+        Craft::$app->getElements()->invalidateCachesForElementType(SuperTableBlockElement::class);
     }
 
     /**
@@ -596,7 +572,6 @@ class SuperTableService extends Component
             return false;
         }
 
-
         $db = Craft::$app->getDb();
         $transaction = $db->beginTransaction();
 
@@ -612,28 +587,28 @@ class SuperTableService extends Component
                 }
             }
 
-            if (!Craft::$app->getProjectConfig()->areChangesPending(self::CONFIG_BLOCKTYPE_KEY)) {
+            if (!Craft::$app->getProjectConfig()->getIsApplyingYamlChanges()) {
                 // Delete the old block types first, in case there's a handle conflict with one of the new ones
                 $oldBlockTypes = $this->getBlockTypesByFieldId($supertableField->id);
                 $oldBlockTypesById = [];
-                
+
                 foreach ($oldBlockTypes as $blockType) {
                     $oldBlockTypesById[$blockType->id] = $blockType;
                 }
-                
+
                 foreach ($supertableField->getBlockTypes() as $blockType) {
                     if (!$blockType->getIsNew()) {
                         unset($oldBlockTypesById[$blockType->id]);
                     }
                 }
-                
+
                 foreach ($oldBlockTypesById as $blockType) {
                     $this->deleteBlockType($blockType);
                 }
-                
+
                 $originalContentTable = Craft::$app->getContent()->contentTable;
                 Craft::$app->getContent()->contentTable = $supertableField->contentTable;
-                
+
                 foreach ($supertableField->getBlockTypes() as $blockType) {
                     $blockType->fieldId = $supertableField->id;
                     $this->saveBlockType($blockType, false);
@@ -737,7 +712,7 @@ class SuperTableService extends Component
                     $parentFieldId = Db::idByUid('{{%matrixblocktypes}}', $parentFieldUid);
                 }
             }
-        
+
             if ($parentFieldId) {
                 $baseName = 'stc_' . $parentFieldId . '_' . strtolower($field->handle);
             }
@@ -766,28 +741,46 @@ class SuperTableService extends Component
     /**
      * Saves a Super Table field.
      *
-     * @param SuperTableField      $field The Super Table field
+     * @param SuperTableField  $field The Super Table field
      * @param ElementInterface $owner The element the field is associated with
-     * @param bool $checkOtherSites Whether to check other sites if the owner was just duplicated
      *
      * @throws \Throwable if reasons
      */
-    public function saveField(SuperTableField $field, ElementInterface $owner, $checkOtherSites = false)
+    public function saveField(SuperTableField $field, ElementInterface $owner)
     {
         /** @var Element $owner */
         $elementsService = Craft::$app->getElements();
-        /** @var MatrixBlockQuery $query */
+        /** @var SuperTableBlockQuery $query */
         $query = $owner->getFieldValue($field->handle);
         /** @var SuperTableBlockElement[] $blocks */
-        $blocks = $query->getCachedResult() ?? (clone $query)->anyStatus()->all();
+        if (($blocks = $query->getCachedResult()) !== null) {
+            $saveAll = false;
+        } else {
+            $blocksQuery = clone $query;
+            $blocks = $blocksQuery->anyStatus()->all();
+            $saveAll = true;
+        }
         $blockIds = [];
-        $collapsedBlockIds = [];
+        $sortOrder = 0;
 
         $transaction = Craft::$app->getDb()->beginTransaction();
         try {
             foreach ($blocks as $block) {
-                $block->ownerId = $owner->id;
-                $elementsService->saveElement($block, false);
+                $sortOrder++;
+                if ($saveAll || !$block->id || $block->dirty) {
+                    $block->ownerId = $owner->id;
+                    $block->sortOrder = $sortOrder;
+                    $elementsService->saveElement($block, false);
+                } else if ((int)$block->sortOrder !== $sortOrder) {
+                    // Just update its sortOrder
+                    $block->sortOrder = $sortOrder;
+                    Db::update('{{%supertableblocks}}', [
+                        'sortOrder' => $sortOrder,
+                    ], [
+                        'id' => $block->id,
+                    ], [], false);
+                }
+
                 $blockIds[] = $block->id;
             }
 
@@ -801,18 +794,21 @@ class SuperTableService extends Component
             ) {
                 // Find the owner's site IDs that *aren't* supported by this site's SuperTable blocks
                 $ownerSiteIds = ArrayHelper::getColumn(ElementHelper::supportedSitesForElement($owner), 'siteId');
-                $fieldSiteIds = $this->getSupportedSiteIdsForField($field, $owner);
+                $fieldSiteIds = $this->getSupportedSiteIds($field->propagationMethod, $owner);
                 $otherSiteIds = array_diff($ownerSiteIds, $fieldSiteIds);
 
                 // If propagateAll isn't set, only deal with sites that the element was just propagated to for the first time
                 if (!$owner->propagateAll) {
+                    $preexistingOtherSiteIds = array_diff($otherSiteIds, $owner->newSiteIds);
                     $otherSiteIds = array_intersect($otherSiteIds, $owner->newSiteIds);
+                } else {
+                    $preexistingOtherSiteIds = [];
                 }
 
                 if (!empty($otherSiteIds)) {
-                    // Get the original element and duplicated element for each of those sites
-                    /** @var Element[] $otherTargets */
-                    $otherTargets = $owner::find()
+                    // Get the owner element across each of those sites
+                    /** @var Element[] $localizedOwners */
+                    $localizedOwners = $owner::find()
                         ->drafts($owner->getIsDraft())
                         ->revisions($owner->getIsRevision())
                         ->id($owner->id)
@@ -823,20 +819,39 @@ class SuperTableService extends Component
                     // Duplicate SuperTable blocks, ensuring we don't process the same blocks more than once
                     $handledSiteIds = [];
 
-                    $cachedQuery = (clone $query)->anyStatus();
+                    $cachedQuery = clone $query;
+                    $cachedQuery->anyStatus();
                     $cachedQuery->setCachedResult($blocks);
                     $owner->setFieldValue($field->handle, $cachedQuery);
-                    
-                    foreach ($otherTargets as $otherTarget) {
+
+                    foreach ($localizedOwners as $localizedOwner) {
                         // Make sure we haven't already duplicated blocks for this site, via propagation from another site
-                        if (isset($handledSiteIds[$otherTarget->siteId])) {
+                        if (isset($handledSiteIds[$localizedOwner->siteId])) {
                             continue;
                         }
 
-                        $this->duplicateBlocks($field, $owner, $otherTarget);
+                        // Find all of the field’s supported sites shared with this target
+                        $sourceSupportedSiteIds = $this->getSupportedSiteIds($field->propagationMethod, $localizedOwner);
+
+                        // Do blocks in this target happen to share supported sites with a preexisting site?
+                        if (
+                            !empty($preexistingOtherSiteIds) &&
+                            !empty($sharedPreexistingOtherSiteIds = array_intersect($preexistingOtherSiteIds, $sourceSupportedSiteIds)) &&
+                            $preexistingLocalizedOwner = $owner::find()
+                                ->drafts($owner->getIsDraft())
+                                ->revisions($owner->getIsRevision())
+                                ->id($owner->id)
+                                ->siteId($sharedPreexistingOtherSiteIds)
+                                ->anyStatus()
+                                ->one()
+                        ) {
+                            // Just resave SuperTable blocks for that one site, and let them propagate over to the new site(s) from there
+                            $this->saveField($field, $preexistingLocalizedOwner);
+                        } else {
+                            $this->duplicateBlocks($field, $owner, $localizedOwner);
+                        }
 
                         // Make sure we don't duplicate blocks for any of the sites that were just propagated to
-                        $sourceSupportedSiteIds = $this->getSupportedSiteIdsForField($field, $otherTarget);
                         $handledSiteIds = array_merge($handledSiteIds, array_flip($sourceSupportedSiteIds));
                     }
 
@@ -862,16 +877,17 @@ class SuperTableService extends Component
      */
     public function duplicateBlocks(SuperTableField $field, ElementInterface $source, ElementInterface $target, bool $checkOtherSites = false)
     {
-        /** @var Element $source */
-        /** @var Element $target */
         $elementsService = Craft::$app->getElements();
         /** @var SuperTableBlockQuery $query */
         $query = $source->getFieldValue($field->handle);
         /** @var SuperTableBlockElement[] $blocks */
-        $blocks = $query->getCachedResult() ?? (clone $query)->anyStatus()->all();
+        if (($blocks = $query->getCachedResult()) === null) {
+            $blocksQuery = clone $query;
+            $blocks = $blocksQuery->anyStatus()->all();
+        }
         $newBlockIds = [];
-        $transaction = Craft::$app->getDb()->beginTransaction();
 
+        $transaction = Craft::$app->getDb()->beginTransaction();
         try {
             foreach ($blocks as $block) {
                 /** @var SuperTableBlockElement $newBlock */
@@ -881,7 +897,6 @@ class SuperTableService extends Component
                     'siteId' => $target->siteId,
                     'propagating' => false,
                 ]);
-
                 $newBlockIds[] = $newBlock->id;
             }
 
@@ -898,7 +913,7 @@ class SuperTableService extends Component
         if ($checkOtherSites && $field->propagationMethod !== SuperTableField::PROPAGATION_METHOD_ALL) {
             // Find the target's site IDs that *aren't* supported by this site's SuperTable blocks
             $targetSiteIds = ArrayHelper::getColumn(ElementHelper::supportedSitesForElement($target), 'siteId');
-            $fieldSiteIds = $this->getSupportedSiteIdsForField($field, $target);
+            $fieldSiteIds = $this->getSupportedSiteIds($field->propagationMethod, $target);
             $otherSiteIds = array_diff($targetSiteIds, $fieldSiteIds);
 
             if (!empty($otherSiteIds)) {
@@ -932,15 +947,15 @@ class SuperTableService extends Component
                     }
 
                     // Make sure we haven't already duplicated blocks for this site, via propagation from another site
-                    if (isset($handledSiteIds[$otherSource->siteId])) {
+                    if (in_array($otherSource->siteId, $handledSiteIds, false)) {
                         continue;
                     }
 
                     $this->duplicateBlocks($field, $otherSource, $otherTargets[$otherSource->siteId]);
 
                     // Make sure we don't duplicate blocks for any of the sites that were just propagated to
-                    $sourceSupportedSiteIds = $this->getSupportedSiteIdsForField($field, $otherSource);
-                    $handledSiteIds = array_merge($handledSiteIds, array_flip($sourceSupportedSiteIds));
+                    $sourceSupportedSiteIds = $this->getSupportedSiteIds($field->propagationMethod, $otherSource);
+                    $handledSiteIds = array_merge($handledSiteIds, $sourceSupportedSiteIds);
                 }
             }
         }
@@ -952,8 +967,22 @@ class SuperTableService extends Component
      * @param SuperTableField $field
      * @param ElementInterface $owner
      * @return int[]
+     * @deprecated in 2.3.2. Use [[getSupportedSiteIds()]] instead.
      */
     public function getSupportedSiteIdsForField(SuperTableField $field, ElementInterface $owner): array
+    {
+        return $this->getSupportedSiteIds($field->propagationMethod, $owner);
+    }
+
+    /**
+     * Returns the site IDs that are supported by SuperTable blocks for the given propagation method and owner element.
+     *
+     * @param string $propagationMethod
+     * @param ElementInterface $owner
+     * @return int[]
+     * @since 2.3.2
+     */
+    public function getSupportedSiteIds(string $propagationMethod, ElementInterface $owner): array    
     {
         /** @var Element $owner */
         /** @var Site[] $allSites */
@@ -962,7 +991,7 @@ class SuperTableService extends Component
         $siteIds = [];
 
         foreach ($ownerSiteIds as $siteId) {
-            switch ($field->propagationMethod) {
+            switch ($propagationMethod) {
                 case SuperTableField::PROPAGATION_METHOD_NONE:
                     $include = $siteId == $owner->siteId;
                     break;
@@ -983,6 +1012,102 @@ class SuperTableService extends Component
         }
 
         return $siteIds;
+    }
+
+    /**
+    * Expands the defualt relationship behaviour to include Super Table
+    * fields so that the user can filter by those too.
+    *
+    * For example:
+    *
+    * ```twig
+    * {% set reverseRelatedElements = craft.superTable.getRelatedElements({
+    *   relatedTo: {
+    *       targetElement: entry,
+    *       field: 'superTableFieldHandle.columnHandle',
+    *   },
+    *   site: 'siteHandle',
+    *   elementType: 'craft\\elements\\Entry',
+    *   criteria: {
+    *       id: 'not 123',
+    *       section: 'someSection',
+    *   }
+    * })->all() %}
+    * ```
+    *
+    * @method getRelatedElements
+    * @param  array                $params  Should contain 'relatedTo' but can also optionally
+    *                                       include 'elementType' and 'criteria'
+    * @return ElementCriteriaModel
+    */
+    public function getRelatedElementsQuery($params = null) {
+        // Parse out the field handles
+        $fieldParams = explode('.', $params['relatedTo']['field']);
+        
+        // For safety fail early if that didn't work
+        if (!isset($fieldParams[0]) || !isset($fieldParams[1])) {
+            return false;
+        }
+
+        $superTableFieldHandle = $fieldParams[0];
+        $superTableBlockFieldHandle = $fieldParams[1];
+
+        // Get the Super Table field and associated block type
+        $superTableField = Craft::$app->fields->getFieldByHandle($superTableFieldHandle);
+        $superTableBlockTypes = $this->getBlockTypesByFieldId($superTableField->id);
+        $superTableBlockType = $superTableBlockTypes[0];
+
+        // Loop the fields on the block type and save the first one that matches our handle
+        $fieldId = false;
+        foreach ($superTableBlockType->getFields() as $field) {
+            if ($field->handle === $superTableBlockFieldHandle) {
+                $fieldId = $field->id;
+                break;
+            }
+        }
+
+        // Check we got something and update the relatedTo criteria for our next elements call
+        if ($fieldId) {
+            $params['relatedTo']['field'] = $fieldId;
+        } else {
+            return false;
+        }
+
+        // Create an element query to find Super Table Blocks
+        $blockQuery = SuperTableBlockElement::find();
+
+        $blockCriteria = [
+            'relatedTo' => $params['relatedTo']
+        ];
+
+        // Check for site param add to blockCriteria
+        if (isset($params['site'])) {
+            $blockCriteria['site'] = $params['site'];
+        }
+
+        Craft::configure($blockQuery, $blockCriteria);
+
+        // Get the Super Table Blocks that are related to that field and criteria
+        $elementIds = $blockQuery->select('ownerId')->column();
+
+        // Default to getting Entry elements but let the user override
+        $elementType = $params['elementType'] ?? Entry::class;
+
+        // Start our final criteria with the element ids we just got
+        $finalCriteria = [
+            'id' => $elementIds,
+        ];
+        
+        // Check if the user gave us another criteria model and merge that in
+        if (isset($params['criteria'])) {
+            $finalCriteria = array_merge($finalCriteria, $params['criteria']);
+        }
+
+        // Create an element query based on our final criteria, and return
+        $elementQuery = $elementType::find();
+        Craft::configure($elementQuery, $finalCriteria);
+
+        return $elementQuery;
     }
 
 

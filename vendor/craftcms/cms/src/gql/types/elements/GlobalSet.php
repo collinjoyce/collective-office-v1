@@ -7,9 +7,7 @@
 
 namespace craft\gql\types\elements;
 
-use craft\gql\interfaces\Element as ElementInterface;
 use craft\gql\interfaces\elements\GlobalSet as GlobalSetInterface;
-use craft\gql\base\ObjectType;
 
 /**
  * Class GlobalSet
@@ -17,7 +15,7 @@ use craft\gql\base\ObjectType;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.3.0
  */
-class GlobalSet extends ObjectType
+class GlobalSet extends Element
 {
     /**
      * @inheritdoc
@@ -26,7 +24,6 @@ class GlobalSet extends ObjectType
     {
         $config['interfaces'] = [
             GlobalSetInterface::getType(),
-            ElementInterface::getType(),
         ];
 
         parent::__construct($config);

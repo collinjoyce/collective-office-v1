@@ -9,6 +9,7 @@ use craft\base\FieldInterface;
 use craft\base\GqlInlineFragmentInterface;
 use craft\base\Model;
 use craft\behaviors\FieldLayoutBehavior;
+use craft\helpers\StringHelper;
 
 use yii\base\InvalidConfigException;
 
@@ -56,20 +57,22 @@ class SuperTableBlockTypeModel extends Model implements GqlInlineFragmentInterfa
      */
     public function behaviors()
     {
-        return [
-            'fieldLayout' => [
-                'class' => FieldLayoutBehavior::class,
-                'elementType' => SuperTableBlockElement::class
-            ],
+        $behaviors = parent::behaviors();
+
+        $behaviors['fieldLayout'] = [
+            'class' => FieldLayoutBehavior::class,
+            'elementType' => SuperTableBlockElement::class,
         ];
+
+        return $behaviors;
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
+    protected function defineRules(): array
     {
-        $rules = parent::rules();
+        $rules = parent::defineRules();
         $rules[] = [['id', 'fieldId'], 'number', 'integerOnly' => true];
 
         return $rules;
@@ -160,5 +163,37 @@ class SuperTableBlockTypeModel extends Model implements GqlInlineFragmentInterfa
     public function getEagerLoadingPrefix(): string
     {
         return '';
+    }
+
+    /**
+     * Returns the field layout config for this block type.
+     *
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        $field = $this->getField();
+
+        $config = [
+            'field' => $field->uid,
+            'fields' => [],
+        ];
+
+        if (
+            ($fieldLayout = $this->getFieldLayout()) &&
+            ($fieldLayoutConfig = $fieldLayout->getConfig())
+        ) {
+            if (!$fieldLayout->uid) {
+                $fieldLayout->uid = StringHelper::UUID();
+            }
+            $config['fieldLayouts'][$fieldLayout->uid] = $fieldLayoutConfig;
+        }
+
+        $fieldsService = Craft::$app->getFields();
+        foreach ($this->getFields() as $field) {
+            $config['fields'][$field->uid] = $fieldsService->createFieldConfig($field);
+        }
+
+        return $config;
     }
 }

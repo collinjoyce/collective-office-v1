@@ -193,8 +193,22 @@ class m190120_000000_fix_supertablecontent_tables extends Migration
             $dbFieldColumns = [];
             $missingFields = false;
 
-            $superTableField = $fieldsService->getFieldById($superTableBlockType['fieldId']);
-            $fieldLayout = $fieldsService->getLayoutById($superTableBlockType['fieldLayoutId']);
+            $fieldId = $superTableBlockType['fieldId'] ?? '';
+
+            if (!$fieldId) {
+                echo "    > ERROR: Blocktype field missing `fieldId` ...\n";
+                continue;
+            }
+
+            $fieldLayoutId = $superTableBlockType['fieldLayoutId'] ?? '';
+
+            if (!$fieldLayoutId) {
+                echo "    > ERROR: Blocktype field #{$superTableBlockType['fieldId']} missing `fieldLayoutId` ...\n";
+                continue;
+            }
+
+            $superTableField = $fieldsService->getFieldById($fieldId);
+            $fieldLayout = $fieldsService->getLayoutById($fieldLayoutId);
 
             if (!$superTableField) {
                 echo "    > ERROR: Blocktype field #{$superTableBlockType['fieldId']} not found ...\n";
@@ -232,22 +246,34 @@ class m190120_000000_fix_supertablecontent_tables extends Migration
                 $contentTable = $superTableField->contentTable;
 
                 if ($contentTable) {
-                    $columns = $this->db->getTableSchema($contentTable)->columns;
+                    $contentTableSchema = Craft::$app->getDb()->getTableSchema($contentTable);
 
-                    foreach ($columns as $key => $column) {
-                        if (strstr($key, 'field_')) {
-                            $dbFieldColumns[] = $key;
+                    if ($contentTableSchema) {
+                        $columns = $contentTableSchema->columns;
+
+                        foreach ($columns as $key => $column) {
+                            if (strstr($key, 'field_')) {
+                                $dbFieldColumns[] = $key;
+                            }
                         }
-                    }
 
-                    // Sort items the same - just in case they're in a slightly different order, but all there
-                    sort($correctFieldColumns);
-                    sort($dbFieldColumns);
+                        // Sort items the same - just in case they're in a slightly different order, but all there
+                        sort($correctFieldColumns);
+                        sort($dbFieldColumns);
 
-                    if ($correctFieldColumns != $dbFieldColumns) {
-                        $fieldsService->saveField($superTableField);
+                        if ($correctFieldColumns != $dbFieldColumns) {
+                            $fieldsService->saveField($superTableField);
 
-                        echo "    > Content table {$contentTable} field columns have been corrected ...\n";
+                            echo "    > Content table {$contentTable} field columns have been corrected ...\n";
+                        }
+                    } else {
+                        $migration = new CreateSuperTableContentTable([
+                            'tableName' => $contentTable,
+                        ]);
+
+                        $migration->up();
+                        
+                        echo "    > Content table {$contentTable} has been re-created ...\n";
                     }
                 }
             }

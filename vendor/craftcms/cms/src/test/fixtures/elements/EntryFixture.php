@@ -18,13 +18,10 @@ use craft\elements\Entry;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @author Robuust digital | Bob Olde Hampsink <bob@robuust.digital>
  * @author Global Network Group | Giel Tettelaar <giel@yellowflash.net>
- * @since 3.2
+ * @since 3.2.0
  */
 abstract class EntryFixture extends ElementFixture
 {
-    // Public Properties
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -39,9 +36,6 @@ abstract class EntryFixture extends ElementFixture
      * @var array
      */
     public $typeIds = [];
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * {@inheritdoc}
@@ -91,8 +85,6 @@ abstract class EntryFixture extends ElementFixture
 
         return $query->one();
     }
-    // Protected Methods
-    // =========================================================================
 
     /**
      * @inheritdoc

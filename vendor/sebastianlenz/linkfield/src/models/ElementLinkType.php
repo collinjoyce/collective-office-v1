@@ -2,8 +2,12 @@
 
 namespace typedlinkfield\models;
 
+use Craft;
 use craft\base\ElementInterface;
+use craft\errors\SiteNotFoundException;
 use craft\helpers\Html;
+use Exception;
+use Throwable;
 use typedlinkfield\fields\LinkField;
 use typedlinkfield\utilities\ElementSourceValidator;
 use typedlinkfield\utilities\Url;
@@ -11,7 +15,6 @@ use yii\base\Model;
 
 /**
  * Class ElementLinkType
- * @package typedlinkfield\models
  */
 class ElementLinkType extends Model implements LinkTypeInterface
 {
@@ -28,6 +31,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
 
   /**
    * ElementLinkType constructor.
+   *
    * @param string|array $elementType
    * @param array $options
    */
@@ -42,7 +46,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return array
+   * @inheritDoc
    */
   public function getDefaultSettings(): array {
     return [
@@ -52,7 +56,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayName(): string {
     $elementType = $this->elementType;
@@ -60,10 +64,10 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayGroup(): string {
-    return \Craft::t('typedlinkfield', $this->displayGroup);
+    return Craft::t('typedlinkfield', $this->displayGroup);
   }
 
   /**
@@ -79,7 +83,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
       'site' => $link->getOwnerSite(),
     ];
 
-    if ($ignoreStatus || \Craft::$app->request->getIsCpRequest()) {
+    if ($ignoreStatus || Craft::$app->request->getIsCpRequest()) {
       $query += [
         'enabledForSite' => null,
         'status' => null,
@@ -91,13 +95,9 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @param Link $value
-   * @param ElementInterface $element
-   * @return string
+   * @inheritDoc
    */
-  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element): string {
+  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element = null): string {
     $settings   = $field->getLinkTypeSettings($linkTypeName, $this);
     $sources    = $settings['sources'];
     $isSelected = $value->type === $linkTypeName;
@@ -110,15 +110,15 @@ class ElementLinkType extends Model implements LinkTypeInterface
 
     try {
       $criteria['siteId'] = $this->getTargetSiteId($element);
-    } catch (\Exception $e) {}
+    } catch (Exception $e) {}
 
     $selectFieldOptions = [
       'criteria'    => $criteria,
       'elementType' => $this->elementType,
       'elements'    => $elements,
-      'id'          => $field->handle . '-' . $linkTypeName,
+      'id'          => $field->handle . '-' . $linkTypeName . '-value',
       'limit'       => 1,
-      'name'        => $field->handle . '[' . $linkTypeName . ']',
+      'name'        => $field->handle . '[' . $linkTypeName . '][value]',
       'storageKey'  => 'field.' . $field->handle,
       'sources'     => $sources === '*' ? null : $sources,
     ];
@@ -127,23 +127,23 @@ class ElementLinkType extends Model implements LinkTypeInterface
     if ($settings['allowCustomQuery']) {
       $queryFieldOptions = [
         'disabled'    => $field->isStatic(),
-        'id'          => $field->handle . '-customQuery',
-        'name'        => $field->handle . '[customQuery]',
-        'placeholder' => \Craft::t('typedlinkfield', 'Query, starts with "#" or "?"'),
+        'id'          => $field->handle . '-' . $linkTypeName . '-customQuery',
+        'name'        => $field->handle . '[' . $linkTypeName . '][customQuery]',
+        'placeholder' => Craft::t('typedlinkfield', 'Query, starts with "#" or "?"'),
         'value'       => empty($value->customQuery) ? '' : $value->customQuery,
       ];
     }
 
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_input-element', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_input-element', [
         'disabled'           => $field->isStatic(),
         'isSelected'         => $isSelected,
         'linkTypeName'       => $linkTypeName,
         'queryFieldOptions'  => $queryFieldOptions,
         'selectFieldOptions' => $selectFieldOptions,
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [ 'name' => $this->getDisplayName() ]
@@ -154,41 +154,31 @@ class ElementLinkType extends Model implements LinkTypeInterface
   /**
    * @param ElementInterface|null $element
    * @return int
-   * @throws \craft\errors\SiteNotFoundException
+   * @throws SiteNotFoundException
    */
   protected function getTargetSiteId(ElementInterface $element = null): int {
-    if (\Craft::$app->getIsMultiSite()) {
-      if ($element !== null) {
+    if (Craft::$app->getIsMultiSite()) {
+      if ($element !== null && property_exists($element, 'siteId')) {
         return $element->siteId;
       }
     }
 
-    return \Craft::$app->getSites()->getCurrentSite()->id;
+    return Craft::$app->getSites()->getCurrentSite()->id;
   }
 
   /**
-   * @param mixed $value
-   * @return mixed
-   */
-  public function getLinkValue($value) {
-    return is_array($value) ? $value[0] : null;
-  }
-
-  /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @return string
+   * @inheritDoc
    */
   public function getSettingsHtml(string $linkTypeName, LinkField $field): string {
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_settings-element', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_settings-element', [
         'settings'     => $field->getLinkTypeSettings($linkTypeName, $this),
         'elementName'  => $this->getDisplayName(),
         'linkTypeName' => $linkTypeName,
         'sources'      => $this->getSources(),
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [ 'name' => $this->getDisplayName() ]
@@ -213,8 +203,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritDoc
    */
   public function getText(Link $link) {
     $element = $link->getElement();
@@ -226,8 +215,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritDoc
    */
   public function getUrl(Link $link) {
     $element = $link->getElement();
@@ -266,7 +254,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
         }
 
         $url = (string)$baseUrl;
-      } catch (\Throwable $error) {}
+      } catch (Throwable $error) {}
     }
 
     return $url;
@@ -281,8 +269,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return bool
+   * @inheritDoc
    */
   public function isEmpty(Link $link): bool {
     if (is_numeric($link->value)) {
@@ -290,6 +277,21 @@ class ElementLinkType extends Model implements LinkTypeInterface
     }
 
     return true;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function readLinkValue($formData) {
+    if (
+      !is_array($formData) ||
+      !array_key_exists('value', $formData) ||
+      !is_array($formData['value'])
+    ) {
+      return null;
+    }
+
+    return $formData['value'][0];
   }
 
   /**
@@ -310,9 +312,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param LinkField $field
-   * @param Link $link
-   * @return array|null
+   * @inheritDoc
    */
   public function validateValue(LinkField $field, Link $link) {
     return null;

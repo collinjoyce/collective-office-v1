@@ -1,5 +1,191 @@
 # Changelog
 
+## 2.6.3 - 2020-09-28
+
+### Fixed
+- Fix InvalidArgumentException not found error. (thanks @smcyr).
+- Fix static matrix layout visual issue.
+
+## 2.6.2 - 2020-08-21
+
+### Fixed
+- Fix duplicate instructions for blocks in Craft 3.5+.
+- Fix checkbox styling in Craft 3.5+.
+
+## 2.6.1 - 2020-08-13
+
+### Fixed
+- Fix content table checking to cater for potentially problematic fields.
+
+## 2.6.0.4 - 2020-08-11
+
+### Fixed
+- Fix layout issue with row layout fields, where any overflow was hidden.
+
+## 2.6.0.3 - 2020-08-10
+
+### Fixed
+- Fix error when rebuilding project config.
+
+## 2.6.0.2 - 2020-08-10
+
+### Fixed
+- Fix potential error during migration from Craft 2.
+
+## 2.6.0.1 - 2020-08-10
+
+### Fixed
+- Fix GQL error.
+- Fix errors with block query.
+
+## 2.6.0 - 2020-08-10
+
+### Added
+- Add Craft 3.5+ compatibility.
+- Now requires Craft 3.5+.
+
+## 2.5.4 - 2020-07-30
+
+### Fixed
+- Fix an error when translating the description if the propagation method is set to PROPAGATION_METHOD_LANGUAGE. (thanks @andersaloof).
+- Fix JS error when adding new blocks.
+
+## 2.5.3 - 2020-07-28
+
+### Fixed
+- Refactor nested Matrix handling. Removed bespoke Matrix code, thanks to core Craft changes. Addresses a few upcoming changes in Craft 3.5+ (but backward-compatible).
+- Now requires Craft 3.4.30+.
+
+## 2.5.2 - 2020-07-28
+
+### Fixed
+- Fix Super Table field inside Matrix blocks not getting their content propagated. (thanks @brandonkelly).
+- Fix error when removing a row for Table layout.
+- Fix blocks not updating when nested in Matrix fields.
+- Fix row layout overflow in some field cases.
+- Improve handling of re-save field utility to handle parent Matrix fields.
+
+## 2.5.1 - 2020-05-31
+
+### Changed
+- Requires Craft 3.4.23+.
+
+### Fixed
+- Fixed an error that could occur when rendering field type settings, if the field’s `getSettingsHtml()` method was expecting to be called from a Twig template.
+- Fixed a race condition that could result in lost content under very specific conditions. ([#6154](https://github.com/craftcms/cms/issues/6154))
+
+## 2.5.0 - 2020-05-30
+
+### Changed
+- Requires Craft 3.4.22+.
+- Field settings are now lazy-loaded when the Field Type selection changes, improving the up-front load time of Edit Field pages.
+
+## 2.4.9 - 2020-04-16
+
+### Fixed
+- Fix logging error `Call to undefined method setFileLogging()`.
+
+## 2.4.8 - 2020-04-15
+
+### Changed
+- File logging now checks if the overall Craft app uses file logging.
+- Log files now only include `GET` and `POST` additional variables.
+
+### Fixed
+- Fix Table field (and some other fields) not working correctly for Super Table field settings.
+
+## 2.4.7 - 2020-04-02
+
+### Changed
+- Refactor row layout with CSS Grid (no style change).
+
+### Fixed
+- Additional checks for Webhooks compatibility. (thanks @johndwells).
+- Fix nested Matrix not focusing on Redactor fields.
+- Fix migration check for missing fieldLayoutId on blocktypes.
+- Fix content table fixer where the content database table doesn’t exist at all.
+- Fix lack of line-breaking for table layout column headings.
+- Fix row layout overflowing the page content in some cases.
+
+## 2.4.6 - 2020-02-28
+
+### Fixed
+- Fix PHP error.
+- Fix number field alignment.
+
+## 2.4.5 - 2020-02-24
+
+### Changed
+- Move `getRelatedElements()` to Service. (thanks @joshua-martin).
+- Now requires Craft ^3.4.8.
+
+### Fixed
+- Fixed a bug where querying for blocks on a newly-created element’s Super Table field value would yield no results..
+
+### Deprecated
+- Deprecated `verbb\supertable\queue\jobs\ApplySuperTablePropagationMethod`.
+
+## 2.4.4 - 2020-02-03
+
+### Fixed
+- Fix being unable to save Matrix-SuperTable-Matrix fields.
+
+## 2.4.3 - 2020-02-02
+
+### Fixed
+- Fix issue with static blocks not appearing correctly.
+
+## 2.4.2 - 2020-01-31
+
+### Fixed
+- Fix more Craft 3.4 issues.
+- Fixed a bug where fields weren’t always showing validation errors.
+- Fixed a bug where unsaved blocks could be lost if an entry was saved with validation errors, and any unsaved blocks weren’t modified before reattempting to save the entry.
+- Fixed a bug where it wasn’t possible to eager-load blocks on a draft.
+
+## 2.4.1 - 2020-01-30
+
+### Fixed
+- Fix Craft 3.4 issues.
+
+## 2.4.0 - 2020-01-29
+
+### Added
+- Craft 3.4 compatibility.
+
+## 2.3.3 - 2020-01-19
+
+### Fixed
+- Fix webhooks incompatibility.
+- Remove `SuperTableBlockNotFoundException` class.
+
+## 2.3.2 - 2020-01-09
+
+### Added
+- Added `verbb\supertable\queue\jobs\ApplySuperTablePropagationMethod`.
+- Added `verbb\supertable\services\SuperTableService::getSupportedSiteIds()`.
+
+### Changed
+- When a Super Table field’s Propagation Method setting changes, the field’s blocks are now duplicated into any sites where their content would have otherwise been deleted.
+
+### Deprecated
+- Deprecated `verbb\supertable\services\SuperTableService::getSupportedSiteIdsForField()`. `getSupportedSiteIds()` should be used instead.
+
+### Fixed
+- Fixed an error that could occur when syncing the project config, that could occur if a Super Table block had been changed to something else.
+- Fixed a bug where importing project config changes would break if they contained a changed global set and orphaned Super Table block types.
+- Fixed an error that could occur when saving a Super Table field.
+
+## 2.3.1 - 2019-11-27
+
+### Fixed
+- Fix matrix layout in some instances.
+- Ensure search keywords is checked by default.
+- Fix being unable to query ST fields directly.
+- Fix up GraphQL.
+- Fix width settings not saving correctly for project config.
+- Fix template mode for checker/fixers, producing 404 errors on direct-access.
+
 ## 2.3.0 - 2019-09-11
 
 ### Added

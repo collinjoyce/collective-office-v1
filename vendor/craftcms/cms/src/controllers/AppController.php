@@ -11,14 +11,17 @@ use Craft;
 use craft\base\UtilityInterface;
 use craft\enums\LicenseKeyStatus;
 use craft\errors\InvalidPluginException;
+use craft\helpers\Api;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Cp;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\models\Update;
+use craft\models\Updates;
 use craft\web\Controller;
 use craft\web\ServiceUnavailableHttpException;
 use Http\Client\Common\Exception\ServerErrorException;
+use yii\base\InvalidConfigException;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
@@ -30,22 +33,19 @@ use yii\web\ServerErrorHttpException;
  * Note that all actions in the controller require an authenticated Craft session via [[allowAnonymous]].
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
+ * @internal
  */
 class AppController extends Controller
 {
-    // Properties
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
     public $allowAnonymous = [
         'migrate' => self::ALLOW_ANONYMOUS_LIVE | self::ALLOW_ANONYMOUS_OFFLINE,
+        'broken-image' => self::ALLOW_ANONYMOUS_LIVE | self::ALLOW_ANONYMOUS_OFFLINE,
+        'health-check' => self::ALLOW_ANONYMOUS_LIVE,
     ];
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * @inheritdoc
@@ -57,6 +57,47 @@ class AppController extends Controller
         }
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * Returns an empty response.
+     *
+     * @since 3.5.0
+     */
+    public function actionHealthCheck(): Response
+    {
+        // All that matters is the 200 response
+        $this->response->format = Response::FORMAT_RAW;
+        $this->response->data = '';
+        return $this->response;
+    }
+
+    /**
+     * Returns the latest Craftnet API headers.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @since 3.3.16
+     */
+    public function actionApiHeaders(): Response
+    {
+        $this->requireCpRequest();
+        return $this->asJson(Api::headers());
+    }
+
+    /**
+     * Processes an API response’s headers.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     * @since 3.3.16
+     */
+    public function actionProcessApiResponseHeaders()
+    {
+        $this->requireCpRequest();
+        $headers = $this->request->getRequiredBodyParam('headers');
+        Api::processResponseHeaders($headers);
+        return $this->asJson(1);
     }
 
     /**
@@ -76,12 +117,52 @@ class AppController extends Controller
             throw new ForbiddenHttpException('User is not permitted to perform this action');
         }
 
-        $request = Craft::$app->getRequest();
-        $forceRefresh = (bool)$request->getParam('forceRefresh');
-        $includeDetails = (bool)$request->getParam('includeDetails');
+        $updatesService = Craft::$app->getUpdates();
 
-        $updates = Craft::$app->getUpdates()->getUpdates($forceRefresh);
+        if ($this->request->getParam('onlyIfCached') && !$updatesService->getIsUpdateInfoCached()) {
+            return $this->asJson(['cached' => false]);
+        }
 
+        $forceRefresh = (bool)$this->request->getParam('forceRefresh');
+        $includeDetails = (bool)$this->request->getParam('includeDetails');
+
+        $updates = $updatesService->getUpdates($forceRefresh);
+        return $this->_updatesResponse($updates, $includeDetails);
+    }
+
+    /**
+     * Caches new update info and then returns it.
+     *
+     * @return Response
+     * @throws ForbiddenHttpException
+     * @since 3.3.16
+     */
+    public function actionCacheUpdates(): Response
+    {
+        $this->requireAcceptsJson();
+
+        // Require either the 'performUpdates' or 'utility:updates' permission
+        $userSession = Craft::$app->getUser();
+        if (!$userSession->checkPermission('performUpdates') && !$userSession->checkPermission('utility:updates')) {
+            throw new ForbiddenHttpException('User is not permitted to perform this action');
+        }
+
+        $updateData = $this->request->getBodyParam('updates');
+        $updatesService = Craft::$app->getUpdates();
+        $updates = $updatesService->cacheUpdates($updateData);
+        $includeDetails = (bool)$this->request->getParam('includeDetails');
+        return $this->_updatesResponse($updates, $includeDetails);
+    }
+
+    /**
+     * Returns updates info as JSON
+     *
+     * @param Updates $updates The updates model
+     * @param bool $includeDetails Whether to include update details
+     * @return Response
+     */
+    private function _updatesResponse(Updates $updates, bool $includeDetails): Response
+    {
         $allowUpdates = (
             Craft::$app->getConfig()->getGeneral()->allowUpdates &&
             Craft::$app->getConfig()->getGeneral()->allowAdminChanges &&
@@ -119,12 +200,13 @@ class AppController extends Controller
      * plugin, & content migrations, and syncs `project.yaml` changes in one go.
      *
      * This action can be used as a post-deploy webhook with site deployment
-     * services (like [DeployBot](https://deploybot.com/)) to minimize site
+     * services (like [DeployBot](https://deploybot.com/) or [DeployPlace](https://deployplace.com/)) to minimize site
      * downtime after a deployment.
      *
+     * @param bool $applyProjectConfigChanges
      * @throws ServerErrorException if something went wrong
      */
-    public function actionMigrate()
+    public function actionMigrate(bool $applyProjectConfigChanges = false)
     {
         $this->requirePostRequest();
 
@@ -136,11 +218,13 @@ class AppController extends Controller
         $runMigrations = !empty($handles);
 
         $projectConfigService = Craft::$app->getProjectConfig();
-        $applyProjectConfigChanges = $projectConfigService->areChangesPending();
+        if ($applyProjectConfigChanges) {
+            $applyProjectConfigChanges = $projectConfigService->areChangesPending();
+        }
 
         if (!$runMigrations && !$applyProjectConfigChanges) {
             // That was easy
-            return Craft::$app->getResponse();
+            return $this->response;
         }
 
         // Bail if Craft is already in maintenance mode
@@ -194,7 +278,7 @@ class AppController extends Controller
                 }
             }
 
-            $error = 'An error occurred running nuw migrations.';
+            $error = 'An error occurred running new migrations.';
             if ($restored) {
                 $error .= ' The database has been restored to its previous state.';
             } else if (isset($restoreException)) {
@@ -208,7 +292,7 @@ class AppController extends Controller
         }
 
         Craft::$app->disableMaintenanceMode();
-        return Craft::$app->getResponse();
+        return $this->response;
     }
 
     /**
@@ -234,7 +318,7 @@ class AppController extends Controller
     }
 
     /**
-     * Loads any CP alerts.
+     * Returns any alerts that should be displayed in the control panel.
      *
      * @return Response
      */
@@ -243,7 +327,7 @@ class AppController extends Controller
         $this->requireAcceptsJson();
         $this->requirePermission('accessCp');
 
-        $path = Craft::$app->getRequest()->getRequiredBodyParam('path');
+        $path = $this->request->getRequiredBodyParam('path');
 
         // Fetch 'em and send 'em
         $alerts = Cp::alerts($path, true);
@@ -252,7 +336,7 @@ class AppController extends Controller
     }
 
     /**
-     * Shuns a CP alert for 24 hours.
+     * Shuns a control panel alert for 24 hours.
      *
      * @return Response
      */
@@ -261,7 +345,7 @@ class AppController extends Controller
         $this->requireAcceptsJson();
         $this->requirePermission('accessCp');
 
-        $message = Craft::$app->getRequest()->getRequiredBodyParam('message');
+        $message = $this->request->getRequiredBodyParam('message');
         $user = Craft::$app->getUser()->getIdentity();
 
         $currentTime = DateTimeHelper::currentUTCDateTime();
@@ -273,7 +357,7 @@ class AppController extends Controller
             ]);
         }
 
-        return $this->asErrorJson(Craft::t('app', 'An unknown error occurred.'));
+        return $this->asErrorJson(Craft::t('app', 'A server error occurred.'));
     }
 
     /**
@@ -288,7 +372,7 @@ class AppController extends Controller
         $this->requireAcceptsJson();
         $this->requireAdmin();
 
-        $edition = Craft::$app->getRequest()->getRequiredBodyParam('edition');
+        $edition = $this->request->getRequiredBodyParam('edition');
         $licensedEdition = Craft::$app->getLicensedEdition();
 
         if ($licensedEdition === null) {
@@ -346,7 +430,9 @@ class AppController extends Controller
      */
     public function actionGetPluginLicenseInfo(): Response
     {
-        $result = $this->_pluginLicenseInfo();
+        $this->requireAdmin();
+        $pluginLicenses = $this->request->getBodyParam('pluginLicenses');
+        $result = $this->_pluginLicenseInfo($pluginLicenses);
         ArrayHelper::multisort($result, 'name');
         return $this->asJson($result);
     }
@@ -362,20 +448,16 @@ class AppController extends Controller
         $this->requireAcceptsJson();
         $this->requireAdmin();
 
-        $request = Craft::$app->getRequest();
-        $handle = $request->getRequiredBodyParam('handle');
-        $newKey = $request->getRequiredBodyParam('key');
+        $handle = $this->request->getRequiredBodyParam('handle');
+        $newKey = $this->request->getRequiredBodyParam('key');
 
         // Get the current key and set the new one
         $pluginsService = Craft::$app->getPlugins();
         $pluginsService->setPluginLicenseKey($handle, $newKey ?: null);
 
         // Return the new plugin license info
-        return $this->asJson($this->_pluginLicenseInfo()[$handle]);
+        return $this->asJson(1);
     }
-
-    // Private Methods
-    // =========================================================================
 
     /**
      * Transforms an update for inclusion in [[actionCheckForUpdates()]] response JSON.
@@ -421,21 +503,27 @@ class AppController extends Controller
     /**
      * Returns plugin license info.
      *
+     * @param array|null $pluginLicenses
      * @return array
      */
-    private function _pluginLicenseInfo(): array
+    private function _pluginLicenseInfo(array $pluginLicenses = null): array
     {
         $result = [];
 
-        // Update our records and get license info from the API
-        $licenseInfo = Craft::$app->getApi()->getLicenseInfo(['plugins']);
-        $allPluginInfo = Craft::$app->getPlugins()->getAllPluginInfo();
+        if ($pluginLicenses === null) {
+            // Update our records and get license info from the API
+            $licenseInfo = Craft::$app->getApi()->getLicenseInfo(['plugins']);
+            $pluginLicenses = $licenseInfo['pluginLicenses'] ?? [];
+        }
+
+        $pluginsService = Craft::$app->getPlugins();
+        $allPluginInfo = $pluginsService->getAllPluginInfo();
 
         // Update our records & use all licensed plugins as a starting point
-        if (!empty($licenseInfo['pluginLicenses'])) {
-            $defaultIconUrl = Craft::$app->getAssetManager()->getPublishedUrl('@app/icons/default-plugin.svg', true);
+        if (!empty($pluginLicenses)) {
+            $defaultIconUrl = Craft::$app->getAssetManager()->getPublishedUrl('@appicons/default-plugin.svg', true);
             $formatter = Craft::$app->getFormatter();
-            foreach ($licenseInfo['pluginLicenses'] as $pluginLicenseInfo) {
+            foreach ($pluginLicenses as $pluginLicenseInfo) {
                 if (isset($pluginLicenseInfo['plugin'])) {
                     $pluginInfo = $pluginLicenseInfo['plugin'];
                     $handle = $pluginInfo['handle'];
@@ -445,7 +533,7 @@ class AppController extends Controller
                     if (
                         !isset($allPluginInfo[$handle]) ||
                         !$allPluginInfo[$handle]['licenseKey'] ||
-                        $allPluginInfo[$handle]['licenseKey'] === $pluginLicenseInfo['key']
+                        $pluginsService->normalizePluginLicenseKey(Craft::parseEnv($allPluginInfo[$handle]['licenseKey'])) === $pluginLicenseInfo['key']
                     ) {
                         $result[$handle] = [
                             'edition' => null,
@@ -484,7 +572,7 @@ class AppController extends Controller
                 'version' => $pluginInfo['version'],
                 'hasMultipleEditions' => $pluginInfo['hasMultipleEditions'],
                 'edition' => $pluginInfo['edition'],
-                'licenseKey' => $pluginInfo['licenseKey'],
+                'licenseKey' => $pluginsService->normalizePluginLicenseKey(Craft::parseEnv($pluginInfo['licenseKey'])),
                 'licensedEdition' => $pluginInfo['licensedEdition'],
                 'licenseKeyStatus' => $pluginInfo['licenseKeyStatus'],
                 'licenseIssues' => $pluginInfo['licenseIssues'],
@@ -494,5 +582,26 @@ class AppController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * Sends a broken image.
+     *
+     * @return Response
+     * @throws InvalidConfigException
+     * @since 3.5.0
+     */
+    public function actionBrokenImage(): Response
+    {
+        $generalConfig = Craft::$app->getConfig()->getGeneral();
+        $imagePath = Craft::getAlias($generalConfig->brokenImagePath);
+        if (!is_file($imagePath)) {
+            throw new InvalidConfigException("Invalid broken image path: $generalConfig->brokenImagePath");
+        }
+
+        $statusCode = $this->response->getStatusCode();
+        return $this->response
+            ->sendFile($imagePath, ['inline' => true])
+            ->setStatusCode($statusCode);
     }
 }

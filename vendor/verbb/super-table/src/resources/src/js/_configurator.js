@@ -9,6 +9,8 @@ Craft.SuperTable.Configurator = Garnish.Base.extend({
 
     inputNamePrefix: null,
     inputIdPrefix: null,
+    fieldTypeSettingsNamespace: null,
+    placeholderKey: null,
 
     blockTypeId: null,
     blockTypeNamePrefix: null,
@@ -30,9 +32,15 @@ Craft.SuperTable.Configurator = Garnish.Base.extend({
     totalNewFields: 0,
     fieldSettings: null,
 
-    init: function(id, fieldTypeInfo, inputNamePrefix) {
+    _fieldTypeSettingsHtml: null,
+    _cancelToken: null,
+    _ignoreFailedRequest: false,
+
+    init: function(id, fieldTypeInfo, inputNamePrefix, fieldTypeSettingsNamespace, placeholderKey) {
+        this.fieldTypeSettingsNamespace = fieldTypeSettingsNamespace;
         this.fieldTypeInfo = fieldTypeInfo;
         this.id = id;
+        this.placeholderKey = placeholderKey;
 
         this.inputNamePrefix = inputNamePrefix + '[blockTypes][' + this.id + ']';
         this.inputIdPrefix = Craft.formatInputId(this.inputNamePrefix);
@@ -43,6 +51,8 @@ Craft.SuperTable.Configurator = Garnish.Base.extend({
         this.$fieldSettingsColumnContainer = this.$container.children('.stc-settings').children();
         this.$fieldItemsOuterContainer = this.$fieldsColumnContainer.children('.field-items');
         this.$fieldSettingItemsContainer = this.$fieldSettingsColumnContainer.children('.field-items');
+
+        this._fieldTypeSettingsHtml = {};
         
         this.$newFieldBtn = this.$fieldItemsOuterContainer.children('.btn');
 
@@ -130,6 +140,44 @@ Craft.SuperTable.Configurator = Garnish.Base.extend({
         this.fieldSort.addItems($item);
     },
 
+    getFieldTypeSettingsHtml: function(type) {
+        return new Promise((resolve, reject) => {
+            if (typeof this._fieldTypeSettingsHtml[type] !== 'undefined') {
+                resolve(this._fieldTypeSettingsHtml[type]);
+                return;
+            }
+
+            // Cancel the current request
+            if (this._cancelToken) {
+                this._ignoreFailedRequest = true;
+                this._cancelToken.cancel();
+                Garnish.requestAnimationFrame(() => {
+                    this._ignoreFailedRequest = false;
+                });
+            }
+
+            // Create a cancel token
+            this._cancelToken = axios.CancelToken.source();
+
+            Craft.sendActionRequest('POST', 'fields/render-settings', {
+                cancelToken: this._cancelToken.token,
+                data: {
+                    type: type,
+                    namespace: this.fieldTypeSettingsNamespace,
+                }
+            }).then(response => {
+                this._fieldTypeSettingsHtml[type] = response.data;
+                
+                resolve(response.data);
+            }).catch(() => {
+                if (!this._ignoreFailedRequest) {
+                    Craft.cp.displayError(Craft.t('app', 'A server error occurred.'));
+                }
+                reject();
+            });
+        });
+    },
+
     // selfDestruct: function() {
     //     this.deselect();
     //     this.$item.remove();
@@ -176,6 +224,7 @@ Craft.SuperTable.Field = Garnish.Base.extend({
         this.inputIdPrefix = this.blockType.inputIdPrefix + '-fields-' + this.id;
 
         this.initializedFieldTypeSettings = {};
+        this.fieldTypeSettingsTemplates = {};
 
         this.$nameLabel = this.$item.children('.name');
         this.$handleLabel = this.$item.children('.handle');
@@ -209,8 +258,8 @@ Craft.SuperTable.Field = Garnish.Base.extend({
         }
 
         this.addListener(this.$item, 'click', 'select');
-        this.addListener(this.$nameInput, 'textchange', 'updateNameLabel');
-        this.addListener(this.$handleInput, 'textchange', 'updateHandleLabel');
+        this.addListener(this.$nameInput, 'input', 'updateNameLabel');
+        this.addListener(this.$handleInput, 'input', 'updateHandleLabel');
         this.addListener(this.$requiredCheckbox, 'change', 'updateRequiredIcon');
         this.addListener(this.$typeSelect, 'change', 'onTypeSelectChange');
         this.addListener(this.$deleteBtn, 'click', 'confirmDelete');
@@ -236,6 +285,8 @@ Craft.SuperTable.Field = Garnish.Base.extend({
                 this.$nameInput.focus();
             }, this), 100);
         }
+
+        Garnish.$win.trigger('resize');
     },
 
     deselect: function() {
@@ -279,38 +330,58 @@ Craft.SuperTable.Field = Garnish.Base.extend({
         this.selectedFieldType = type;
         this.$typeSelect.val(type);
 
-        var firstTime = (typeof this.initializedFieldTypeSettings[type] === 'undefined'),
-            $body,
-            footHtml;
+        // Show a spinner
+        this.$typeSettingsContainer.html('<div class="zilch"><div class="spinner"></div></div>');
 
-        if (firstTime) {
-            var info = this.configurator.getFieldTypeInfo(type),
-                bodyHtml = this.getParsedFieldTypeHtml(info.settingsBodyHtml);
+        this.getFieldTypeSettings(type).then(({fresh, $settings, headHtml, footHtml}) => {
+            this.$typeSettingsContainer.html('').append($settings);
+            
+            if (fresh) {
+                Craft.initUiElements($settings);
+                Craft.appendHeadHtml(headHtml);
+                Craft.appendFootHtml(footHtml);
+            }
 
-            footHtml = this.getParsedFieldTypeHtml(info.settingsFootHtml);
-            $body = $('<div>' + bodyHtml + '</div>');
+            // In case Firefox was sleeping on the job
+            this.$typeSettingsContainer.trigger('resize');
+        }).catch(() => {
+            this.$typeSettingsContainer.html('');
+        });
+    },
 
-            this.initializedFieldTypeSettings[type] = $body;
-        }
-        else {
-            $body = this.initializedFieldTypeSettings[type];
-        }
+    getFieldTypeSettings: function(type) {
+        return new Promise((resolve, reject) => {
+            if (typeof this.initializedFieldTypeSettings[type] !== 'undefined') {
+                resolve({
+                    fresh: false,
+                    $settings: this.initializedFieldTypeSettings[type],
+                });
 
-        $body.appendTo(this.$typeSettingsContainer);
+                return;
+            }
 
-        if (firstTime) {
-            Craft.initUiElements($body);
-            Garnish.$bod.append(footHtml);
-        }
-
-        // Firefox might have been sleeping on the job.
-        this.$typeSettingsContainer.trigger('resize');
+            this.configurator.getFieldTypeSettingsHtml(type).then(({settingsHtml, headHtml, footHtml}) => {
+                settingsHtml = this.getParsedFieldTypeHtml(settingsHtml);
+                headHtml = this.getParsedFieldTypeHtml(headHtml);
+                footHtml = this.getParsedFieldTypeHtml(footHtml);
+                let $settings = $('<div/>').html(settingsHtml);
+                this.initializedFieldTypeSettings[type] = $settings;
+                
+                resolve({
+                    fresh: true,
+                    $settings: $settings,
+                    headHtml: headHtml,
+                    footHtml: footHtml,
+                });
+            }).catch($.noop);
+        });
     },
 
     getParsedFieldTypeHtml: function(html) {
         if (typeof html === 'string') {
-            html = html.replace(/__BLOCK_TYPE_ST__/g, this.blockType.id);
-            html = html.replace(/__FIELD_ST__/g, this.id);
+            console.log('ST Placeholder: ' + this.configurator.placeholderKey)
+            html = html.replace(new RegExp(`__BLOCK_TYPE_${this.configurator.placeholderKey}__`, 'g'), this.blockType.id);
+            html = html.replace(new RegExp(`__FIELD_${this.configurator.placeholderKey}__`, 'g'), this.id);
         }
         else {
             html = '';
@@ -360,9 +431,10 @@ Craft.SuperTable.Field = Garnish.Base.extend({
         }).appendTo($container);
 
         Craft.ui.createCheckboxField({
-            label: Craft.t('app', 'Use this field’s values as search keywords?'),
+            label: Craft.t('app', 'Use this field’s values as search keywords'),
             id: this.inputIdPrefix + '-searchable',
-            name: this.inputNamePrefix + '[searchable]'
+            name: this.inputNamePrefix + '[searchable]',
+            checked: true,
         }).appendTo($container);
 
         var fieldTypeOptions = [];

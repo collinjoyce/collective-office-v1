@@ -39,9 +39,25 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
     /**
      * @inheritdoc
      */
+    public static function lowerDisplayName(): string
+    {
+        return Craft::t('super-table', 'SuperTable block');
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function pluralDisplayName(): string
     {
         return Craft::t('super-table', 'SuperTable Blocks');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralLowerDisplayName(): string
+    {
+        return Craft::t('super-table', 'SuperTable blocks');
     }
 
     /**
@@ -78,6 +94,7 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
 
     /**
      * @inheritdoc
+     * @return SuperTableBlockQuery The newly created [[SuperTableBlockQuery]] instance.
      */
     public static function find(): ElementQueryInterface
     {
@@ -153,6 +170,13 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
     public $sortOrder;
 
     /**
+     * @var bool Whether the block has changed.
+     * @internal
+     * @since 2.4.0
+     */
+    public $dirty = false;
+
+    /**
      * @var bool Collapsed
      */
     public $collapsed = false;
@@ -195,16 +219,16 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
         $names = parent::extraFields();
         $names[] = 'owner';
         $names[] = 'type';
-        
+
         return $names;
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
+    protected function defineRules(): array
     {
-        $rules = parent::rules();
+        $rules = parent::defineRules();
         $rules[] = [['fieldId', 'ownerId', 'typeId', 'sortOrder'], 'number', 'integerOnly' => true];
         return $rules;
     }
@@ -224,7 +248,19 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
             return [Craft::$app->getSites()->getPrimarySite()->id];
         }
 
-        return SuperTable::$plugin->getService()->getSupportedSiteIdsForField($this->_field(), $owner);
+        return SuperTable::$plugin->getService()->getSupportedSiteIds($this->_field()->propagationMethod, $owner);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCacheTags(): array
+    {
+        return [
+            "field-owner:$this->fieldId-$this->ownerId",
+            "field:$this->fieldId",
+            "owner:$this->ownerId",
+        ];
     }
 
     /**
@@ -247,7 +283,7 @@ class SuperTableBlockElement extends Element implements BlockElementInterface
         $blockType = SuperTable::$plugin->getService()->getBlockTypeById($this->typeId);
 
         if (!$blockType) {
-            throw new InvalidConfigException('Invalid SuperTable block ID: ' . $this->typeId);
+            throw new InvalidConfigException('Invalid SuperTable block type ID: ' . $this->typeId);
         }
 
         return $blockType;

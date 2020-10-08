@@ -7,6 +7,7 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
     {
         requestId: 0,
         hud: null,
+        $uploadBtn: null,
         uploader: null,
         progressBar: null,
 
@@ -23,7 +24,10 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
             }
 
             this.base.apply(this, arguments);
-            this._attachUploader();
+
+            if (this.settings.canUpload) {
+                this._attachUploader();
+            }
 
             this.addListener(this.$elementsContainer, 'keydown', this._onKeyDown.bind(this));
             this.elementSelect.on('focusItem', this._onElementFocus.bind(this));
@@ -85,7 +89,8 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
             return this.base($element, {
                 params: {
                     defaultFieldLayoutId: this.settings.defaultFieldLayoutId
-                }
+                },
+                input: this
             });
         },
 
@@ -96,13 +101,27 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
             this.progressBar = new Craft.ProgressBar($('<div class="progress-shade"></div>').appendTo(this.$container));
 
             var options = {
-                url: Craft.getActionUrl('assets/save-asset'),
+                url: Craft.getActionUrl('assets/upload'),
                 dropZone: this.$container,
                 formData: {
                     fieldId: this.settings.fieldId,
                     elementId: this.settings.sourceElementId
                 }
             };
+
+            if (this.$addElementBtn) {
+                this.$uploadBtn = $('<button/>', {
+                    type: 'button',
+                    class: 'btn dashed',
+                    'data-icon': 'upload',
+                    text: this.settings.limit == 1 ? Craft.t('app', 'Upload a file') : Craft.t('app', 'Upload files'),
+                }).insertAfter(this.$addElementBtn);
+                options.fileInput = $('<input/>', {
+                    type: 'file',
+                    class: 'hidden',
+                    multiple: this.settings.limit != 1,
+                }).insertAfter(this.$uploadBtn);
+            }
 
             // If CSRF protection isn't enabled, these won't be defined.
             if (typeof Craft.csrfTokenName !== 'undefined' && typeof Craft.csrfTokenValue !== 'undefined') {
@@ -122,6 +141,32 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
             options.events.fileuploaddone = $.proxy(this, '_onUploadComplete');
 
             this.uploader = new Craft.Uploader(this.$container, options);
+
+            if (this.$uploadBtn) {
+                this.$uploadBtn.on('click', $.proxy(function(ev) {
+                    // We can't store a reference to the file input, because it gets replaced with a new input
+                    // each time a new file is uploaded - see https://stackoverflow.com/a/25034721/1688568
+                    this.$uploadBtn.next('input[type=file]').trigger('click');
+                }, this));
+            }
+        },
+
+        refreshThumbnail: function(elementId) {
+            var parameters = {
+                elementId: elementId,
+                siteId: this.settings.criteria.siteId,
+                size: this.settings.viewMode
+            };
+
+            Craft.postActionRequest('elements/get-element-html', parameters, function(data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    var $existing = this.$elements.filter('[data-id="' + elementId + '"]');
+                    $existing.find('.elementthumb').replaceWith($(data.html).find('.elementthumb'));
+                    this.thumbLoader.load($existing);
+                }
+            }.bind(this));
         },
 
         /**
@@ -266,7 +311,6 @@ Craft.AssetSelectInput = Craft.BaseElementSelectInput.extend(
                     range.moveStart("character", startPos);
                     range.select();
                 }
-
             }, this));
         },
 

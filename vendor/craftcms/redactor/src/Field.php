@@ -11,6 +11,7 @@ use Craft;
 use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Volume;
+use craft\elements\Asset;
 use craft\elements\Category;
 use craft\elements\Entry;
 use craft\helpers\ArrayHelper;
@@ -20,13 +21,18 @@ use craft\helpers\Html;
 use craft\helpers\HtmlPurifier;
 use craft\helpers\Json;
 use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use craft\models\Section;
 use craft\redactor\assets\field\FieldAsset;
 use craft\redactor\assets\redactor\RedactorAsset;
+use craft\redactor\events\ModifyPurifierConfigEvent;
+use craft\redactor\events\ModifyRedactorConfigEvent;
 use craft\redactor\events\RegisterLinkOptionsEvent;
 use craft\redactor\events\RegisterPluginPathsEvent;
 use craft\validators\HandleValidator;
+use HTMLPurifier_Config;
 use yii\base\Event;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\db\Schema;
 
@@ -51,6 +57,43 @@ class Field extends \craft\base\Field
      */
     const EVENT_REGISTER_LINK_OPTIONS = 'registerLinkOptions';
 
+    /**
+     * @event ModifyPurifierConfigEvent The event that is triggered when creating HTML Purifier config
+     *
+     * Plugins can get notified when HTML Purifier config is being constructed.
+     *
+     * ```php
+     * use craft\redactor\events\ModifyPurifierConfigEvent;
+     * use craft\redactor\Field;
+     * use HTMLPurifier_AttrDef_Text;
+     * use yii\base\Event;
+     *
+     * Event::on(Field::class, Field::EVENT_MODIFY_PURIFIER_CONFIG, function(ModifyPurifierConfigEvent $e) {
+     *      // Allow the use of the Redactor Variables plugin
+     *      $e->config->getHTMLDefinition(true)->addAttribute('span', 'data-redactor-type', new HTMLPurifier_AttrDef_Text());
+     * });
+     * ```
+     */
+    const EVENT_MODIFY_PURIFIER_CONFIG = 'modifyPurifierConfig';
+
+    /**
+     * @event ModifyRedactorConfigEvent The event that is triggered when loading redactor config.
+     *
+     * Plugins can get notified when redactor config is loaded
+     *
+     * ```php
+     * use craft\redactor\events\ModifyRedactorConfigEvent;
+     * use craft\redactor\Field;
+     * use yii\base\Event;
+     *
+     * Event::on(Field::class, Field::EVENT_DEFINE_REDACTOR_CONFIG, function(ModifyRedactorConfigEvent $e) {
+     *      // Never allow the bold button for reasons.
+     *     $e->config['buttonsHide'] = empty($e->config['buttonsHide']) ? ['bold'] : array_merge($e->config['buttonsHide'], ['bold']);
+     * });
+     * ```
+     */
+    const EVENT_DEFINE_REDACTOR_CONFIG = 'defineRedactorConfig';
+
     // Static
     // =========================================================================
 
@@ -66,6 +109,12 @@ class Field extends \craft\base\Field
 
     // Properties
     // =========================================================================
+
+    /**
+     * @var string The UI mode of the field.
+     * @since 2.7.0
+     */
+    public $uiMode = 'enlarged';
 
     /**
      * @var string|null The Redactor config file to use
@@ -119,10 +168,51 @@ class Field extends \craft\base\Field
     public $availableTransforms = '*';
 
     /**
+     * @var bool Whether to show input sources for volumes the user doesn’t have permission to view.
+     * @since 2.6.0
+     */
+    public $showUnpermittedVolumes = false;
+
+    /**
+     * @var bool Whether to show files the user doesn’t have permission to view, per the
+     * “View files uploaded by other users” permission.
+     * @since 2.6.0
+     */
+    public $showUnpermittedFiles = false;
+
+    /**
+     * @var bool Whether "view source" button should only be displayed to admins.
+     * @since 2.7.0
+     */
+    public $showHtmlButtonForNonAdmins = false;
+
+    /**
+     * @var string Config selection mode ('choose' or 'manual')
+     * @since 2.7.0
+     */
+    public $configSelectionMode = 'choose';
+
+    /**
+     * @var string Manual config to use
+     * @since 2.7.0
+     */
+    public $manualConfig = '';
+
+    /**
+     * @var string The default transform to use.
+     */
+    public $defaultTransform = '';
+
+    /**
      * @inheritdoc
      */
     public function __construct(array $config = [])
     {
+        // Default showHtmlButtonForNonAdmins to true for existing Assets fields
+        if (isset($config['id']) && !isset($config['showHtmlButtonForNonAdmins'])) {
+            $config['showHtmlButtonForNonAdmins'] = true;
+        }
+
         // normalize a mix/match of ids and uids to a list of uids.
         if (isset($config['availableVolumes']) && is_array($config['availableVolumes'])) {
             $ids = [];
@@ -168,7 +258,22 @@ class Field extends \craft\base\Field
             $config['redactorConfig'] = ArrayHelper::remove($config, 'configFile');
         }
 
+        // Default showUnpermittedVolumes to true for existing Redactor fields
+        if (isset($config['id']) && !isset($config['showUnpermittedVolumes'])) {
+            $config['showUnpermittedVolumes'] = true;
+        }
+
         parent::__construct($config);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        $this->showUnpermittedVolumes = (bool)$this->showUnpermittedVolumes;
+        $this->showUnpermittedFiles = (bool)$this->showUnpermittedFiles;
+        parent::init();
     }
 
     /**
@@ -213,7 +318,7 @@ class Field extends \craft\base\Field
             }
         }
 
-        throw new InvalidConfigException('Redactor plugin not found: '.$plugin);
+        throw new InvalidConfigException('Redactor plugin not found: ' . $plugin);
     }
 
     /**
@@ -230,7 +335,7 @@ class Field extends \craft\base\Field
         $event = new RegisterPluginPathsEvent([
             'paths' => [
                 Craft::getAlias('@config/redactor/plugins'),
-                dirname(__DIR__).'/lib/redactor-plugins',
+                __DIR__ . '/assets/redactor-plugins/dist',
             ]
         ]);
         Event::trigger(self::class, self::EVENT_REGISTER_PLUGIN_PATHS, $event);
@@ -271,7 +376,36 @@ class Field extends \craft\base\Field
             'purifierConfigOptions' => $this->_getCustomConfigOptions('htmlpurifier'),
             'volumeOptions' => $volumeOptions,
             'transformOptions' => $transformOptions,
+            'defaultTransformOptions' => array_merge([
+                [
+                    'label' => Craft::t('redactor', 'No transform'),
+                    'value' => null
+                ]
+            ], $transformOptions),
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function defineRules(): array
+    {
+        $rules = parent::defineRules();
+        $rules[] = [
+            ['manualConfig'],
+            function() {
+                if (!Json::isJsonObject($this->manualConfig)) {
+                    $this->addError('manualConfig', Craft::t('redactor', 'This must be a valid JSON object.'));
+                    return;
+                }
+                try {
+                    Json::decode($this->manualConfig);
+                } catch (InvalidArgumentException $e) {
+                    $this->addError('manualConfig', Craft::t('redactor', 'This must be a valid JSON object.'));
+                }
+            }
+        ];
+        return $rules;
     }
 
     /**
@@ -303,7 +437,7 @@ class Field extends \craft\base\Field
     /**
      * @inheritdoc
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    protected function inputHtml($value, ElementInterface $element = null): string
     {
         /** @var FieldData|null $value */
         /** @var Element $element */
@@ -319,23 +453,36 @@ class Field extends \craft\base\Field
 
         // register plugins
         $redactorConfig = $this->_getRedactorConfig();
+
         if (isset($redactorConfig['plugins'])) {
             foreach ($redactorConfig['plugins'] as $plugin) {
                 static::registerRedactorPlugin($plugin);
             }
         }
 
-        $id = $view->formatInputId($this->handle);
+        if (!$this->showHtmlButtonForNonAdmins && !Craft::$app->getUser()->getIsAdmin()) {
+            $redactorConfig['buttonsHide'] = array_merge($redactorConfig['buttonsHide'] ?? [], ['html']);
+        }
+
+        $id = Html::id($this->handle);
         $site = ($element ? $element->getSite() : Craft::$app->getSites()->getCurrentSite());
+
+        $defaultTransform = '';
+
+        if (!empty($this->defaultTransform) && $transform = Craft::$app->getAssetTransforms()->getTransformByUid($this->defaultTransform)) {
+            $defaultTransform = $transform->handle;
+        }
 
         $settings = [
             'id' => $view->namespaceInputId($id),
             'linkOptions' => $this->_getLinkOptions($element),
             'volumes' => $this->_getVolumeKeys(),
             'transforms' => $this->_getTransforms(),
+            'defaultTransform' => $defaultTransform,
             'elementSiteId' => $site->id,
             'redactorConfig' => $redactorConfig,
             'redactorLang' => $redactorLang,
+            'showAllUploaders' => $this->showUnpermittedFiles,
         ];
 
         if ($this->translationMethod != self::TRANSLATION_METHOD_NONE) {
@@ -345,7 +492,7 @@ class Field extends \craft\base\Field
         }
 
         RedactorAsset::registerTranslations($view);
-        $view->registerJs('new Craft.RedactorInput('.Json::encode($settings).');');
+        $view->registerJs('new Craft.RedactorInput(' . Json::encode($settings) . ');');
 
         if ($value instanceof FieldData) {
             $value = $value->getRawContent();
@@ -356,13 +503,25 @@ class Field extends \craft\base\Field
             $value = $this->_parseRefs($value, $element);
 
             // Swap any <!--pagebreak-->'s with <hr>'s
-            $value = str_replace('<!--pagebreak-->', '<hr class="redactor_pagebreak" style="display:none" unselectable="on" contenteditable="false" />', $value);
-
-            // Remove newlines to avoid pointless page unload confirmations
-            $value = preg_replace('/[\r\n]/', '', $value);
+            $value = str_replace('<!--pagebreak-->', Html::tag('hr', '', [
+                'class' => 'redactor_pagebreak',
+                'style' => ['display' => 'none'],
+                'unselectable' => 'on',
+                'contenteditable' => 'false',
+            ]), $value);
         }
 
-        return '<textarea id="'.$id.'" name="'.$this->handle.'" style="display: none">'.htmlentities($value, ENT_NOQUOTES, 'UTF-8').'</textarea>';
+        $textarea = Html::textarea($this->handle, $value, [
+            'id' => $id,
+            'style' => ['display' => 'none'],
+        ]);
+
+        return Html::tag('div', $textarea, [
+            'class' => [
+                'redactor',
+                $this->uiMode,
+            ],
+        ]);
     }
 
     /**
@@ -371,15 +530,20 @@ class Field extends \craft\base\Field
     public function getStaticHtml($value, ElementInterface $element): string
     {
         /** @var FieldData|null $value */
-        return '<div class="text">'.($value ?: '&nbsp;').'</div>';
+        return Html::tag('div', $value ?: '&nbsp;', [
+            'class' => array_filter([
+                'text',
+                $this->uiMode === 'enlarged' ? 'readable' : null,
+            ]),
+        ]);
     }
 
     /**
      * @inheritdoc
      */
-    public function getSearchKeywords($value, ElementInterface $element): string
+    protected function searchKeywords($value, ElementInterface $element): string
     {
-        $keywords = parent::getSearchKeywords($value, $element);
+        $keywords = parent::searchKeywords($value, $element);
 
         if (Craft::$app->getDb()->getIsMysql()) {
             $keywords = StringHelper::encodeMb4($keywords);
@@ -428,7 +592,18 @@ class Field extends \craft\base\Field
                 // Parse reference tags so HTMLPurifier doesn't encode the curly braces
                 $value = $this->_parseRefs($value, $element);
 
+                // Sanitize & tokenize any SVGs
+                $svgTokens = [];
+                $svgContent = [];
+                $value = preg_replace_callback('/<svg\b.*>.*<\/svg>/Uis', function(array $match) use (&$svgTokens, &$svgContent): string {
+                    $svgContent[] = Html::sanitizeSvg($match[0]);
+                    return $svgTokens[] = 'svg:' . StringHelper::randomString(10);
+                }, $value);
+
                 $value = HtmlPurifier::process($value, $this->_getPurifierConfig());
+
+                // Put the sanitized SVGs back
+                $value = str_replace($svgTokens, $svgContent, $value);
             }
 
             if ($this->removeInlineStyles) {
@@ -438,7 +613,7 @@ class Field extends \craft\base\Field
                 // Remove disallowed inline styles
                 $allowedStyles = $this->_allowedStyles();
                 $value = preg_replace_callback(
-                    '/(<(?:h1|h2|h3|h4|h5|h6|p|div|blockquote|pre|strong|em|b|i|u|a|span)\b[^>]*)\s+style="([^"]*)"/',
+                    '/(<(?:h1|h2|h3|h4|h5|h6|p|div|blockquote|pre|strong|em|b|i|u|a|span|img)\b[^>]*)\s+style="([^"]*)"/',
                     function(array $matches) use ($allowedStyles) {
                         // Only allow certain styles through
                         $allowed = [];
@@ -449,7 +624,7 @@ class Field extends \craft\base\Field
                                 $allowed[] = "{$name}: {$value}";
                             }
                         }
-                        return $matches[1].(!empty($allowed) ? ' style="'.implode('; ', $allowed).'"' : '');
+                        return $matches[1] . (!empty($allowed) ? ' style="' . implode('; ', $allowed) . '"' : '');
                     },
                     $value
                 );
@@ -469,23 +644,33 @@ class Field extends \craft\base\Field
 
         // Find any element URLs and swap them with ref tags
         $value = preg_replace_callback(
-            '/(href=|src=)([\'"])[^\'"#]+?(#[^\'"#]+)?(?:#|%23)([\w\\\\]+)\:(\d+)(\:(?:transform\:)?'.HandleValidator::$handlePattern.')?\2/',
+            '/(href=|src=)([\'"])([^\'"\?#]*)(\?[^\'"\?#]+)?(#[^\'"\?#]+)?(?:#|%23)([\w\\\\]+)\:(\d+)(?:@(\d+))?(\:(?:transform\:)?' . HandleValidator::$handlePattern . ')?\2/',
             function($matches) {
+                list(, $attr, $q, $url, $query, $hash, $elementType, $ref, $siteId, $transform) = array_pad($matches, 10, null);
+
                 // Create the ref tag, and make sure :url is in there
-                $refTag = '{'.$matches[4].':'.$matches[5].(!empty($matches[6]) ? $matches[6] : ':url').'}';
-                $hash = (!empty($matches[3]) ? $matches[3] : '');
+                $ref = $elementType . ':' . $ref . ($siteId ? "@$siteId" : '') . ($transform ?: ':url');
 
-                if ($hash) {
-                    // Make sure that the hash isn't actually part of the parsed URL
-                    // (someone's Entry URL Format could be "#{slug}", etc.)
-                    $url = Craft::$app->getElements()->parseRefs($refTag);
-
-                    if (mb_strpos($url, $hash) !== false) {
+                if ($query || $hash) {
+                    // Make sure that the query/hash isn't actually part of the parsed URL
+                    // - someone's Entry URL Format could include "?slug={slug}" or "#{slug}", etc.
+                    // - assets could include ?mtime=X&focal=none, etc.
+                    $parsed = Craft::$app->getElements()->parseRefs("{{$ref}}");
+                    if ($query) {
+                        // Decode any HTML entities, e.g. &amp;
+                        $query = Html::decode($query);
+                        if (mb_strpos($parsed, $query) !== false) {
+                            $url .= $query;
+                            $query = '';
+                        }
+                    }
+                    if ($hash && mb_strpos($parsed, $hash) !== false) {
+                        $url .= $hash;
                         $hash = '';
                     }
                 }
 
-                return $matches[1].$matches[2].$refTag.$hash.$matches[2];
+                return $attr . $q . '{' . $ref . '||' . $url . '}' . $query . $hash . $q;
             },
             $value);
 
@@ -514,12 +699,22 @@ class Field extends \craft\base\Field
             return $value;
         }
 
-        return preg_replace_callback('/(href=|src=)([\'"])(\{([\w\\\\]+\:\d+\:(?:transform\:)?'.HandleValidator::$handlePattern.')\})(#[^\'"#]+)?\2/', function($matches) use ($element) {
+        return preg_replace_callback('/(href=|src=)([\'"])(\{([\w\\\\]+\:\d+(?:@\d+)?\:(?:transform\:)?' . HandleValidator::$handlePattern . ')(?:\|\|[^\}]+)?\})(?:\?([^\'"#]*))?(#[^\'"#]+)?\2/', function($matches) use ($element) {
             /** @var Element|null $element */
-            list (, $attr, $q, $refTag, $ref) = $matches;
-            $fragment = $matches[5] ?? '';
-
-            return $attr.$q.Craft::$app->getElements()->parseRefs($refTag, $element->siteId ?? null).$fragment.'#'.$ref.$q;
+            list ($fullMatch, $attr, $q, $refTag, $ref, $query, $fragment) = array_pad($matches, 7, null);
+            $parsed = Craft::$app->getElements()->parseRefs($refTag, $element->siteId ?? null);
+            // If the ref tag couldn't be parsed, leave it alone
+            if ($parsed === $refTag) {
+                return $fullMatch;
+            }
+            if ($query) {
+                // Decode any HTML entities, e.g. &amp;
+                $query = Html::decode($query);
+                if (mb_strpos($parsed, $query) !== false) {
+                    $parsed = UrlHelper::urlWithParams($parsed, $query);
+                }
+            }
+            return $attr . $q . $parsed . ($fragment ?? '') . '#' . $ref . $q;
         }, $value);
     }
 
@@ -548,6 +743,16 @@ class Field extends \craft\base\Field
                 'elementType' => Entry::class,
                 'refHandle' => Entry::refHandle(),
                 'sources' => $sectionSources,
+                'criteria' => ['uri' => ':notempty:']
+            ];
+        }
+
+        if (!empty($this->_getVolumeKeys())) {
+            $linkOptions[] = [
+                'optionTitle' => Craft::t('redactor', 'Link to an asset'),
+                'elementType' => Asset::class,
+                'refHandle' => Asset::refHandle(),
+                'sources' => $this->_getVolumeKeys(),
             ];
         }
 
@@ -591,20 +796,28 @@ class Field extends \craft\base\Field
         $sections = Craft::$app->getSections()->getAllSections();
         $showSingles = false;
 
+        // Get all sites
+        $sites = Craft::$app->getSites()->getAllSites();
+
         foreach ($sections as $section) {
             if ($section->type === Section::TYPE_SINGLE) {
                 $showSingles = true;
             } else if ($element) {
-                // Does the section have URLs in the same site as the element we're editing?
                 $sectionSiteSettings = $section->getSiteSettings();
-                if (isset($sectionSiteSettings[$element->siteId]) && $sectionSiteSettings[$element->siteId]->hasUrls) {
-                    $sources[] = 'section:'.$section->uid;
+                foreach ($sites as $site) {
+                    if (isset($sectionSiteSettings[$site->id]) && $sectionSiteSettings[$site->id]->hasUrls) {
+                        $sources[] = 'section:' . $section->uid;
+                    }
                 }
             }
         }
 
         if ($showSingles) {
             array_unshift($sources, 'singles');
+        }
+
+        if (!empty($sources)) {
+            array_unshift($sources, '*');
         }
 
         return $sources;
@@ -627,7 +840,7 @@ class Field extends \craft\base\Field
                 // Does the category group have URLs in the same site as the element we're editing?
                 $categoryGroupSiteSettings = $categoryGroup->getSiteSettings();
                 if (isset($categoryGroupSiteSettings[$element->siteId]) && $categoryGroupSiteSettings[$element->siteId]->hasUrls) {
-                    $sources[] = 'group:'.$categoryGroup->uid;
+                    $sources[] = 'group:' . $categoryGroup->uid;
                 }
             }
         }
@@ -648,9 +861,18 @@ class Field extends \craft\base\Field
 
         $criteria = ['parentId' => ':empty:'];
 
-        if ($this->availableVolumes !== '*') {
-            $criteria['volumeId'] = Db::idsByUids('{{%volumes}}', $this->availableVolumes);
+        $allVolumes = Craft::$app->getVolumes()->getAllVolumes();
+        $allowedVolumes = [];
+        $userService = Craft::$app->getUser();
+
+        foreach ($allVolumes as $volume) {
+            $allowedBySettings = $this->availableVolumes === '*' || (is_array($this->availableVolumes) && in_array($volume->uid, $this->availableVolumes));
+            if ($allowedBySettings && ($this->showUnpermittedVolumes || $userService->checkPermission("viewVolume:{$volume->uid}"))) {
+                $allowedVolumes[] = $volume->uid;
+            }
         }
+
+        $criteria['volumeId'] = Db::idsByUids('{{%volumes}}', $allowedVolumes);
 
         $folders = Craft::$app->getAssets()->findFolders($criteria);
 
@@ -669,7 +891,7 @@ class Field extends \craft\base\Field
         });
 
         foreach ($folders as $folder) {
-            $volumeKeys[] = 'folder:'.$folder->uid;
+            $volumeKeys[] = 'folder:' . $folder->uid;
         }
 
         return $volumeKeys;
@@ -710,7 +932,7 @@ class Field extends \craft\base\Field
     private function _getCustomConfigOptions(string $dir): array
     {
         $options = ['' => Craft::t('redactor', 'Default')];
-        $path = Craft::$app->getPath()->getConfigPath().DIRECTORY_SEPARATOR.$dir;
+        $path = Craft::$app->getPath()->getConfigPath() . DIRECTORY_SEPARATOR . $dir;
 
         if (is_dir($path)) {
             $files = FileHelper::findFiles($path, [
@@ -719,7 +941,10 @@ class Field extends \craft\base\Field
             ]);
 
             foreach ($files as $file) {
-                $options[pathinfo($file, PATHINFO_BASENAME)] = pathinfo($file, PATHINFO_FILENAME);
+                $filename = basename($file);
+                if ($filename !== 'Default.json') {
+                    $options[$filename] = pathinfo($file, PATHINFO_FILENAME);
+                }
             }
         }
 
@@ -730,18 +955,22 @@ class Field extends \craft\base\Field
      * Returns a JSON-decoded config, if it exists.
      *
      * @param string $dir The directory name within the config/ folder to look for the config file
-     * @param string|null $file The filename to load
+     * @param string|null $file The filename to load.
      * @return array|false The config, or false if the file doesn't exist
      */
     private function _getConfig(string $dir, string $file = null)
     {
         if (!$file) {
-            return false;
+            $file = 'Default.json';
         }
 
-        $path = Craft::$app->getPath()->getConfigPath().DIRECTORY_SEPARATOR.$dir.DIRECTORY_SEPARATOR.$file;
+        $path = Craft::$app->getPath()->getConfigPath() . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $file;
 
         if (!is_file($path)) {
+            if ($file !== 'Default.json') {
+                // Try again with Default
+                return $this->_getConfig($dir);
+            }
             return false;
         }
 
@@ -755,26 +984,53 @@ class Field extends \craft\base\Field
      */
     private function _getRedactorConfig(): array
     {
-        return $this->_getConfig('redactor', $this->redactorConfig) ?: [];
+        if ($this->configSelectionMode === 'manual') {
+            $config = Json::decode($this->manualConfig);
+        } else {
+            $config = $this->_getConfig('redactor', $this->redactorConfig) ?: [];
+        }
+
+        // Give plugins a chance to modify the Redactor config
+        $event = new ModifyRedactorConfigEvent([
+            'config' => $config,
+            'field' => $this
+        ]);
+
+        $this->trigger(self::EVENT_DEFINE_REDACTOR_CONFIG, $event);
+
+        return $event->config;
     }
 
     /**
      * Returns the HTML Purifier config used by this field.
      *
-     * @return array
+     * @return HTMLPurifier_Config
      */
-    private function _getPurifierConfig(): array
+    private function _getPurifierConfig(): HTMLPurifier_Config
     {
-        if ($config = $this->_getConfig('htmlpurifier', $this->purifierConfig)) {
-            return $config;
-        }
+        $purifierConfig = HTMLPurifier_Config::createDefault();
+        $purifierConfig->autoFinalize = false;
 
-        // Default config
-        return [
+        $config = $this->_getConfig('htmlpurifier', $this->purifierConfig) ?: [
             'Attr.AllowedFrameTargets' => ['_blank'],
             'Attr.EnableID' => true,
             'HTML.AllowedComments' => ['pagebreak'],
+            'HTML.SafeIframe' => true,
+            'URI.SafeIframeRegexp' => '%^https?://(www.youtube.com/embed/|player.vimeo.com/video/)%',
         ];
+
+        foreach ($config as $option => $value) {
+            $purifierConfig->set($option, $value);
+        }
+
+        // Give plugins a chance to modify the HTML Purifier config, or add new ones
+        $event = new ModifyPurifierConfigEvent([
+            'config' => $purifierConfig,
+        ]);
+
+        $this->trigger(self::EVENT_MODIFY_PURIFIER_CONFIG, $event);
+
+        return $event->config;
     }
 
     /**

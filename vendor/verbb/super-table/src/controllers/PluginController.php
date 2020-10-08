@@ -27,6 +27,9 @@ class PluginController extends Controller
 
     public function actionSettings()
     {
+        $view = $this->getView();
+        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
+
         return $this->renderTemplate('super-table/plugin-settings', [
             'settings' => true,
             'checking' => true,
@@ -49,6 +52,7 @@ class PluginController extends Controller
         $superTableService = SuperTable::$plugin->getService();
         $matrixService = Craft::$app->getMatrix();
         $projectConfig = Craft::$app->getProjectConfig();
+        $processedParentFields = [];
 
         $superTableBlockTypes = (new Query())
             ->select(['*'])
@@ -58,7 +62,20 @@ class PluginController extends Controller
         foreach ($superTableBlockTypes as $superTableBlockType) {
             $missingFields = false;
 
+            if (!isset($superTableBlockType['fieldId'])) {
+                echo "    > Super Table field skipped as it's missing its `fieldId`. Block type #{$superTableBlockType['id']} ...\n";
+
+                continue;
+            }
+
             $superTableField = $fieldsService->getFieldById($superTableBlockType['fieldId']);
+
+            if (!isset($superTableBlockType['fieldLayoutId'])) {
+                echo "    > Super Table field #{$superTableField->id} skipped as it's missing its `fieldLayoutId`. Block type #{$superTableBlockType['id']} ...\n";
+
+                continue;
+            }
+
             $fieldLayout = $fieldsService->getLayoutById($superTableBlockType['fieldLayoutId']);
 
             // Find what the columns should be according to the block type fields
@@ -70,13 +87,49 @@ class PluginController extends Controller
                     }
                 }
             } else {
-                echo "    > Super Table field #{$superTableField->id} skipped as it isn't a Super Table field ...\n";
+                echo "    > Super Table field #{$superTableField->id} skipped as it isn't a Super Table field, it's a " . get_class($superTableField) . ". Block type #{$superTableBlockType['id']} ...\n";
 
                 continue;
             }
 
             if ($missingFields) {
                 echo "    > Super Table field #{$superTableField->id} skipped as it contains missing fields ...\n";
+
+                continue;
+            }
+
+            // Check to see what level this is. Non-top levels fields should have their owner saved
+            if ($superTableField->context !== 'global') {
+                $parentFieldContext = explode(':', $superTableField->context);
+
+                if ($parentFieldContext[0] == 'matrixBlockType') {
+                    $parentBlockTypeUid = $parentFieldContext[1];
+                    $parentBlockTypeId = Db::idByUid('{{%matrixblocktypes}}', $parentBlockTypeUid);
+
+                    if (!$parentBlockTypeId) {
+                        echo "    > ERROR: Unable to find owner Matrix block ID for #{$parentBlockTypeUid} ...\n";
+
+                        continue;
+                    }
+
+                    $blockType = Craft::$app->getMatrix()->getBlockTypeById($parentBlockTypeId);
+                    $parentField = $fieldsService->getFieldById($blockType->fieldId);
+
+                    if (in_array($parentField->id, $processedParentFields)) {
+                        // echo "    > Owner matrix field #{$parentField->id} skipped as it's already been re-saved ...\n";
+
+                        continue;
+                    }
+
+                    // Re-save it
+                    $fieldsService->saveField($parentField);
+
+                    $processedParentFields[] = $parentField->id;
+
+                    echo "    > Owner matrix field #{$parentField->id} re-saved ...\n";
+                } else {
+                    echo "    > Unknown parent context {$superTableField->context} ...\n";
+                }
 
                 continue;
             }
@@ -94,6 +147,9 @@ class PluginController extends Controller
         $output = nl2br($output);
 
         $output .= '<br>Field re-saving complete.';
+
+        $view = $this->getView();
+        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
 
         return $this->renderTemplate('super-table/plugin-settings', [
             'resaving' => true,
@@ -123,6 +179,9 @@ class PluginController extends Controller
         $output = nl2br($output);
 
         $output .= '<br>Fixes complete.';
+
+        $view = $this->getView();
+        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
 
         return $this->renderTemplate('super-table/plugin-settings', [
             'checking' => true,
@@ -254,7 +313,20 @@ class PluginController extends Controller
             $dbFieldColumns = [];
             $missingFields = false;
 
+            if (!isset($superTableBlockType['fieldId'])) {
+                echo "    > Super Table field skipped as it's missing its `fieldId`. Block type #{$superTableBlockType['id']} ...\n";
+
+                continue;
+            }
+
             $superTableField = $fieldsService->getFieldById($superTableBlockType['fieldId']);
+
+            if (!isset($superTableBlockType['fieldLayoutId'])) {
+                echo "    > Super Table field #{$superTableField->id} skipped as it's missing its `fieldLayoutId`. Block type #{$superTableBlockType['id']} ...\n";
+
+                continue;
+            }
+
             $fieldLayout = $fieldsService->getLayoutById($superTableBlockType['fieldLayoutId']);
 
             if (!$superTableField) {
@@ -295,21 +367,28 @@ class PluginController extends Controller
                 $contentTable = $superTableField->contentTable;
 
                 if ($contentTable) {
-                    $columns = Craft::$app->getDb()->getTableSchema($contentTable)->columns;
+                    $contentTableSchema = Craft::$app->getDb()->getTableSchema($contentTable);
 
-                    foreach ($columns as $key => $column) {
-                        if (strstr($key, 'field_')) {
-                            $dbFieldColumns[] = $key;
+                    if ($contentTableSchema) {
+                        $columns = $contentTableSchema->columns;
+
+                        foreach ($columns as $key => $column) {
+                            if (strstr($key, 'field_')) {
+                                $dbFieldColumns[] = $key;
+                            }
                         }
-                    }
 
-                    // Sort items the same - just in case they're in a slightly different order, but all there
-                    sort($correctFieldColumns);
-                    sort($dbFieldColumns);
+                        // Sort items the same - just in case they're in a slightly different order, but all there
+                        sort($correctFieldColumns);
+                        sort($dbFieldColumns);
 
-                    if ($correctFieldColumns != $dbFieldColumns) {
+                        if ($correctFieldColumns != $dbFieldColumns) {
+                            $errors = true;
+                            echo "    > ERROR: {$contentTable} has missing field columns ...\n";
+                        }
+                    } else {
                         $errors = true;
-                        echo "    > ERROR: {$contentTable} has missing field columns ...\n";
+                        echo "    > ERROR: {$contentTable} database table does not exist ...\n";
                     }
                 }
             }
@@ -348,6 +427,9 @@ class PluginController extends Controller
         if (!$errors) {
             $output .= 'No errors found.';
         }
+
+        $view = $this->getView();
+        $view->setTemplateMode($view::TEMPLATE_MODE_CP);
 
         return $this->renderTemplate('super-table/plugin-settings', [
             'checking' => true,

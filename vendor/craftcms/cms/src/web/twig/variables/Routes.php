@@ -15,15 +15,12 @@ use craft\services\Routes as RoutesService;
  * Route functions.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class Routes
 {
-    // Public Methods
-    // =========================================================================
-
     /**
-     * Returns the routes defined in the CP.
+     * Returns the routes defined in the control panel.
      *
      * @return array
      */

@@ -8,7 +8,9 @@
 namespace craft\helpers;
 
 use Craft;
+use Normalizer;
 use Stringy\Stringy as BaseStringy;
+use voku\helper\ASCII;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
@@ -16,19 +18,22 @@ use yii\base\InvalidConfigException;
  * This helper class provides various multi-byte aware string related manipulation and encoding methods.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class StringHelper extends \yii\helpers\StringHelper
 {
-    // Constants
-    // =========================================================================
-
     const UTF8 = 'UTF-8';
 
+    /**
+     * @since 3.0.37
+     */
     const UUID_PATTERN = '[A-Za-z0-9]{8}-[A-Za-z0-9]{4}-4[A-Za-z0-9]{3}-[89abAB][A-Za-z0-9]{3}-[A-Za-z0-9]{12}';
 
-    // Public Methods
-    // =========================================================================
+    /**
+     * @var array Character mappings
+     * @see asciiCharMap()
+     */
+    private static $_asciiCharMaps;
 
     /**
      * Gets the substring after the first occurrence of a separator.
@@ -108,8 +113,8 @@ class StringHelper extends \yii\helpers\StringHelper
     }
 
     /**
-     * Returns ASCII character mappings, merging in any custom defined mappings from the
-     * [[\craft\config\GeneralConfig::customAsciiCharMappings|customAsciiCharMappings]] config setting.
+     * Returns ASCII character mappings, merging in any custom defined mappings
+     * from the <config3:customAsciiCharMappings> config setting.
      *
      * @param bool $flat Whether the mappings should be returned as a flat array (é => e)
      * @param string|null $language Whether to include language-specific mappings (only applied if $flat is true)
@@ -117,10 +122,15 @@ class StringHelper extends \yii\helpers\StringHelper
      */
     public static function asciiCharMap(bool $flat = false, string $language = null): array
     {
+        $key = $flat ? 'flat-' . ($language ?? '*') : '*';
+        if (isset(self::$_asciiCharMaps[$key])) {
+            return self::$_asciiCharMaps[$key];
+        }
+
         $map = (new Stringy())->getAsciiCharMap();
 
         if (!$flat) {
-            return $map;
+            return self::$_asciiCharMaps[$key] = $map;
         }
 
         $flatMap = [];
@@ -132,20 +142,18 @@ class StringHelper extends \yii\helpers\StringHelper
 
         // Include language specific replacements (unless the ASCII chars have custom mappings)
         if ($language !== null) {
-            $langSpecific = Stringy::getLangSpecificCharsArray($language);
-            if (!empty($langSpecific)) {
-                $generalConfig = Craft::$app->getConfig()->getGeneral();
-                $customChars = !empty($generalConfig->customAsciiCharMappings) ? call_user_func_array('array_merge', $generalConfig->customAsciiCharMappings) : [];
-                $customChars = array_flip($customChars);
-                foreach ($langSpecific[0] as $i => $char) {
-                    if (!isset($customChars[$char])) {
-                        $flatMap[$char] = $langSpecific[1][$i];
-                    }
+            $langSpecific = ASCII::charsArrayWithOneLanguage($language);
+            $generalConfig = Craft::$app->getConfig()->getGeneral();
+            $customChars = !empty($generalConfig->customAsciiCharMappings) ? call_user_func_array('array_merge', $generalConfig->customAsciiCharMappings) : [];
+            $customChars = array_flip($customChars);
+            foreach ($langSpecific['orig'] as $i => $char) {
+                if (!isset($customChars[$char])) {
+                    $flatMap[$char] = $langSpecific['replace'][$i];
                 }
             }
         }
 
-        return $flatMap;
+        return self::$_asciiCharMaps[$key] = $flatMap;
     }
 
     /**
@@ -282,7 +290,15 @@ class StringHelper extends \yii\helpers\StringHelper
      */
     public static function containsMb4(string $str): bool
     {
-        return max(array_map('ord', str_split($str))) >= 240;
+        $length = strlen($str);
+
+        for ($i = 0; $i < $length; $i++) {
+            if (ord($str[$i]) >= 240) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -469,7 +485,7 @@ class StringHelper extends \yii\helpers\StringHelper
      * by setting $caseSensitive to false.
      *
      * @param string $str The string to check the end of.
-     * @param $substrings[] Substrings to look for.
+     * @param $substrings [] Substrings to look for.
      * @param bool $caseSensitive Whether or not to force case-sensitivity.
      * @return bool Whether or not $str ends with $substring.
      * @since 3.3.0
@@ -1001,14 +1017,13 @@ class StringHelper extends \yii\helpers\StringHelper
      * @param int $length The length of the random string. Defaults to 36.
      * @param bool $extendedChars Whether to include symbols in the random string.
      * @return string The randomly generated string.
-     * @throws \Exception
      */
     public static function randomString(int $length = 36, bool $extendedChars = false): string
     {
         if ($extendedChars) {
             $validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`~!@#$%^&*()-_=+[]\{}|;:\'",./<>?"';
         } else {
-            $validChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+            $validChars = 'abcdefghijklmnopqrstuvwxyz';
         }
 
         return static::randomStringWithChars($validChars, $length);
@@ -1022,7 +1037,6 @@ class StringHelper extends \yii\helpers\StringHelper
      * @param string $validChars A string containing the valid characters
      * @param int $length The length of the random string
      * @return string The randomly generated string.
-     * @throws \Exception
      */
     public static function randomStringWithChars(string $validChars, int $length): string
     {
@@ -1034,10 +1048,14 @@ class StringHelper extends \yii\helpers\StringHelper
         // repeat the steps until we've created a string of the right length
         for ($i = 0; $i < $length; $i++) {
             // pick a random number from 1 up to the number of valid chars
-            $randomPick = random_int(1, $numValidChars);
+            try {
+                $randomPick = random_int(0, $numValidChars - 1);
+            } catch (\Exception $e) {
+                $randomPick = rand(0, $numValidChars - 1);
+            }
 
             // take the random character out of the string of valid chars
-            $randomChar = $validChars[$randomPick - 1];
+            $randomChar = $validChars[$randomPick];
 
             // add the randomly-chosen char onto the end of our string
             $randomString .= $randomChar;
@@ -1071,7 +1089,7 @@ class StringHelper extends \yii\helpers\StringHelper
      */
     public static function removeHtml(string $str, string $allowableTags = null): string
     {
-        return (string)BaseStringy::create($str)->removeHtml($allowableTags);
+        return (string)BaseStringy::create($str)->removeHtml($allowableTags ?? '');
     }
 
     /**
@@ -1228,6 +1246,7 @@ class StringHelper extends \yii\helpers\StringHelper
      * @param string $str The string
      * @param string|callable $replace The replacement string, or callback function.
      * @return string The string with converted 4-byte UTF-8 characters
+     * @since 3.1.13
      */
     public static function replaceMb4(string $str, $replace): string
     {
@@ -1256,8 +1275,8 @@ class StringHelper extends \yii\helpers\StringHelper
 
     /**
      * Truncates the string to a given length, while ensuring that it does not split words. If $substring is provided,
-     * and truncating occurs, the string is further truncated so that the substring may be appended without exceeding t
-     * he desired length.
+     * and truncating occurs, the string is further truncated so that the substring may be appended without exceeding
+     * the desired length.
      *
      * @param string $str The string to truncate.
      * @param int $length The desired length of the truncated string.
@@ -1322,8 +1341,8 @@ class StringHelper extends \yii\helpers\StringHelper
      * is also converted to lowercase. The language of the source string can
      * also be supplied for language-specific transliteration.
      *
-     * @param string      $str The string to process
-     * @param string      $replacement The string used to replace whitespace.
+     * @param string $str The string to process
+     * @param string $replacement The string used to replace whitespace.
      * @param string|null $language The language of the source string.
      * @return string The string converted to a URL slug.
      * @since 3.3.0
@@ -1555,6 +1574,11 @@ class StringHelper extends \yii\helpers\StringHelper
      */
     public static function toAscii(string $str, string $language = null): string
     {
+        // If Intl is installed, normalize NFD chars to NFC
+        if (class_exists(Normalizer::class)) {
+            $str = Normalizer::normalize($str, Normalizer::FORM_C);
+        }
+
         return (string)BaseStringy::create($str)->toAscii($language ?? Craft::$app->language);
     }
 
@@ -1747,6 +1771,7 @@ class StringHelper extends \yii\helpers\StringHelper
      * @param bool $lower Whether the returned words should be lowercased
      * @param bool $removePunctuation Whether punctuation should be removed from the returned words
      * @return string[] The prepped words in the string
+     * @since 3.1.0
      */
     public static function toWords(string $str, bool $lower = false, bool $removePunctuation = false): array
     {

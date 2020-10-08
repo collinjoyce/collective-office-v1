@@ -11,9 +11,11 @@
             <div class="field-items">
                 {% for blockTypeId, blockType in blockTypes %}
                     <div data-id="{{ blockTypeId }}">
-                        {% for fieldId, field in blockTypeFields[blockTypeId] %}
+                        {% for fieldId, layoutElement in blockTypeFields[blockTypeId] %}
+                            {% set field = layoutElement.getField() %}
+                            
                             <div class="supertableconfigitem stci-field{% if field.hasErrors() %} error{% endif %} {% if loop.first %}sel{% endif %}" data-id="{{ fieldId }}">
-                                <div class="name{% if field.required %} required{% endif %}">
+                                <div class="name{% if layoutElement.required %} required{% endif %}">
                                     {% if field.name %}
                                         {{ field.name }}
                                     {% else %}
@@ -51,7 +53,9 @@
             <div class="field-items">
                 {% for blockTypeId, blockType in blockTypes %}
                     <div data-id="{{ blockTypeId }}">
-                        {% for fieldId, field in blockTypeFields[blockTypeId] %}
+                        {% for fieldId, layoutElement in blockTypeFields[blockTypeId] %}
+                            {% set field = layoutElement.getField() %}
+                            
                             <div data-id="{{ fieldId }}" {% if not loop.first %}class="settings-hidden"{% endif %}>
                                 {% namespace 'blockTypes[' ~ blockTypeId ~ '][fields][' ~ fieldId ~ ']' %}
                                     {{ forms.textField({
@@ -90,10 +94,10 @@
                                 {{ forms.textField({
                                     label: "Column Width" | t('super-table'),
                                     instructions: "Only applies for Table Layout. Set the width for this column in either pixels or percentage. i.e. `10px` or `10%`." | t('super-table'),
-                                    id: 'columns-' ~ fieldId ~ '-width',
-                                    name: 'columns[' ~ fieldId ~ '][width]',
+                                    id: 'columns-' ~ field.uid ~ '-width',
+                                    name: 'columns[' ~ field.uid ~ '][width]',
                                     size: 8,
-                                    value: supertableField.columns[fieldId].width ?? '',
+                                    value: supertableField.columns[field.uid].width ?? '',
                                 }) }}
 
                                 {% namespace 'blockTypes[' ~ blockTypeId ~ '][fields][' ~ fieldId ~ ']' %}
@@ -101,11 +105,11 @@
                                         label: "This field is required" | t('app'),
                                         id: 'required',
                                         name: 'required',
-                                        checked: field.required
+                                        checked: layoutElement.required
                                     }) }}
 
                                     {{ forms.checkboxField({
-                                        label: "Use this field’s values as search keywords?" | t('app'),
+                                        label: "Use this field’s values as search keywords" | t('app'),
                                         id: 'searchable',
                                         name: 'searchable',
                                         checked: field.searchable
@@ -163,14 +167,7 @@
                                 <div class="fieldtype-settings">
                                     <div>
                                         {% namespace 'blockTypes[' ~ blockTypeId ~ '][fields][' ~ fieldId ~ '][typesettings]' %}
-                                            {# Special-case for Matrix at the moment - hopefully will not be needed after core alts #}
-                                            {# This is necessary to load our MatrixConfiguratorAlt.js rather than core Matrix JS #}
-                                            
-                                            {% if field.displayName() == 'Matrix' %}
-                                                {{ craft.superTable.getMatrixSettingsHtml(field) | raw }}
-                                            {% else %}
-                                                {{ field.getSettingsHtml() | raw }}
-                                            {% endif %}
+                                            {{ field.getSettingsHtml() | raw }}
                                         {% endnamespace %}
                                     </div>
                                 </div>
@@ -209,7 +206,6 @@
     {{ forms.selectField({
         label: 'Propagation Method' | t('app'),
         instructions: 'Which sites should blocks be saved to?' | t('app'),
-        warning: supertableField.id and supertableField.propagationMethod != 'none' ? 'Changing this may result in data loss.' | t('app'),
         id: 'propagationMethod',
         name: 'propagationMethod',
         options: [
@@ -220,6 +216,26 @@
         ],
         value: supertableField.propagationMethod
     }) }}
+
+    {% if supertableField.id and supertableField.propagationMethod != 'none' %}
+        {% js %}
+            (function() {
+                var showingWarning = false;
+                $("#{{ 'propagationMethod' | namespaceInputId }}").on('change', function() {
+                    if ($(this).val() !== '{{ supertableField.propagationMethod }}') {
+                        if (!showingWarning) {
+                            $('<p/>', {'class': 'warning', text: "{{ 'Applying this change to existing blocks can take some time.' | t('app') | e('js') }}"})
+                                .appendTo($("#{{ 'propagationMethod-field' | namespaceInputId }}"));
+                            showingWarning = true;
+                        }
+                    } else if (showingWarning) {
+                        $("#{{ 'propagationMethod-field' | namespaceInputId }} .warning").remove();
+                        showingWarning = false;
+                    }
+                });
+            })();
+        {% endjs %}
+    {% endif %}
 {% endif %}
 
 {{ forms.textField({

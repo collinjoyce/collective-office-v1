@@ -15,13 +15,10 @@ use yii\base\Exception;
  * Class Url
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class UrlHelper
 {
-    // Public Methods
-    // =========================================================================
-
     /**
      * Returns whether a given string appears to be an absolute URL.
      *
@@ -75,8 +72,23 @@ class UrlHelper
      */
     public static function buildQuery(array $params): string
     {
-        // Decode and convert `[x]`s to `[]`
-        return preg_replace('/\[[0-9]+\]/u', '[]', urldecode(http_build_query($params)));
+        if (empty($params)) {
+            return '';
+        }
+        // build the query string
+        $query = http_build_query($params);
+        if ($query === '') {
+            return '';
+        }
+        // Decode the param names and a few select chars in param values
+        $params = [];
+        foreach (explode('&', $query) as $param) {
+            list($n, $v) = array_pad(explode('=', $param, 2), 2, '');
+            $n = urldecode($n);
+            $v = str_replace(['%2F', '%7B', '%7D'], ['/', '{', '}'], $v);
+            $params[] = $v !== '' ? "$n=$v" : $n;
+        }
+        return implode('&', $params);
     }
 
     /**
@@ -99,8 +111,8 @@ class UrlHelper
         $fragment = $fragment ?? $baseFragment;
 
         // Append to the base URL and return
-        if (!empty($params)) {
-            $url .= '?' . static::buildQuery($params);
+        if (($query = static::buildQuery($params)) !== '') {
+            $url .= '?' . $query;
         }
         if ($fragment !== null) {
             $url .= '#' . $fragment;
@@ -125,8 +137,8 @@ class UrlHelper
         unset($params[$param]);
 
         // Rebuild
-        if (!empty($params)) {
-            $url .= '?' . static::buildQuery($params);
+        if (($query = static::buildQuery($params)) !== '') {
+            $url .= '?' . $query;
         }
         if ($fragment !== null) {
             $url .= '#' . $fragment;
@@ -182,6 +194,7 @@ class UrlHelper
      *
      * @param string $url
      * @return string
+     * @since 3.1.11
      */
     public static function rootRelativeUrl(string $url): string
     {
@@ -198,7 +211,7 @@ class UrlHelper
     }
 
     /**
-     * Returns either a CP or a site URL, depending on the request type.
+     * Returns either a control panel or a site URL, depending on the request type.
      *
      * @param string $path
      * @param array|string|null $params
@@ -227,7 +240,7 @@ class UrlHelper
         $request = Craft::$app->getRequest();
 
         if ($request->getIsCpRequest()) {
-            $path = Craft::$app->getConfig()->getGeneral()->cpTrigger . ($path ? '/' . $path : '');
+            $path = static::prependCpTrigger($path);
             $cpUrl = true;
         } else {
             $cpUrl = false;
@@ -242,7 +255,7 @@ class UrlHelper
     }
 
     /**
-     * Returns a CP URL.
+     * Returns a control panel URL.
      *
      * @param string $path
      * @param array|string|null $params
@@ -257,7 +270,7 @@ class UrlHelper
         }
 
         $path = trim($path, '/');
-        $path = Craft::$app->getConfig()->getGeneral()->cpTrigger . ($path ? '/' . $path : '');
+        $path = static::prependCpTrigger($path);
 
         return self::_createUrl($path, $params, $scheme, true);
     }
@@ -324,12 +337,13 @@ class UrlHelper
      */
     public static function actionUrl(string $path = '', $params = null, string $scheme = null): string
     {
-        $path = Craft::$app->getConfig()->getGeneral()->actionTrigger . '/' . trim($path, '/');
+        $generalConfig = Craft::$app->getConfig()->getGeneral();
+        $path = $generalConfig->actionTrigger . '/' . trim($path, '/');
 
         $request = Craft::$app->getRequest();
 
         if ($request->getIsCpRequest()) {
-            $path = Craft::$app->getConfig()->getGeneral()->cpTrigger . ($path ? '/' . $path : '');
+            $path = static::prependCpTrigger($path);
             $cpUrl = true;
         } else {
             $cpUrl = false;
@@ -340,7 +354,7 @@ class UrlHelper
             $scheme = 'https';
         }
 
-        return self::_createUrl($path, $params, $scheme, $cpUrl, true, false);
+        return self::_createUrl($path, $params, $scheme, $cpUrl, (bool)$generalConfig->pathParam, false);
     }
 
     /**
@@ -399,7 +413,7 @@ class UrlHelper
     }
 
     /**
-     * Returns either the current site’s base URL or the CP base URL, depending on the type of request this is.
+     * Returns either the current site’s base URL or the control panel’s base URL, depending on the type of request this is.
      *
      * @return string
      * @throws SiteNotFoundException if this is a site request and yet there's no current site for some reason
@@ -437,7 +451,7 @@ class UrlHelper
     }
 
     /**
-     * Returns the Control Panel’s base URL (with a trailing slash) (sans-CP trigger).
+     * Returns the control panel’s base URL (with a trailing slash) (sans control panel trigger).
      *
      * @return string
      */
@@ -469,7 +483,7 @@ class UrlHelper
     }
 
     /**
-     * Returns the host info for the CP or the current site, depending on the request type.
+     * Returns the host info for the control panel or the current site, depending on the request type.
      *
      * @return string
      * @throws SiteNotFoundException
@@ -491,7 +505,7 @@ class UrlHelper
     }
 
     /**
-     * Returns the Control Panel's host.
+     * Returns the control panel's host.
      *
      * @return string
      */
@@ -528,6 +542,18 @@ class UrlHelper
         return $host;
     }
 
+    /**
+     * Prepends the CP trigger onto the given path.
+     *
+     * @param string $path
+     * @return string
+     * @since 3.5.0
+     */
+    public static function prependCpTrigger(string $path): string
+    {
+        return implode('/', array_filter([Craft::$app->getConfig()->getGeneral()->cpTrigger, $path]));
+    }
+
     // Deprecated Methods
     // -------------------------------------------------------------------------
 
@@ -537,11 +563,10 @@ class UrlHelper
      * @param string $url the URL
      * @param string $scheme the scheme ('http' or 'https')
      * @return string
-     * @deprecated in 3.0. Use [[urlWithScheme()]] instead.
+     * @deprecated in 3.0.0. Use [[urlWithScheme()]] instead.
      */
     public static function urlWithProtocol(string $url, string $scheme): string
     {
-        Craft::$app->getDeprecator()->log('UrlHelper::urlWithProtocol()', 'UrlHelper::urlWithProtocol() is deprecated. Use urlWithScheme() instead.');
         return static::urlWithScheme($url, $scheme);
     }
 
@@ -551,16 +576,12 @@ class UrlHelper
      * urls, share entry URLs, etc.
      *
      * @return string
-     * @deprecated in 3.0. Use [[getSchemeForTokenizedUrl()]] instead.
+     * @deprecated in 3.0.0. Use [[getSchemeForTokenizedUrl()]] instead.
      */
     public static function getProtocolForTokenizedUrl(): string
     {
-        Craft::$app->getDeprecator()->log('UrlHelper::getProtocolForTokenizedUrl()', 'UrlHelper::getProtocolForTokenizedUrl() is deprecated. Use getSchemeForTokenizedUrl() instead.');
         return static::getSchemeForTokenizedUrl();
     }
-
-    // Private Methods
-    // =========================================================================
 
     /**
      * Returns a URL.
@@ -609,7 +630,7 @@ class UrlHelper
         if ($showScriptName) {
             if ($request->getIsConsoleRequest()) {
                 // No way to know for sure, so just guess
-                $baseUrl = '/' . $request->getScriptFilename();
+                $baseUrl = '/index.php';
             } else {
                 $baseUrl = static::host() . $request->getScriptUrl();
             }
@@ -629,7 +650,7 @@ class UrlHelper
         }
 
         // Put it all together
-        if (!$showScriptName || $generalConfig->usePathInfo) {
+        if (!$showScriptName || $generalConfig->usePathInfo || !$generalConfig->pathParam) {
             if ($path) {
                 $url = rtrim($baseUrl, '/') . '/' . trim($path, '/');
 
@@ -644,14 +665,13 @@ class UrlHelper
 
             if ($path) {
                 // Prepend it to the params array
-                $pathParam = $generalConfig->pathParam;
-                ArrayHelper::remove($params, $pathParam);
-                $params = array_merge([$pathParam => $path], $params);
+                ArrayHelper::remove($params, $generalConfig->pathParam);
+                $params = array_merge([$generalConfig->pathParam => $path], $params);
             }
         }
 
-        if (!empty($params)) {
-            $url .= '?' . static::buildQuery($params);
+        if (($query = static::buildQuery($params)) !== '') {
+            $url .= '?' . $query;
         }
 
         if ($fragment !== null) {
@@ -686,7 +706,6 @@ class UrlHelper
             }
 
             parse_str($params, $arr);
-            $arr = ArrayHelper::filterEmptyStringsFromArray($arr);
         } else {
             $arr = [];
         }

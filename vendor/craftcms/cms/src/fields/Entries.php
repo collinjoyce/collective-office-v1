@@ -22,13 +22,10 @@ use GraphQL\Type\Definition\Type;
  * Entries represents an Entries field.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class Entries extends BaseRelationField
 {
-    // Static
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -61,9 +58,6 @@ class Entries extends BaseRelationField
         return EntryQuery::class;
     }
 
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      * @since 3.3.0
@@ -84,7 +78,7 @@ class Entries extends BaseRelationField
      */
     public function getEagerLoadingGqlConditions()
     {
-        $allowedEntities = Gql::extractAllowedEntitiesFromToken();
+        $allowedEntities = Gql::extractAllowedEntitiesFromSchema();
         $allowedSectionUids = $allowedEntities['sections'] ?? [];
         $allowedEntryTypeUids = $allowedEntities['entrytypes'] ?? [];
 

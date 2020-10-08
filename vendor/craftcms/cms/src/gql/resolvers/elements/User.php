@@ -29,7 +29,7 @@ class User extends ElementResolver
         // If this is the beginning of a resolver chain, start fresh
         if ($source === null) {
             $query = UserElement::find();
-        // If not, get the prepared element query
+            // If not, get the prepared element query
         } else {
             $query = $source->$fieldName;
         }
@@ -43,15 +43,16 @@ class User extends ElementResolver
             $query->$key($value);
         }
 
-        $pairs = GqlHelper::extractAllowedEntitiesFromToken('read');
+        $pairs = GqlHelper::extractAllowedEntitiesFromSchema('read');
 
         if (!GqlHelper::canQueryUsers()) {
             return [];
         }
 
-        if (!GqlHelper::canToken('usergroups.everyone')) {
-            $query->innerJoin(Table::USERGROUPS_USERS . ' usergroups_users',
-                ['and',
+        if (!GqlHelper::canSchema('usergroups.everyone')) {
+            $query->innerJoin(['usergroups_users' => Table::USERGROUPS_USERS],
+                [
+                    'and',
                     '[[users.id]] = [[usergroups_users.userId]]',
                     ['in', '[[usergroups_users.groupId]]', array_values(Db::idsByUids(Table::USERGROUPS, $pairs['usergroups']))]
                 ]

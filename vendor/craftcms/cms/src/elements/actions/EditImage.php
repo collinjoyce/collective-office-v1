@@ -15,20 +15,14 @@ use craft\helpers\Json;
  * EditImage represents an Edit Image action
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class EditImage extends ElementAction
 {
-    // Properties
-    // =========================================================================
-
     /**
      * @var string The trigger label
      */
     public $label;
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * @inheritdoc
@@ -55,10 +49,9 @@ class EditImage extends ElementAction
     {
         $type = Json::encode(static::class);
 
-        $js = <<<EOT
-(function()
-{
-    var trigger = new Craft.ElementActionTrigger({
+        $js = <<<JS
+(() => {
+    new Craft.ElementActionTrigger({
         type: {$type},
         batch: false,
         _imageEditor: null,
@@ -82,8 +75,9 @@ class EditImage extends ElementAction
         }
     });
 })();
-EOT;
+JS;
 
         Craft::$app->getView()->registerJs($js);
+        return null;
     }
 }

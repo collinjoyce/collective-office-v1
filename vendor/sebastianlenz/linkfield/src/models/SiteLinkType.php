@@ -6,13 +6,12 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\helpers\Html;
 use craft\models\Site;
+use Throwable;
 use typedlinkfield\fields\LinkField;
-use typedlinkfield\utilities\ElementSourceValidator;
 use yii\base\Model;
 
 /**
  * Class SiteLinkType
- * @package typedlinkfield\models
  */
 class SiteLinkType extends Model implements LinkTypeInterface
 {
@@ -29,6 +28,7 @@ class SiteLinkType extends Model implements LinkTypeInterface
 
   /**
    * SiteLinkType constructor.
+   *
    * @param string|array $displayName
    * @param array $options
    */
@@ -43,7 +43,7 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return array
+   * @inheritDoc
    */
   public function getDefaultSettings(): array {
     return [
@@ -52,17 +52,24 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayName(): string {
-    return \Craft::t('typedlinkfield', $this->displayName);
+    return Craft::t('typedlinkfield', $this->displayName);
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayGroup(): string {
-    return \Craft::t('typedlinkfield', $this->displayGroup);
+    return Craft::t('typedlinkfield', $this->displayGroup);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getElement(Link $link, $ignoreStatus = false) {
+    return null;
   }
 
   /**
@@ -78,13 +85,9 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @param Link $value
-   * @param ElementInterface $element
-   * @return string
+   * @inheritDoc
    */
-  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element): string {
+  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element = null): string {
     $settings     = $field->getLinkTypeSettings($linkTypeName, $this);
     $siteIds      = $settings['sites'];
     $isSelected   = $value->type === $linkTypeName;
@@ -99,13 +102,13 @@ class SiteLinkType extends Model implements LinkTypeInterface
     ];
 
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_input-select', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_input-select', [
         'isSelected'         => $isSelected,
         'linkTypeName'       => $linkTypeName,
         'selectFieldOptions' => $selectFieldOptions,
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [
@@ -116,28 +119,18 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param mixed $value
-   * @return mixed
-   */
-  public function getLinkValue($value) {
-    return $value ?? null;
-  }
-
-  /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @return string
+   * @inheritDoc
    */
   public function getSettingsHtml(string $linkTypeName, LinkField $field): string {
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_settings-site', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_settings-site', [
         'settings'     => $field->getLinkTypeSettings($linkTypeName, $this),
         'elementName'  => $this->getDisplayName(),
         'linkTypeName' => $linkTypeName,
         'siteOptions'  => $this->getSiteOptions(),
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [
@@ -173,8 +166,7 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritdoc
    */
   public function getText(Link $link) {
     $site = $this->getSite($link);
@@ -186,8 +178,7 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritdoc
    */
   public function getUrl(Link $link) {
     $site = $this->getSite($link);
@@ -199,8 +190,14 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return bool
+   * @inheritdoc
+   */
+  public function hasElement(Link $link, $ignoreStatus = false): bool {
+    return false;
+  }
+
+  /**
+   * @inheritdoc
    */
   public function isEmpty(Link $link): bool {
     if (is_string($link->value)) {
@@ -211,6 +208,13 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
+   * @inheritDoc
+   */
+  public function readLinkValue($formData) {
+    return $formData ?? null;
+  }
+
+  /**
    * @inheritdoc
    */
   public function validateSettings(array $settings): array {
@@ -218,25 +222,9 @@ class SiteLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param LinkField $field
-   * @param Link $link
-   * @return array|null
+   * @inheritdoc
    */
   public function validateValue(LinkField $field, Link $link) {
     return null;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function getElement(Link $link, $ignoreStatus = false) {
-    return null;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function hasElement(Link $link, $ignoreStatus = false): bool {
-    return false;
   }
 }

@@ -12,16 +12,19 @@ namespace craft\base;
  * sort options on element indexes.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.2
+ * @since 3.2.0
  */
 interface SortableFieldInterface
 {
-    // Public Methods
-    // =========================================================================
-
     /**
-     * Returns the sort option array that should be included in the element’s
-     * [[\craft\base\ElementInterface::sortOptions()|sortOptions()]] response.
+     * Returns the field’s sort option configuration.
+     *
+     * This should return an array with the following keys:
+     *
+     * - `label` – The sort option label
+     * - `orderBy` – An array or comma-delimited string of columns to order the query by
+     * - `attribute` _(optional)_ – The table attribute name that this option is associated with
+     *   (required if `orderBy` is an array or more than one column name)
      *
      * @return array
      */

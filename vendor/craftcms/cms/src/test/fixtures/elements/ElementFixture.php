@@ -8,7 +8,6 @@
 namespace craft\test\fixtures\elements;
 
 use Craft;
-use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\elements\db\ElementQuery;
 use craft\errors\InvalidElementException;
@@ -29,16 +28,16 @@ use yii\test\ActiveFixture;
  */
 abstract class ElementFixture extends ActiveFixture
 {
-    // Public properties
-    // =========================================================================
-
     /**
      * @var array
      */
     protected $siteIds = [];
 
-    // Public Methods
-    // =========================================================================
+    /**
+     * @var bool Whether the fixture data should be unloaded
+     * @since 3.3.5
+     */
+    public $unload = true;
 
     /**
      * @inheritdoc
@@ -47,7 +46,7 @@ abstract class ElementFixture extends ActiveFixture
     {
         parent::init();
 
-        if (!($this->getElement() instanceof Element)) {
+        if (!($this->getElement() instanceof ElementInterface)) {
             throw new InvalidConfigException('"modelClass" must be an Element');
         }
 
@@ -80,7 +79,6 @@ abstract class ElementFixture extends ActiveFixture
         $this->data = [];
 
         foreach ($this->getData() as $alias => $data) {
-            /* @var Element $element */
             $element = $this->getElement($data) ?: new $this->modelClass;
 
             // If they want to add a date deleted. Store it but dont set that as an element property
@@ -139,15 +137,17 @@ abstract class ElementFixture extends ActiveFixture
      */
     public function unload()
     {
-        foreach ($this->getData() as $data) {
-            $element = $this->getElement($data);
+        if ($this->unload) {
+            foreach ($this->getData() as $data) {
+                $element = $this->getElement($data);
 
-            if ($element && !Craft::$app->getElements()->deleteElement($element, true)) {
-                throw new InvalidElementException($element, 'Unable to delete element.');
+                if ($element && !Craft::$app->getElements()->deleteElement($element, true)) {
+                    throw new InvalidElementException($element, 'Unable to delete element.');
+                }
             }
-        }
 
-        $this->data = [];
+            $this->data = [];
+        }
     }
 
     /**
@@ -169,22 +169,31 @@ abstract class ElementFixture extends ActiveFixture
      * @param array $data
      * @return ElementQuery
      */
-    public function generateElementQuery(array $data) : ElementQuery
+    public function generateElementQuery(array $data): ElementQuery
     {
         $modelClass = $this->modelClass;
         $query = $modelClass::find()->anyStatus()->trashed(null);
 
         foreach ($data as $key => $value) {
+            // Is this the "field:handle" syntax?
+            if (strncmp($key, 'field:', 6) === 0) {
+                $key = substr($key, 6);
+            }
+
             if ($this->isPrimaryKey($key)) {
-                $query = $query->$key(addcslashes($value, ','));
+                if (is_array($value)) {
+                    $query = $query->relatedTo([
+                        'targetElement' => $value,
+                        'field' => $key,
+                    ]);
+                } else {
+                    $query = $query->$key(addcslashes($value, ','));
+                }
             }
         }
 
         return $query;
     }
-
-    // Protected Methods
-    // =========================================================================
 
     /**
      * See if an element's handle is a primary key.

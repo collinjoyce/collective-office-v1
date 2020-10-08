@@ -16,13 +16,10 @@ use craft\fields\data\SingleOptionFieldData;
  * Dropdown represents a Dropdown field.
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class Dropdown extends BaseOptionsField implements SortableFieldInterface
 {
-    // Static
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -39,31 +36,27 @@ class Dropdown extends BaseOptionsField implements SortableFieldInterface
         return SingleOptionFieldData::class;
     }
 
-    // Properties
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
     public $optgroups = true;
 
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    protected function inputHtml($value, ElementInterface $element = null): string
     {
+        /** @var SingleOptionFieldData $value */
+        if (!$value->valid) {
+            Craft::$app->getView()->setInitialDeltaValue($this->handle, null);
+        }
+
         return Craft::$app->getView()->renderTemplate('_includes/forms/select', [
             'name' => $this->handle,
             'value' => $value,
             'options' => $this->translatedOptions(),
         ]);
     }
-
-    // Protected Methods
-    // =========================================================================
 
     /**
      * @inheritdoc

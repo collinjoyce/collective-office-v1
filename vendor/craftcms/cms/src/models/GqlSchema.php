@@ -9,29 +9,18 @@ namespace craft\models;
 
 use craft\base\Model;
 use craft\helpers\Json;
+use craft\helpers\StringHelper;
 use craft\records\GqlSchema as GqlSchemaRecord;
 use craft\validators\UniqueValidator;
 
 /**
  * GraphQL schema class
  *
- * @property bool $isPublic Whether this is the public schema
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.3.0
  */
 class GqlSchema extends Model
 {
-    // Constants
-    // =========================================================================
-
-    /**
-     * The public schema token value.
-     */
-    const PUBLIC_TOKEN = '__PUBLIC__';
-
-    // Properties
-    // =========================================================================
-
     /**
      * @var int|null ID
      */
@@ -43,42 +32,25 @@ class GqlSchema extends Model
     public $name;
 
     /**
-     * @var string The access token
-     */
-    public $accessToken;
-
-    /**
-     * @var bool Is the schema enabled
-     */
-    public $enabled = true;
-
-    /**
-     * @var \DateTime|null Date expires
-     */
-    public $expiryDate;
-
-    /**
-     * @var \DateTime|null Date last used
-     */
-    public $lastUsed;
-
-    /**
      * @var array The schema’s scope
      */
     public $scope = [];
 
     /**
-     * @var \DateTime|null Date created
+     * @var array Whether this schema is public
      */
-    public $dateCreated;
+    public $isPublic = false;
 
     /**
      * @var string $uid
      */
     public $uid;
 
-    // Public Methods
-    // =========================================================================
+    /**
+     * @var array Instance cache for the extracted scope pairs
+     * @since 3.3.16
+     */
+    private $_cachedPairs = [];
 
     public function __construct($config = [])
     {
@@ -92,23 +64,12 @@ class GqlSchema extends Model
     /**
      * @inheritdoc
      */
-    public function datetimeAttributes(): array
+    protected function defineRules(): array
     {
-        $attributes = parent::datetimeAttributes();
-        $attributes[] = 'expiryDate';
-        $attributes[] = 'lastUsed';
-        return $attributes;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        $rules = parent::rules();
-        $rules[] = [['name', 'accessToken'], 'required'];
+        $rules = parent::defineRules();
+        $rules[] = [['name'], 'required'];
         $rules[] = [
-            ['name', 'accessToken'],
+            ['name'],
             UniqueValidator::class,
             'targetClass' => GqlSchemaRecord::class,
         ];
@@ -127,16 +88,6 @@ class GqlSchema extends Model
     }
 
     /**
-     * returns whether this is the public schema.
-     *
-     * @return bool
-     */
-    public function getIsPublic(): bool
-    {
-        return $this->accessToken === self::PUBLIC_TOKEN;
-    }
-
-    /**
      * Return whether this schema can perform an action
      *
      * @param $name
@@ -145,5 +96,64 @@ class GqlSchema extends Model
     public function has(string $name): bool
     {
         return is_array($this->scope) && in_array($name, $this->scope, true);
+    }
+
+    /**
+     * Return all scope pairs.
+     *
+     * @return array
+     * @since 3.3.16
+     */
+    public function getAllScopePairs(): array
+    {
+        if (!empty($this->_cachedPairs)) {
+            return $this->_cachedPairs;
+        }
+        foreach ((array)$this->scope as $permission) {
+            if (preg_match('/:([\w-]+)$/', $permission, $matches)) {
+                $action = $matches[1];
+                $permission = StringHelper::removeRight($permission, ':' . $action);
+                $parts = explode('.', $permission);
+                if (count($parts) === 2) {
+                    $this->_cachedPairs[$action][$parts[0]][] = $parts[1];
+                } else if (count($parts) === 1) {
+                    $this->_cachedPairs[$action][$parts[0]] = true;
+                }
+            }
+        }
+        return $this->_cachedPairs;
+    }
+
+    /**
+     * Return all scope pairs.
+     *
+     * @param string $action
+     * @return array
+     * @since 3.3.16
+     */
+    public function getAllScopePairsForAction(string $action = 'read'): array
+    {
+        $pairs = $this->getAllScopePairs();
+        return $pairs[$action] ?? [];
+    }
+
+    /**
+     * Returns the field layout config for this schema.
+     *
+     * @return array
+     * @since 3.5.0
+     */
+    public function getConfig(): array
+    {
+        $config = [
+            'name' => $this->name,
+            'isPublic' => (bool)$this->isPublic,
+        ];
+
+        if ($this->scope) {
+            $config['scope'] = $this->scope;
+        }
+
+        return $config;
     }
 }

@@ -11,13 +11,10 @@ namespace craft\helpers;
  * Class Path
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.0
+ * @since 3.0.0
  */
 class Path
 {
-    // Public Methods
-    // =========================================================================
-
     /**
      * Ensures that a relative path never goes deeper than its root directory.
      *

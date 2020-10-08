@@ -20,17 +20,23 @@ if (typeof Craft.SuperTable === typeof undefined) {
         $tbody: null,
         $addRowBtn: null,
 
+        $field: null,
+
         init: function(id, blockType, inputNamePrefix, settings) {
             blockType = blockType[0];
 
             if (settings.fieldLayout == 'table') {
-                new Craft.SuperTable.InputTable(id, blockType, inputNamePrefix, settings);
+                this.$field = new Craft.SuperTable.InputTable(id, blockType, inputNamePrefix, settings);
             } else if (settings.fieldLayout == 'matrix') {
-                new Craft.SuperTable.InputMatrix(id, blockType, inputNamePrefix, settings);
+                this.$field = new Craft.SuperTable.InputMatrix(id, blockType, inputNamePrefix, settings);
             } else {
-                new Craft.SuperTable.InputRow(id, blockType, inputNamePrefix, settings);
+                this.$field = new Craft.SuperTable.InputRow(id, blockType, inputNamePrefix, settings);
             }
-        }
+        },
+
+        addRow: function() {
+            this.$field.addRow();
+        },
     });
 
     Craft.SuperTable.InputTable = Garnish.Base.extend({
@@ -92,20 +98,26 @@ if (typeof Craft.SuperTable === typeof undefined) {
 
         addRow: function() {
             var type = this.blockType.type;
+            var isStatic = this.settings.staticField;
 
             this.totalNewBlocks++;
 
-            var id = 'new'+this.totalNewBlocks;
+            var id = 'new' + this.totalNewBlocks;
 
             var bodyHtml = this.getParsedBlockHtml(this.blockType.bodyHtml, id),
                 footHtml = this.getParsedBlockHtml(this.blockType.footHtml, id);
 
-            var html = '<tr data-id="' + id + '">' +
-                '<input type="hidden" name="' + this.inputNamePrefix + '[' + id + '][type]" value="' + type + '" />' +
-                '' + bodyHtml + '' +
-                '<td class="thin action super-table-action"><a class="move icon" title="' + Craft.t('super-table', 'Reorder') + '"></a></td>' +
-                '<td class="thin action super-table-action"><a class="delete icon" title="' + Craft.t('super-table', 'Delete') + '"></a></td>' +
-                '</tr>';
+            var html = '<tr data-id="' + id + '" data-type="' + type + '">' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[sortOrder][]" value="' + id + '" />' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[blocks][' + id + '][type]" value="' + type + '" />' +
+                '' + bodyHtml + '';
+
+            if (!isStatic) {
+                html += '<td class="thin action super-table-action"><a class="move icon" title="' + Craft.t('super-table', 'Reorder') + '"></a></td>' +
+                    '<td class="thin action super-table-action"><a class="delete icon" title="' + Craft.t('super-table', 'Delete') + '"></a></td>';
+            }
+
+            html += '</tr>';
 
             var $tr = $(html).appendTo(this.$tbody);
 
@@ -121,7 +133,7 @@ if (typeof Craft.SuperTable === typeof undefined) {
 
         getParsedBlockHtml: function(html, id) {
             if (typeof html == 'string') {
-                return html.replace(/__BLOCK_ST__/g, id);
+                return html.replace(new RegExp(`__BLOCK_${this.settings.placeholderKey}__`, 'g'), id);
             } else {
                 return '';
             }
@@ -148,12 +160,21 @@ if (typeof Craft.SuperTable === typeof undefined) {
                 return;
             }
 
+            // Pause the draft editor
+            if (window.draftEditor) {
+                window.draftEditor.pause();
+            }
+
             this.sorter.removeItems(row.$tr);
             row.$tr.remove();
 
             this.updateAddBlockBtn();
-        },
 
+            // Resume the draft editor
+            if (window.draftEditor) {
+                window.draftEditor.resume();
+            }
+        },
     });
 
 
@@ -191,7 +212,7 @@ if (typeof Craft.SuperTable === typeof undefined) {
             this.$rows = this.$divInner.children('.superTableRow');
 
             this.sorter = new Garnish.DragSort(this.$rows, {
-                handle: 'tfoot .reorder .move',
+                handle: '.tfoot-actions .reorder .move',
                 axis: 'y',
                 collapseDraggees: true,
                 magnetStrength: 4,
@@ -224,6 +245,7 @@ if (typeof Craft.SuperTable === typeof undefined) {
 
         addRow: function() {
             var type = this.blockType.type;
+            var isStatic = this.settings.staticField;
 
             this.totalNewBlocks++;
 
@@ -232,19 +254,22 @@ if (typeof Craft.SuperTable === typeof undefined) {
             var bodyHtml = this.getParsedBlockHtml(this.blockType.bodyHtml, id),
                 footHtml = this.getParsedBlockHtml(this.blockType.footHtml, id);
 
-            var html = '<div class="superTableRow" data-id="'+id+'">' +
-                '<input type="hidden" name="'+this.inputNamePrefix+'['+id+'][type]" value="'+type+'">' +
-                '<table id="'+id+'" class="superTable-table superTable-layout-row">' +
-                '<tbody>' +
-                '' + bodyHtml + '' +
-                '</tbody>' +
-                '<tfoot>' +
-                '<tr>' +
-                '<td class="floating reorder"><a class="move icon" title="'+Craft.t('super-table', 'Reorder')+'"></a></td>' +
-                '<td class="floating delete"><a class="delete icon" title="'+Craft.t('super-table', 'Delete')+'"></a></td>' +
-                '</tr>' +
-                '</tfoot>' +
-                '</table>' +
+            var html = '<div class="superTableRow" data-id="' + id + '" data-type="' + type + '">' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[sortOrder][]" value="' + id + '">' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[blocks][' + id  +'][type]" value="' + type + '">' +
+                '<div id="' + id + '" class="superTable-layout-row-new">' +
+                    '<div class="superTable-layout-row-new-body">' +
+                        bodyHtml +
+                    '</div>';
+
+            if (!isStatic) {
+                html += '<div class="superTable-layout-row-new-actions tfoot-actions">' +
+                    '<div class="floating reorder"><a class="move icon" title="' + Craft.t('super-table', 'Reorder') + '"></a></div>' +
+                    '<div class="floating delete"><a class="delete icon" title="' + Craft.t('super-table', 'Delete') + '"></a></div>' + 
+                '</div>';
+            }
+
+            html += '</div>' +
                 '</div>';
 
             var $tr = $(html).appendTo(this.$divInner);
@@ -256,14 +281,12 @@ if (typeof Craft.SuperTable === typeof undefined) {
             var row = new Craft.SuperTable.InputRow.Row(this, $tr);
             this.sorter.addItems($tr);
 
-            row.expand();
-
             this.updateAddBlockBtn();
         },
 
         getParsedBlockHtml: function(html, id) {
             if (typeof html == 'string') {
-                return html.replace(/__BLOCK_ST__/g, id);
+                return html.replace(new RegExp(`__BLOCK_${this.settings.placeholderKey}__`, 'g'), id);
             } else {
                 return '';
             }
@@ -279,8 +302,8 @@ if (typeof Craft.SuperTable === typeof undefined) {
             // otherwise, we get a nasty overflow of buttons.
 
             // Get the Super Table overall width, with some padding
-            var actionBtnWidth = this.$divInner.find('tfoot tr').width();
-            var rowHeaderWidth = this.$divInner.find('td.rowHeader').width();
+            var actionBtnWidth = this.$divInner.find('.tfoot-actions').width();
+            var rowHeaderWidth = this.$divInner.find('.rowHeader').width();
             var rowWidth = this.$divInner.width() - actionBtnWidth - rowHeaderWidth - 20;
             var $matrixFields = this.$divInner.find('.matrix.matrix-field');
 
@@ -316,7 +339,7 @@ if (typeof Craft.SuperTable === typeof undefined) {
             this.table = table;
             this.$tr = $(tr);
 
-            var $deleteBtn = this.$tr.children().last().find('tfoot .delete');
+            var $deleteBtn = this.$tr.children().last().find('.tfoot-actions .delete');
             this.addListener($deleteBtn, 'click', 'deleteRow');
         },
 
@@ -329,39 +352,21 @@ if (typeof Craft.SuperTable === typeof undefined) {
                 return;
             }
 
+            // Pause the draft editor
+            if (window.draftEditor) {
+                window.draftEditor.pause();
+            }
+
             this.table.sorter.removeItems(this.$tr);
 
-            this.contract(function() {
-                this.$tr.remove();
+            this.$tr.remove();
 
-                this.table.updateAddBlockBtn();
-            });
-        },
+            this.table.updateAddBlockBtn();
 
-        expand: function(callback) {
-            this.$tr
-                .css(this._getContractedStyles())
-                .velocity(this._getExpandedStyles(), 'fast', callback ? $.proxy(callback, this) : null);
-        },
-
-        contract: function(callback) {
-            this.$tr
-                .css(this._getExpandedStyles())
-                .velocity(this._getContractedStyles(), 'fast', callback ? $.proxy(callback, this) : null);
-        },
-
-        _getExpandedStyles: function() {
-            return {
-                opacity: 1,
-                marginBottom: 10
-            };
-        },
-
-        _getContractedStyles: function() {
-            return {
-                opacity: 0,
-                marginBottom: -(this.$tr.outerHeight())
-            };
+            // Resume the draft editor
+            if (window.draftEditor) {
+                window.draftEditor.resume();
+            }
         },
 
     });
@@ -434,36 +439,42 @@ if (typeof Craft.SuperTable === typeof undefined) {
 
         addRow: function() {
             var type = this.blockType.type;
+            var isStatic = this.settings.staticField;
 
             this.totalNewBlocks++;
 
-            var id = 'new'+this.totalNewBlocks;
+            var id = 'new'+ this.totalNewBlocks;
 
             var bodyHtml = this.getParsedBlockHtml(this.blockType.bodyHtml, id),
                 footHtml = this.getParsedBlockHtml(this.blockType.footHtml, id);
 
-            var html = '<div class="superTableMatrix matrixblock" data-id="{{ blockId }}"{% if block.collapsed %} data-collapsed{% endif %}>' +
-                '<input type="hidden" name="'+this.inputNamePrefix+'['+id+'][type]" value="'+type+'">' +
-                '<div class="titlebar">' +
+            var html = '<div class="superTableMatrix matrixblock ' + (isStatic ? 'static' : '') + '" data-id="' + id + '">' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[sortOrder][]" value="' + id + '">' +
+                '<input type="hidden" name="' + this.inputNamePrefix + '[blocks][' + id + '][type]" value="' + type + '">';
+
+            if (!isStatic) {
+                html += '<div class="titlebar">' +
                 '<div class="blocktype"></div>' +
                 '<div class="preview"></div>' +
                 '</div>' +
                 '<div class="actions">' +
-                '<a class="settings icon menubtn" title="'+Craft.t('app', 'Actions')+'" role="button"></a>' +
+                '<a class="settings icon menubtn" title="' + Craft.t('app', 'Actions') + '" role="button"></a>' +
                 '<div class="menu">' +
                 '<ul class="padded">' +
-                '<li><a data-icon="collapse" data-action="collapse">'+Craft.t('app', 'Collapse')+'</a></li>' +
-                '<li class="hidden"><a data-icon="expand" data-action="expand">'+Craft.t('app', 'Expand')+'</a></li>' +
+                '<li><a data-icon="collapse" data-action="collapse">' + Craft.t('app', 'Collapse') + '</a></li>' +
+                '<li class="hidden"><a data-icon="expand" data-action="expand">' + Craft.t('app', 'Expand') + '</a></li>' +
                 '</ul>' +
                 '<hr class="padded">' +
                 '<ul class="padded">' +
-                '<li><a class="error" data-icon="remove" data-action="delete">'+Craft.t('super-table', 'Delete')+'</a></li>' +
+                '<li><a class="error" data-icon="remove" data-action="delete">' + Craft.t('super-table', 'Delete') + '</a></li>' +
                 '</ul>' +
                 '</div>' +
-                '<a class="move icon" title="'+Craft.t('super-table', 'Reorder')+'" role="button"></a>' +
-                '</div>' +
-                '<div class="fields">' + bodyHtml + '</div>' +
+                '<a class="move icon" title="' + Craft.t('super-table', 'Reorder') + '" role="button"></a>' +
                 '</div>';
+            }
+
+            html += '<div class="fields">' + bodyHtml + '</div>' +
+            '</div>';
 
             var $tr = $(html).appendTo(this.$divInner);
 
@@ -481,7 +492,7 @@ if (typeof Craft.SuperTable === typeof undefined) {
 
         getParsedBlockHtml: function(html, id) {
             if (typeof html == 'string') {
-                return html.replace(/__BLOCK_ST__/g, id);
+                return html.replace(new RegExp(`__BLOCK_${this.settings.placeholderKey}__`, 'g'), id);
             } else {
                 return '';
             }
@@ -604,12 +615,22 @@ if (typeof Craft.SuperTable === typeof undefined) {
         deleteRow: function() {
             this.table.sorter.removeItems(this.$tr);
 
+            // Pause the draft editor
+            if (window.draftEditor) {
+                window.draftEditor.pause();
+            }
+
             this.$tr.velocity({
                 opacity: 0,
                 marginBottom: -(this.$tr.outerHeight())
             }, 'fast', $.proxy(function() {
                 this.$tr.remove();
                 this.table.updateAddBlockBtn();
+
+                // Resume the draft editor
+                if (window.draftEditor) {
+                    window.draftEditor.resume();
+                }
             }, this));
         },
 
@@ -729,8 +750,9 @@ if (typeof Craft.SuperTable === typeof undefined) {
             this.$tr.height('auto');
             this.$fieldsContainer.show();
             var expandedContainerHeight = this.$tr.height();
+            var displayValue = this.$fieldsContainer.css('display') || 'block';
             this.$tr.height(collapsedContainerHeight);
-            this.$fieldsContainer.hide().velocity('fadeIn', {duration: 'fast'});
+            this.$fieldsContainer.hide().velocity('fadeIn', {duration: 'fast', display: displayValue});
             this.$tr.velocity({height: expandedContainerHeight}, 'fast', $.proxy(function() {
                 this.$previewContainer.html('');
                 this.$tr.height('auto');

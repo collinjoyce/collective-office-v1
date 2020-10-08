@@ -6,13 +6,13 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\helpers\Html;
 use craft\validators\UrlValidator;
+use Throwable;
 use typedlinkfield\fields\LinkField;
 use yii\base\Model;
 use yii\validators\EmailValidator;
 
 /**
  * Class InputLinkType
- * @package typedlinkfield\models
  */
 class InputLinkType extends Model implements LinkTypeInterface
 {
@@ -39,6 +39,7 @@ class InputLinkType extends Model implements LinkTypeInterface
 
   /**
    * ElementLinkType constructor.
+   *
    * @param string|array $displayName
    * @param array $options
    */
@@ -53,7 +54,7 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return array
+   * @inheritDoc
    */
   public function getDefaultSettings(): array {
     return [
@@ -63,17 +64,17 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayName(): string {
-    return \Craft::t('typedlinkfield', $this->displayName);
+    return Craft::t('typedlinkfield', $this->displayName);
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getDisplayGroup(): string {
-    return \Craft::t('typedlinkfield', $this->displayGroup);
+    return Craft::t('typedlinkfield', $this->displayGroup);
   }
 
   /**
@@ -84,13 +85,9 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @param Link $value
-   * @param ElementInterface $element
-   * @return string
+   * @inheritDoc
    */
-  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element): string {
+  public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element = null): string {
     $settings   = $field->getLinkTypeSettings($linkTypeName, $this);
     $isSelected = $value->type === $linkTypeName;
     $value      = $isSelected ? $value->value : '';
@@ -107,30 +104,22 @@ class InputLinkType extends Model implements LinkTypeInterface
     }
 
     if (isset($this->placeholder)) {
-      $textFieldOptions['placeholder'] = \Craft::t('typedlinkfield', $this->placeholder);
+      $textFieldOptions['placeholder'] = Craft::t('typedlinkfield', $this->placeholder);
     }
 
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_input-input', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_input-input', [
         'isSelected'       => $isSelected,
         'linkTypeName'     => $linkTypeName,
         'textFieldOptions' => $textFieldOptions,
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [ 'name' => $this->getDisplayName() ]
       ));
     }
-  }
-
-  /**
-   * @param mixed $value
-   * @return mixed
-   */
-  public function getLinkValue($value) {
-    return is_string($value) ? $value : '';
   }
 
   /**
@@ -156,19 +145,17 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @return string
+   * @inheritDoc
    */
   public function getSettingsHtml(string $linkTypeName, LinkField $field): string {
     try {
-      return \Craft::$app->view->renderTemplate('typedlinkfield/_settings-input', [
+      return Craft::$app->view->renderTemplate('typedlinkfield/_settings-input', [
         'settings'     => $field->getLinkTypeSettings($linkTypeName, $this),
         'elementName'  => $this->getDisplayName(),
         'linkTypeName' => $linkTypeName,
       ]);
-    } catch (\Throwable $exception) {
-      return Html::tag('p', \Craft::t(
+    } catch (Throwable $exception) {
+      return Html::tag('p', Craft::t(
         'typedlinkfield',
         'Error: Could not render the template for the field `{name}`.',
         [ 'name' => $this->getDisplayName() ]
@@ -177,16 +164,14 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritDoc
    */
   public function getText(Link $link) {
     return null;
   }
 
   /**
-   * @param Link $link
-   * @return null|string
+   * @inheritDoc
    */
   public function getUrl(Link $link) {
     $url = $this->getRawUrl($link);
@@ -212,8 +197,7 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param Link $link
-   * @return bool
+   * @inheritDoc
    */
   public function isEmpty(Link $link): bool {
     if (is_string($link->value)) {
@@ -224,6 +208,13 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
+   * @inheritDoc
+   */
+  public function readLinkValue($formData) {
+    return is_string($formData) ? $formData : '';
+  }
+
+  /**
    * @inheritdoc
    */
   public function validateSettings(array $settings): array {
@@ -231,9 +222,7 @@ class InputLinkType extends Model implements LinkTypeInterface
   }
 
   /**
-   * @param LinkField $field
-   * @param Link $link
-   * @return array|null
+   * @inheritDoc
    */
   public function validateValue(LinkField $field, Link $link) {
     $value = $this->getRawUrl($link);
@@ -262,7 +251,7 @@ class InputLinkType extends Model implements LinkTypeInterface
       case('tel'):
         $regexp = '/^[0-9+\(\)#\.\s\/ext-]+$/';
         if (!filter_var($value, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $regexp)))) {
-          return [\Craft::t('typedlinkfield', 'Please enter a valid phone number.'), []];
+          return [Craft::t('typedlinkfield', 'Please enter a valid phone number.'), []];
         }
         break;
 

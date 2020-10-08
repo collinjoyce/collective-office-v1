@@ -7,12 +7,10 @@
 
 namespace craft\gql\interfaces\elements;
 
-use craft\elements\Category as CategoryElement;
 use craft\gql\arguments\elements\Category as CategoryArguments;
-use craft\gql\interfaces\elements\Category as CategoryInterface;
-use craft\gql\interfaces\Structure;
-use craft\gql\TypeLoader;
 use craft\gql\GqlEntityRegistry;
+use craft\gql\interfaces\Structure;
+use craft\gql\TypeManager;
 use craft\gql\types\generators\CategoryType;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\Type;
@@ -38,22 +36,18 @@ class Category extends Structure
      */
     public static function getType($fields = null): Type
     {
-        if ($type = GqlEntityRegistry::getEntity(self::class)) {
+        if ($type = GqlEntityRegistry::getEntity(self::getName())) {
             return $type;
         }
 
-        $type = GqlEntityRegistry::createEntity(self::class, new InterfaceType([
+        $type = GqlEntityRegistry::createEntity(self::getName(), new InterfaceType([
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented by all categories.',
-            'resolveType' => function (CategoryElement $value) {
-                return GqlEntityRegistry::getEntity($value->getGqlTypeName());
-            }
+            'resolveType' => self::class . '::resolveElementTypeName',
         ]));
 
-        foreach (CategoryType::generateTypes() as $typeName => $generatedType) {
-            TypeLoader::registerType($typeName, function () use ($generatedType) { return $generatedType ;});
-        }
+        CategoryType::generateTypes();
 
         return $type;
     }
@@ -69,8 +63,9 @@ class Category extends Structure
     /**
      * @inheritdoc
      */
-    public static function getFieldDefinitions(): array {
-        return array_merge(parent::getFieldDefinitions(), [
+    public static function getFieldDefinitions(): array
+    {
+        return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), [
             'groupId' => [
                 'name' => 'groupId',
                 'type' => Type::int(),
@@ -84,14 +79,37 @@ class Category extends Structure
             'children' => [
                 'name' => 'children',
                 'args' => CategoryArguments::getArguments(),
-                'type' => Type::listOf(CategoryInterface::getType()),
+                'type' => Type::listOf(static::getType()),
                 'description' => 'The category’s children.'
             ],
             'parent' => [
                 'name' => 'parent',
-                'type' => CategoryInterface::getType(),
+                'type' => static::getType(),
                 'description' => 'The category’s parent.'
             ],
-        ]);
+            'url' => [
+                'name' => 'url',
+                'type' => Type::string(),
+                'description' => 'The element’s full URL',
+            ],
+            'localized' => [
+                'name' => 'localized',
+                'args' => CategoryArguments::getArguments(),
+                'type' => Type::listOf(static::getType()),
+                'description' => 'The same element in other locales.',
+            ],
+            'prev' => [
+                'name' => 'prev',
+                'type' => self::getType(),
+                'args' => CategoryArguments::getArguments(),
+                'description' => 'Returns the previous element relative to this one, from a given set of criteria. CAUTION: Applying arguments to this field severely degrades the performance of the query.',
+            ],
+            'next' => [
+                'name' => 'next',
+                'type' => self::getType(),
+                'args' => CategoryArguments::getArguments(),
+                'description' => 'Returns the next element relative to this one, from a given set of criteria. CAUTION: Applying arguments to this field severely degrades the performance of the query.',
+            ],
+        ]), self::getName());
     }
 }
