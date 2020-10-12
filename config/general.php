@@ -29,6 +29,14 @@ return [
         
         // Don't transform gifs (there is quality loss and it might crash the server
         'transformGifs' => false,
+        
+        // CP Favicon
+        'cpHeadTags' => [
+		    // Traditional favicon
+		    ['link', ['rel' => 'icon', 'href' => '/favicon.ico']],
+		    // Scalable favicon for browsers that support them
+		    ['link', ['rel' => 'icon', 'type' => 'image/svg+xml', 'sizes' => 'any', 'href' => '/assets/icons/favicon-32x32.png']],
+		],
     ],
 
     // Dev environment settings
