@@ -1,0 +1,8 @@
+handle: misc
+hasUrls: true
+name: Misc
+settings:
+  path: '@webroot/assets/img/misc'
+sortOrder: 5
+type: craft\volumes\Local
+url: '@web/assets/img/misc'

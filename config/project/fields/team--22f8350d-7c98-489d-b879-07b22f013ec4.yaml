@@ -1,0 +1,47 @@
+contentColumnType: string
+fieldGroup: 8eab593b-b98e-4683-a504-aa14998fc5aa
+handle: team
+instructions: ''
+name: Team
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - 15
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 16
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 14
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 17
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_team}}'
+  fieldLayout: row
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Biography'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

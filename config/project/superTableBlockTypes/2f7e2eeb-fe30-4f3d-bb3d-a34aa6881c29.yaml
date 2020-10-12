@@ -1,0 +1,164 @@
+field: 2cc951e2-4ee9-4241-9c48-ffafc42009d2
+fieldLayouts:
+  7d8dc41c-5df4-4aa4-9e40-ceb956e49e52:
+    tabs:
+      -
+        fields:
+          0b37b6e1-4073-47e8-b529-0f0cd526054d:
+            required: false
+            sortOrder: 3
+          66ebfaf5-22cb-4a00-8dac-8f6f5626501c:
+            required: true
+            sortOrder: 2
+          76c598fe-ec94-4b4c-9080-a6cad473ac06:
+            required: true
+            sortOrder: 1
+        name: Content
+        sortOrder: 1
+fields:
+  0b37b6e1-4073-47e8-b529-0f0cd526054d:
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkHref
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      allowCustomText: ''
+      allowTarget: ''
+      allowedLinkNames:
+        3: entry
+        9: url
+      autoNoReferrer: ''
+      defaultLinkName: url
+      defaultText: ''
+      enableAriaLabel: ''
+      enableTitle: ''
+      typeSettings:
+        __assoc__:
+          -
+            - asset
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - category
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - entry
+            -
+              __assoc__:
+                -
+                  - sources
+                  -
+                    - singles
+                    - 'section:1a2a7c95-1089-4cf8-abf3-ac2f6eb47665'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - site
+            -
+              __assoc__:
+                -
+                  - sites
+                  - '*'
+          -
+            - user
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - custom
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - email
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - tel
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - url
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: typedlinkfield\fields\LinkField
+  66ebfaf5-22cb-4a00-8dac-8f6f5626501c:
+    contentColumnType: text
+    fieldGroup: null
+    handle: creditName
+    instructions: ''
+    name: Name
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '1'
+      multiline: '1'
+      placeholder: 'John Doe'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  76c598fe-ec94-4b4c-9080-a6cad473ac06:
+    contentColumnType: text
+    fieldGroup: null
+    handle: label
+    instructions: ''
+    name: Label
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: Millwork
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText

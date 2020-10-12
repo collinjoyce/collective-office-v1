@@ -1,0 +1,20 @@
+contentColumnType: text
+fieldGroup: 8eab593b-b98e-4683-a504-aa14998fc5aa
+handle: aboutLede
+instructions: ''
+name: 'About Lede'
+searchable: true
+settings:
+  availableTransforms: '*'
+  availableVolumes: '*'
+  cleanupHtml: true
+  columnType: text
+  purifierConfig: ''
+  purifyHtml: '1'
+  redactorConfig: Simple.json
+  removeEmptyTags: '1'
+  removeInlineStyles: '1'
+  removeNbsp: '1'
+translationKeyFormat: null
+translationMethod: none
+type: craft\redactor\Field

@@ -1,0 +1,291 @@
+field: fef300bb-fd16-4af0-b3c3-ee86610e1575
+fieldLayouts:
+  579312fb-f9aa-472d-94e5-c1db90447f8e:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 69a49488-63c6-4078-ba27-4ecbc93961d9
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 2dfba906-5248-4c60-8635-cc9148a2d64d
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 03402f5c-8eee-421c-af29-d8cdd3066211
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  03402f5c-8eee-421c-af29-d8cdd3066211:
+    contentColumnType: string
+    fieldGroup: null
+    handle: position
+    instructions: ''
+    name: Position
+    searchable: false
+    settings:
+      optgroups: true
+      options:
+        -
+          __assoc__:
+            -
+              - label
+              - 'Center / Top'
+            -
+              - value
+              - centerTop
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Left / Top'
+            -
+              - value
+              - leftTop
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Right / Top'
+            -
+              - value
+              - rightTop
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Center / Center'
+            -
+              - value
+              - centerCenter
+            -
+              - default
+              - '1'
+        -
+          __assoc__:
+            -
+              - label
+              - 'Left / Center'
+            -
+              - value
+              - leftCenter
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Right / Center'
+            -
+              - value
+              - rightCenter
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Center / Bottom'
+            -
+              - value
+              - centerBottom
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Left / Bottom'
+            -
+              - value
+              - leftBottom
+            -
+              - default
+              - ''
+        -
+          __assoc__:
+            -
+              - label
+              - 'Right / Bottom'
+            -
+              - value
+              - rightBottom
+            -
+              - default
+              - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Dropdown
+  2dfba906-5248-4c60-8635-cc9148a2d64d:
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkHref
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      allowCustomText: ''
+      allowTarget: ''
+      allowedLinkNames:
+        3: entry
+      autoNoReferrer: ''
+      defaultLinkName: asset
+      defaultText: ''
+      enableAriaLabel: ''
+      enableTitle: ''
+      typeSettings:
+        __assoc__:
+          -
+            - asset
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - category
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - entry
+            -
+              __assoc__:
+                -
+                  - sources
+                  -
+                    - singles
+                    - 'section:1a2a7c95-1089-4cf8-abf3-ac2f6eb47665'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - site
+            -
+              __assoc__:
+                -
+                  - sites
+                  - '*'
+          -
+            - user
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - custom
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - email
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - tel
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - url
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: typedlinkfield\fields\LinkField
+  69a49488-63c6-4078-ba27-4ecbc93961d9:
+    contentColumnType: string
+    fieldGroup: null
+    handle: image
+    instructions: ''
+    name: Image
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      allowedKinds:
+        - image
+      defaultUploadLocationSource: 'volume:85439ae7-1862-44fe-8a1d-9769a43bdafc'
+      defaultUploadLocationSubpath: ''
+      limit: '1'
+      localizeRelations: false
+      previewMode: full
+      restrictFiles: '1'
+      selectionLabel: 'Select an Image'
+      showSiteMenu: true
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: true
+      singleUploadLocationSource: 'volume:85439ae7-1862-44fe-8a1d-9769a43bdafc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources: '*'
+      targetSiteId: null
+      useSingleFolder: false
+      validateRelatedElements: false
+      viewMode: large
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets

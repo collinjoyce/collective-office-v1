@@ -1,0 +1,26 @@
+contentColumnType: string
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: projectHero
+instructions: ''
+name: 'Project Hero'
+searchable: true
+settings:
+  allowedKinds:
+    - image
+  defaultUploadLocationSource: 'volume:235b4f58-4ad9-40f0-b731-ff420117e5b0'
+  defaultUploadLocationSubpath: ''
+  limit: '1'
+  localizeRelations: false
+  restrictFiles: '1'
+  selectionLabel: 'Add an Image'
+  singleUploadLocationSource: 'volume:235b4f58-4ad9-40f0-b731-ff420117e5b0'
+  singleUploadLocationSubpath: ''
+  source: null
+  sources: '*'
+  targetSiteId: null
+  useSingleFolder: ''
+  validateRelatedElements: ''
+  viewMode: large
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Assets

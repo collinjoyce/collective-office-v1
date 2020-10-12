@@ -1,0 +1,144 @@
+field: 0bc672be-1742-4d02-99df-e98fc7fcb1f7
+fieldLayouts:
+  f5f517fc-bdb1-42f1-89b9-05d5f1aead0a:
+    tabs:
+      -
+        fields:
+          2c78f142-2c81-4217-b083-60b28e69a94a:
+            required: true
+            sortOrder: 2
+          d8c50fc2-e0c2-4149-95a0-f28704885c04:
+            required: true
+            sortOrder: 1
+        name: Content
+        sortOrder: 1
+fields:
+  2c78f142-2c81-4217-b083-60b28e69a94a:
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkHref
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      allowCustomText: ''
+      allowTarget: '1'
+      allowedLinkNames:
+        3: entry
+        9: url
+      autoNoReferrer: ''
+      defaultLinkName: entry
+      defaultText: ''
+      enableAriaLabel: ''
+      enableTitle: ''
+      typeSettings:
+        __assoc__:
+          -
+            - asset
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - category
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - entry
+            -
+              __assoc__:
+                -
+                  - sources
+                  -
+                    - singles
+                    - 'section:1a2a7c95-1089-4cf8-abf3-ac2f6eb47665'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - site
+            -
+              __assoc__:
+                -
+                  - sites
+                  - '*'
+          -
+            - user
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - custom
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - email
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - tel
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - url
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: typedlinkfield\fields\LinkField
+  d8c50fc2-e0c2-4149-95a0-f28704885c04:
+    contentColumnType: text
+    fieldGroup: null
+    handle: label
+    instructions: ''
+    name: Label
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: 'Learn More'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText

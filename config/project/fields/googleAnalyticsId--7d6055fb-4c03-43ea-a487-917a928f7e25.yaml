@@ -1,0 +1,16 @@
+contentColumnType: text
+fieldGroup: 39826311-1380-4080-b915-84461fe6689f
+handle: googleAnalyticsId
+instructions: ''
+name: 'Google Analytics ID'
+searchable: true
+settings:
+  charLimit: ''
+  code: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: UA-XXXXX-X
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

@@ -1,0 +1,25 @@
+fieldLayouts:
+  8acb7594-742d-4055-bfbc-4bc63ae3a14b:
+    tabs:
+      -
+        elements:
+          -
+            instructions: null
+            label: ''
+            type: craft\fieldlayoutelements\EntryTitleField
+          -
+            fieldUid: 51ece176-0c0f-4e07-9e1a-a0fae04bc709
+            required: false
+            type: craft\fieldlayoutelements\CustomField
+          -
+            fieldUid: afdbb43e-c582-4fff-ad0b-7e0ad5cda3fa
+            required: false
+            type: craft\fieldlayoutelements\CustomField
+        name: SEO
+        sortOrder: 1
+handle: work
+hasTitleField: false
+name: Work
+section: 84a18217-4f96-486c-b2ac-a90e9850f098
+sortOrder: 1
+titleFormat: '{section.name|raw}'

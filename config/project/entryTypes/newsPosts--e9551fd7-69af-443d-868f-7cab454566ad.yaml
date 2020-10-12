@@ -1,0 +1,29 @@
+fieldLayouts:
+  948a5c54-e94b-48c6-adc6-3b3962ec0a2d:
+    tabs:
+      -
+        elements:
+          -
+            instructions: null
+            label: Title
+            type: craft\fieldlayoutelements\EntryTitleField
+          -
+            fieldUid: 0fb4b9fd-c4b7-4c04-a515-300101e880b1
+            required: true
+            type: craft\fieldlayoutelements\CustomField
+          -
+            fieldUid: 67295535-98f5-42d0-b26e-b21e092b8297
+            required: true
+            type: craft\fieldlayoutelements\CustomField
+          -
+            fieldUid: 0bc672be-1742-4d02-99df-e98fc7fcb1f7
+            required: false
+            type: craft\fieldlayoutelements\CustomField
+        name: Entry
+        sortOrder: 1
+handle: newsPosts
+hasTitleField: true
+name: 'News Posts'
+section: d0af4b29-b440-4092-bc9f-347aec564eb3
+sortOrder: 1
+titleFormat: ''

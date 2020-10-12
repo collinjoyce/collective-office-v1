@@ -1,0 +1,10 @@
+handle: projectSections
+name: 'Project Sections'
+siteSettings:
+  c61833c8-0611-48fe-89ba-399962d57890:
+    hasUrls: false
+    template: null
+    uriFormat: null
+structure:
+  maxLevels: 1
+  uid: 2e531542-7159-4d62-ae5c-550d816d4057

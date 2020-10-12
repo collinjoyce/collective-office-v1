@@ -1,0 +1,141 @@
+field: 2fc56fad-3168-441e-bb3b-ec743dab75b4
+fieldLayouts:
+  206ffd34-72da-4628-aba5-319bca79d0d8:
+    tabs:
+      -
+        fields:
+          28400fb8-0b46-46da-9dd2-ee9d54e07a43:
+            required: true
+            sortOrder: 1
+          f7f25c75-27f0-4aac-9e4d-52eeefa62f17:
+            required: false
+            sortOrder: 2
+        name: Content
+        sortOrder: 1
+fields:
+  28400fb8-0b46-46da-9dd2-ee9d54e07a43:
+    contentColumnType: text
+    fieldGroup: null
+    handle: collaborator
+    instructions: ''
+    name: Collaborator
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  f7f25c75-27f0-4aac-9e4d-52eeefa62f17:
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkHref
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      allowCustomText: ''
+      allowTarget: ''
+      allowedLinkNames:
+        9: url
+      autoNoReferrer: ''
+      defaultLinkName: url
+      defaultText: ''
+      enableAriaLabel: ''
+      enableTitle: ''
+      typeSettings:
+        __assoc__:
+          -
+            - asset
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - category
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - entry
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - site
+            -
+              __assoc__:
+                -
+                  - sites
+                  - '*'
+          -
+            - user
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - custom
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - email
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - tel
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - url
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: typedlinkfield\fields\LinkField

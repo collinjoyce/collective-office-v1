@@ -1,0 +1,93 @@
+field: 22f8350d-7c98-489d-b879-07b22f013ec4
+fieldLayouts:
+  a83fb3c9-6a8c-4c02-9cc0-251294de8534:
+    tabs:
+      -
+        fields:
+          88b5f2a2-00a6-4045-a678-ae09d50154a7:
+            required: true
+            sortOrder: 3
+          cd6601f3-e490-47aa-a6d9-ce09154cdf59:
+            required: true
+            sortOrder: 1
+          fc5cf46a-87a8-497a-9d3e-2b886a1c1b18:
+            required: false
+            sortOrder: 2
+          fe16ece1-4c2d-4439-927e-7f165b5c2687:
+            required: true
+            sortOrder: 4
+        name: Content
+        sortOrder: 1
+fields:
+  88b5f2a2-00a6-4045-a678-ae09d50154a7:
+    contentColumnType: text
+    fieldGroup: null
+    handle: role
+    instructions: ''
+    name: Role
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  cd6601f3-e490-47aa-a6d9-ce09154cdf59:
+    contentColumnType: text
+    fieldGroup: null
+    handle: bioName
+    instructions: ''
+    name: Name
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  fc5cf46a-87a8-497a-9d3e-2b886a1c1b18:
+    contentColumnType: text
+    fieldGroup: null
+    handle: credentials
+    instructions: ''
+    name: Credentials
+    searchable: false
+    settings:
+      charLimit: '20'
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: AIA
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  fe16ece1-4c2d-4439-927e-7f165b5c2687:
+    contentColumnType: text
+    fieldGroup: null
+    handle: biography
+    instructions: ''
+    name: Biography
+    searchable: false
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: Standard.json
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field

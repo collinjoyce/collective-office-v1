@@ -1,0 +1,141 @@
+field: 269cf768-5324-4368-830b-6d443834d7a7
+fieldLayouts:
+  7a24fcb2-a813-4636-8954-c65b78dc91fe:
+    tabs:
+      -
+        fields:
+          47be38bd-0667-4c7e-b111-e3d4c1a2286c:
+            required: false
+            sortOrder: 2
+          77784898-326f-49f5-9010-22b8f42e3221:
+            required: true
+            sortOrder: 1
+        name: Content
+        sortOrder: 1
+fields:
+  47be38bd-0667-4c7e-b111-e3d4c1a2286c:
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkHref
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      allowCustomText: ''
+      allowTarget: ''
+      allowedLinkNames:
+        9: url
+      autoNoReferrer: ''
+      defaultLinkName: url
+      defaultText: ''
+      enableAriaLabel: ''
+      enableTitle: ''
+      typeSettings:
+        __assoc__:
+          -
+            - asset
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - category
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - entry
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - site
+            -
+              __assoc__:
+                -
+                  - sites
+                  - '*'
+          -
+            - user
+            -
+              __assoc__:
+                -
+                  - sources
+                  - '*'
+                -
+                  - allowCustomQuery
+                  - ''
+          -
+            - custom
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - email
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - tel
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+          -
+            - url
+            -
+              __assoc__:
+                -
+                  - disableValidation
+                  - ''
+                -
+                  - allowAliases
+                  - ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: typedlinkfield\fields\LinkField
+  77784898-326f-49f5-9010-22b8f42e3221:
+    contentColumnType: text
+    fieldGroup: null
+    handle: partner
+    instructions: ''
+    name: Partner
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText

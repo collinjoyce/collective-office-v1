@@ -1,0 +1,16 @@
+contentColumnType: text
+fieldGroup: 9b367ccb-75ea-4ace-9184-96baf13829ed
+handle: seoTeaser
+instructions: 'This text snippet is offered to social platforms and search engines for use when listing the page.'
+name: 'SEO Teaser'
+searchable: true
+settings:
+  charLimit: '240'
+  code: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

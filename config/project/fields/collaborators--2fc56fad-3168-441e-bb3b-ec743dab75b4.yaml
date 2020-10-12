@@ -1,0 +1,17 @@
+contentColumnType: string
+fieldGroup: 8eab593b-b98e-4683-a504-aa14998fc5aa
+handle: collaborators
+instructions: ''
+name: Collaborators
+searchable: false
+settings:
+  contentTable: '{{%stc_collaborators}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Collaborator'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

@@ -1,0 +1,15 @@
+enableVersioning: false
+handle: projectPages
+name: 'Project Pages'
+previewTargets:
+  -
+    label: 'Primary entry page'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  c61833c8-0611-48fe-89ba-399962d57890:
+    enabledByDefault: true
+    hasUrls: true
+    template: _pages/project
+    uriFormat: 'work/{slug}'
+type: channel

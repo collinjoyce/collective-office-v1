@@ -1,0 +1,16 @@
+contentColumnType: text
+fieldGroup: 39826311-1380-4080-b915-84461fe6689f
+handle: siteDescription
+instructions: 'The fallback description used when a more specific version hasn''t been set.'
+name: 'Site Description'
+searchable: false
+settings:
+  charLimit: '240'
+  code: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

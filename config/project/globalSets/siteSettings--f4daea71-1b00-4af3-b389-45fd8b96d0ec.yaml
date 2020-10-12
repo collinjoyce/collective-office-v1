@@ -1,0 +1,33 @@
+fieldLayouts:
+  94f2a698-a51e-4f10-8d76-232eae228f18:
+    tabs:
+      -
+        fields:
+          06df06d3-686f-4833-868e-016e2cafffd6:
+            required: false
+            sortOrder: 4
+          1be4d892-fc8c-453b-a1d8-c554d9d69081:
+            required: false
+            sortOrder: 1
+          57ad419e-87f9-4efc-842d-0ae9c30e156f:
+            required: false
+            sortOrder: 8
+          7d6055fb-4c03-43ea-a487-917a928f7e25:
+            required: false
+            sortOrder: 3
+          ac000a9b-40da-488d-b873-553d55872e39:
+            required: false
+            sortOrder: 2
+          d21c1a2e-9b17-491d-8246-92347e0a2172:
+            required: false
+            sortOrder: 7
+          d9ae8852-5b1e-461c-8273-6a97b0e91a4d:
+            required: false
+            sortOrder: 6
+          dd0af88a-241c-4668-abb5-10f3df574a6c:
+            required: false
+            sortOrder: 5
+        name: Settings
+        sortOrder: 1
+handle: siteSettings
+name: 'Site Settings'

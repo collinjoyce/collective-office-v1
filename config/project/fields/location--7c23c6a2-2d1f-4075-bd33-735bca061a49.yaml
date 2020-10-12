@@ -1,0 +1,16 @@
+contentColumnType: text
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: location
+instructions: ''
+name: Location
+searchable: false
+settings:
+  charLimit: ''
+  code: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: 'Chicago, IL'
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

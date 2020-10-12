@@ -1,0 +1,8 @@
+handle: news
+hasUrls: true
+name: News
+settings:
+  path: '@webroot/assets/img/news'
+sortOrder: 4
+type: craft\volumes\Local
+url: '@web/assets/img/news'

@@ -1,0 +1,23 @@
+contentColumnType: string
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: imageGrid
+instructions: 'Create an image grid for the desktop view. Add "rows" and within each select one, two, or three images. When you are displaying multiple images in the same row, be sure that they have the same aspect ratio (height and width) otherwise odd whitespace may occur.'
+name: 'Image Grid'
+searchable: true
+settings:
+  columns:
+    e131a688-acc3-4273-8eb7-2372cb616dbc:
+      __assoc__:
+        -
+          - width
+          - ''
+  contentTable: '{{%stc_imagegrid}}'
+  fieldLayout: row
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Row'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

@@ -1,0 +1,16 @@
+contentColumnType: text
+fieldGroup: 39826311-1380-4080-b915-84461fe6689f
+handle: siteTitle
+instructions: ''
+name: 'Site Title'
+searchable: true
+settings:
+  charLimit: '40'
+  code: ''
+  columnType: text
+  initialRows: '4'
+  multiline: ''
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\PlainText

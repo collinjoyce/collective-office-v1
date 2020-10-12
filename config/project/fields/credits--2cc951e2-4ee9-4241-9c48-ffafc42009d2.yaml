@@ -1,0 +1,40 @@
+contentColumnType: string
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: credits
+instructions: ''
+name: Credits
+searchable: false
+settings:
+  columns:
+    __assoc__:
+      -
+        - 45
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 44
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 43
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_credits}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Credit'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

@@ -1,0 +1,47 @@
+dateModified: 1602177586
+email:
+  fromEmail: website@collectiveoffice.com
+  fromName: 'Collective Office'
+  template: null
+  transportSettings:
+    encryptionMethod: ssl
+    host: fhpz-2lh6.accessdomain.com
+    password: 'yx#39fGwH&'
+    port: '465'
+    timeout: '10'
+    useAuthentication: '1'
+    username: website@collectiveoffice.com
+  transportType: craft\mail\transportadapters\Smtp
+graphql:
+  publicToken:
+    enabled: false
+    expiryDate: null
+plugins:
+  redactor:
+    edition: standard
+    enabled: true
+    schemaVersion: 2.3.0
+  redirect:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.5
+  super-table:
+    edition: standard
+    enabled: true
+    schemaVersion: 2.2.1
+  typedlinkfield:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+system:
+  edition: pro
+  live: true
+  name: 'Collective Office'
+  schemaVersion: 3.5.13
+  timeZone: America/Chicago
+users:
+  allowPublicRegistration: false
+  defaultGroup: ''
+  photoSubpath: avatars
+  photoVolumeUid: 33ffc041-5f94-484d-a77e-b25e67fdd8f4
+  requireEmailVerification: true

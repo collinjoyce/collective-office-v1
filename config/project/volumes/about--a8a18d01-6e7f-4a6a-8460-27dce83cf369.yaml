@@ -1,0 +1,8 @@
+handle: about
+hasUrls: true
+name: About
+settings:
+  path: '@webroot/assets/img/about'
+sortOrder: 2
+type: craft\volumes\Local
+url: '@web/assets/img/about'

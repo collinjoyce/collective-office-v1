@@ -1,0 +1,21 @@
+contentColumnType: string
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: projectType
+instructions: ''
+name: 'Project Type'
+searchable: true
+settings:
+  allowLimit: false
+  allowMultipleSources: false
+  branchLimit: ''
+  limit: null
+  localizeRelations: false
+  selectionLabel: 'Add a Type'
+  source: 'group:6bf9f6be-3cc7-4a29-a9f8-099b06481e58'
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: ''
+  viewMode: null
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Categories

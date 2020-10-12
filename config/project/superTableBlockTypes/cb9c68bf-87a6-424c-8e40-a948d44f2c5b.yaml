@@ -1,0 +1,103 @@
+field: 1e5542a7-3a38-49b2-b143-164d56576e5e
+fieldLayouts:
+  612b8719-d1cc-46cc-a549-e2330f0e5421:
+    tabs:
+      -
+        fields:
+          0a73d90a-62a7-44d8-a426-a00dcf9ebaee:
+            required: true
+            sortOrder: 1
+          237666eb-46aa-49c0-8272-b0b685c9aacc:
+            required: false
+            sortOrder: 3
+          55bc4f75-7cd4-48a1-bf03-ca2b2508a77b:
+            required: true
+            sortOrder: 2
+          6212231d-0d90-4d34-ab61-01acc953cfd2:
+            required: true
+            sortOrder: 4
+        name: Content
+        sortOrder: 1
+fields:
+  0a73d90a-62a7-44d8-a426-a00dcf9ebaee:
+    contentColumnType: text
+    fieldGroup: null
+    handle: service
+    instructions: ''
+    name: Service
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  237666eb-46aa-49c0-8272-b0b685c9aacc:
+    contentColumnType: text
+    fieldGroup: null
+    handle: services
+    instructions: 'A comma delimited list of services provided. '
+    name: Services
+    searchable: false
+    settings:
+      charLimit: ''
+      code: ''
+      columnType: text
+      initialRows: '4'
+      multiline: ''
+      placeholder: ''
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  55bc4f75-7cd4-48a1-bf03-ca2b2508a77b:
+    contentColumnType: text
+    fieldGroup: null
+    handle: description
+    instructions: ''
+    name: Description
+    searchable: false
+    settings:
+      availableTransforms: '*'
+      availableVolumes: '*'
+      cleanupHtml: true
+      columnType: text
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: Simple.json
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
+  6212231d-0d90-4d34-ab61-01acc953cfd2:
+    contentColumnType: string
+    fieldGroup: null
+    handle: image
+    instructions: ''
+    name: Image
+    searchable: false
+    settings:
+      allowedKinds:
+        - image
+      defaultUploadLocationSource: 'volume:a8a18d01-6e7f-4a6a-8460-27dce83cf369'
+      defaultUploadLocationSubpath: ''
+      limit: '1'
+      localizeRelations: false
+      restrictFiles: '1'
+      selectionLabel: 'Add an Image'
+      singleUploadLocationSource: 'volume:85439ae7-1862-44fe-8a1d-9769a43bdafc'
+      singleUploadLocationSubpath: ''
+      source: null
+      sources: '*'
+      targetSiteId: null
+      useSingleFolder: ''
+      validateRelatedElements: ''
+      viewMode: large
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets

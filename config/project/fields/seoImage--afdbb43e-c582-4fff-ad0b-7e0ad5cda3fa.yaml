@@ -1,0 +1,26 @@
+contentColumnType: string
+fieldGroup: 9b367ccb-75ea-4ace-9184-96baf13829ed
+handle: seoImage
+instructions: 'If you want a specific image to be used when this page is shared on social media, select it here.'
+name: 'SEO Image'
+searchable: true
+settings:
+  allowedKinds:
+    - image
+  defaultUploadLocationSource: 'volume:85439ae7-1862-44fe-8a1d-9769a43bdafc'
+  defaultUploadLocationSubpath: ''
+  limit: '1'
+  localizeRelations: false
+  restrictFiles: '1'
+  selectionLabel: ''
+  singleUploadLocationSource: 'volume:85439ae7-1862-44fe-8a1d-9769a43bdafc'
+  singleUploadLocationSubpath: ''
+  source: null
+  sources: '*'
+  targetSiteId: null
+  useSingleFolder: ''
+  validateRelatedElements: ''
+  viewMode: large
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Assets

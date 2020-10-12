@@ -1,0 +1,47 @@
+contentColumnType: string
+fieldGroup: 8eab593b-b98e-4683-a504-aa14998fc5aa
+handle: services
+instructions: ''
+name: Services
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - 27
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 29
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 28
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 30
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_services}}'
+  fieldLayout: row
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Service'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

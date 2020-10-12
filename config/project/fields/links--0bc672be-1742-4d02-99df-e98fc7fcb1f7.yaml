@@ -1,0 +1,33 @@
+contentColumnType: string
+fieldGroup: 31d8a857-8b68-4d02-9a06-8b6ef57a7453
+handle: links
+instructions: ''
+name: Links
+searchable: true
+settings:
+  columns:
+    __assoc__:
+      -
+        - 37
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 36
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_links}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: ''
+  propagationMethod: all
+  selectionLabel: 'Add a Link'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

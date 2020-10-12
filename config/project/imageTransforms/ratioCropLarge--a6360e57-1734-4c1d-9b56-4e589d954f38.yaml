@@ -1,0 +1,9 @@
+format: null
+handle: ratioCropLarge
+height: 1500
+interlace: none
+mode: crop
+name: '4/3 - 2000 Wide'
+position: center-center
+quality: 82
+width: 2000

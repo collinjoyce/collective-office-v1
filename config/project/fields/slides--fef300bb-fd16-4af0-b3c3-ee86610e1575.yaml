@@ -1,0 +1,34 @@
+contentColumnType: string
+fieldGroup: 41ae5b31-8f54-4094-b73c-c8d937d9d282
+handle: slides
+instructions: ''
+name: Slides
+searchable: false
+settings:
+  columns:
+    __assoc__:
+      -
+        - 69a49488-63c6-4078-ba27-4ecbc93961d9
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+      -
+        - 2dfba906-5248-4c60-8635-cc9148a2d64d
+        -
+          __assoc__:
+            -
+              - width
+              - ''
+  contentTable: '{{%stc_slides}}'
+  fieldLayout: table
+  maxRows: ''
+  minRows: '1'
+  placeholderKey: null
+  propagationMethod: all
+  selectionLabel: 'Add a Slide'
+  staticField: ''
+translationKeyFormat: null
+translationMethod: site
+type: verbb\supertable\fields\SuperTableField

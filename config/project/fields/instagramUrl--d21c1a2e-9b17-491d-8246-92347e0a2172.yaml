@@ -1,0 +1,12 @@
+contentColumnType: string(255)
+fieldGroup: 39826311-1380-4080-b915-84461fe6689f
+handle: instagramUrl
+instructions: ''
+name: 'Instagram URL'
+searchable: false
+settings:
+  maxLength: '255'
+  placeholder: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Url

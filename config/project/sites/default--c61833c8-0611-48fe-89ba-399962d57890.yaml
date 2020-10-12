@@ -1,0 +1,8 @@
+baseUrl: '@web/'
+handle: default
+hasUrls: true
+language: en-US
+name: 'Collective Office'
+primary: true
+siteGroup: 012d0751-8ec4-472b-b7e3-f399df4892fc
+sortOrder: 1

@@ -1,0 +1,17 @@
+contentColumnType: integer(10)
+fieldGroup: 5dd0df0b-91fa-44a5-9d30-cddc6e24908d
+handle: yearStarted
+instructions: ''
+name: 'Year Started'
+searchable: false
+settings:
+  decimals: 0
+  defaultValue: null
+  max: null
+  min: '0'
+  prefix: ''
+  size: '4'
+  suffix: ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Number
