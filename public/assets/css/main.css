@@ -369,13 +369,13 @@ th {
 /*
 /*
 /**********************************************************************************************************/
-.font-1, .header, .projects .entry h4, .related-projects .entries .entry h4, .news h3, .header-big, .project-header .title h1, .about h2, .subhead, .project-credits h4, .related-projects h2, .about h3, .subhead-small, .project-header .title p, .project-credits ul h5, .about h5, .news h5, .masthead .primary-nav a {
+.font-1, .masthead .primary-nav a, .subhead-small, .news h5, .about h5, .project-credits ul h5, .project-header .title p, .subhead, .about h3, .related-projects h2, .project-credits h4, .header-big, .about h2, .project-header .title h1, .header, .news h3, .related-projects .entries .entry h4, .projects .entry h4 {
   font-family: 'Frutiger W01', Verdana, sans-serif;
   line-height: 1.4; }
 
-.font-2, body, .lede, .project-header .description p, .about .lede, .body, .project-credits ul p, .about p, .news p, .body-big, .body-small, .about p.small, .news p.small, a.button, form input[type="email"],
+.font-2, .projects-filter a, form input[type="submit"], form input[type="email"],
 form input[type="password"],
-form input[type="text"], form input[type="submit"], .projects-filter a {
+form input[type="text"], a.button, .body-small, .news p.small, .about p.small, .body-big, .body, .news p, .about p, .project-credits ul p, .lede, .about .lede, .project-header .description p, body {
   font-family: 'Neue Helvetica eText W01', Arial, sans-serif;
   line-height: 1.4; }
 
@@ -444,51 +444,48 @@ a.social-button {
       fill: #Ed2d8c; }
 
 /* Type System */
-.header, .projects .entry h4, .related-projects .entries .entry h4, .news h3 {
+.header, .news h3, .related-projects .entries .entry h4, .projects .entry h4 {
   font-size: 18px;
   font-weight: normal;
   color: #Ed2d8c; }
   @media only screen and (max-width: 600px) {
-    .header, .projects .entry h4, .related-projects .entries .entry h4, .news h3 {
+    .header, .news h3, .related-projects .entries .entry h4, .projects .entry h4 {
       font-size: 16px; } }
-
-.header-big, .project-header .title h1, .about h2 {
+.header-big, .about h2, .project-header .title h1 {
   font-size: 24px;
   font-weight: normal;
   color: #Ed2d8c; }
   @media only screen and (max-width: 600px) {
-    .header-big, .project-header .title h1, .about h2 {
+    .header-big, .about h2, .project-header .title h1 {
       font-size: 21px; } }
-
-.subhead, .project-credits h4, .related-projects h2, .about h3 {
+.subhead, .about h3, .related-projects h2, .project-credits h4 {
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #Ed2d8c; }
 
-.subhead-small, .project-header .title p, .project-credits ul h5, .about h5, .news h5 {
+.subhead-small, .news h5, .about h5, .project-credits ul h5, .project-header .title p {
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #999; }
 
-.lede, .project-header .description p, .about .lede {
+.lede, .about .lede, .project-header .description p {
   font-size: 21px;
   font-weight: normal;
   color: #999; }
   @media only screen and (max-width: 900px) {
-    .lede, .project-header .description p, .about .lede {
+    .lede, .about .lede, .project-header .description p {
       font-size: 18px; } }
-
-.body, .project-credits ul p, .about p, .news p {
+.body, .news p, .about p, .project-credits ul p {
   font-size: 15px;
   font-weight: normal;
   color: #999; }
-  .body a, .project-credits ul p a, .about p a, .news p a {
+  .body a, .news p a, .about p a, .project-credits ul p a {
     border-bottom: 1px solid #ccc; }
-    .no-touch .body a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover, .no-touch .about p a:hover, .about .no-touch p a:hover, .no-touch .news p a:hover, .news .no-touch p a:hover {
+    .no-touch .body a:hover, .no-touch .news p a:hover, .news .no-touch p a:hover, .no-touch .about p a:hover, .about .no-touch p a:hover, .no-touch .project-credits ul p a:hover, .project-credits ul .no-touch p a:hover {
       border-color: #Ed2d8c;
       color: #Ed2d8c; }
 
@@ -502,13 +499,13 @@ a.social-button {
       border-color: #Ed2d8c;
       color: #Ed2d8c; }
 
-.body-small, .about p.small, .news p.small {
+.body-small, .news p.small, .about p.small {
   font-size: 13px;
   font-weight: normal;
   color: #999; }
-  .body-small a, .about p.small a, .news p.small a {
+  .body-small a, .news p.small a, .about p.small a {
     border-bottom: 1px solid #ccc; }
-    .no-touch .body-small a:hover, .no-touch .about p.small a:hover, .about .no-touch p.small a:hover, .no-touch .news p.small a:hover, .news .no-touch p.small a:hover {
+    .no-touch .body-small a:hover, .no-touch .news p.small a:hover, .news .no-touch p.small a:hover, .no-touch .about p.small a:hover, .about .no-touch p.small a:hover {
       border-color: #Ed2d8c;
       color: #Ed2d8c; }
 
@@ -650,7 +647,6 @@ body.has-overlay {
   @media only screen and (max-width: 600px) {
     .masthead-inner {
       padding: 0 30px; } }
-
 .masthead.is-up {
   top: -100px; }
 
@@ -673,7 +669,6 @@ body.has-overlay {
       body.has-overlay .masthead .logo svg {
         fill: #fff;
         color: #fff; } }
-
 .masthead .nav {
   align-self: center; }
 
@@ -714,7 +709,6 @@ body.has-overlay {
       text-transform: none;
       letter-spacing: 0;
       color: #fff; } }
-
 .masthead .overlay-toggle {
   display: none;
   padding: 8px; }
@@ -723,7 +717,6 @@ body.has-overlay {
       display: block;
       position: relative;
       z-index: 1300; } }
-
 .masthead .overlay-toggle .menu-icon {
   width: 16px; }
   .masthead .overlay-toggle .menu-icon .line {
@@ -765,7 +758,6 @@ body.has-overlay {
     .footer {
       padding: 0 30px 10px 30px;
       margin-top: 60px; } }
-
 .footer .footer-contact {
   display: flex;
   flex-basis: 50%;
@@ -773,7 +765,6 @@ body.has-overlay {
   @media only screen and (max-width: 600px) {
     .footer .footer-contact {
       flex-basis: 100%; } }
-
 .footer .footer-contact p {
   margin: 0;
   padding: 0;
@@ -786,20 +777,17 @@ body.has-overlay {
       margin-bottom: 20px;
       font-size: 12px;
       text-align: center; } }
-
 .footer .footer-social {
   flex-basis: 50%; }
   @media only screen and (max-width: 600px) {
     .footer .footer-social {
       flex-basis: 100%; } }
-
 .footer .footer-social.social-buttons {
   display: flex;
   justify-content: flex-end; }
   @media only screen and (max-width: 600px) {
     .footer .footer-social.social-buttons {
       justify-content: center; } }
-
 .footer .footer-legal {
   flex-basis: 100%;
   padding-top: 40px; }
@@ -813,7 +801,6 @@ body.has-overlay {
   @media only screen and (max-width: 600px) {
     .footer .footer-legal p {
       text-align: center; } }
-
 /*=====================================================*/
 /* Layout
 /*=====================================================*/
@@ -831,7 +818,6 @@ body.has-overlay {
     .section {
       padding: 0 30px;
       margin: 60px auto; } }
-
 .section img {
   opacity: 0.1;
   transition: 0.65s opacity ease-in-out; }
@@ -873,7 +859,9 @@ hr {
 /* Hero Image
 /*=====================================================*/
 .hero {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 260px);
+  max-width: 1800px;
+  margin: 0 auto;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -885,7 +873,6 @@ hr {
   @media only screen and (max-width: 600px) {
     .hero {
       height: 300px; } }
-
 /*=====================================================*/
 /* Hero Slider
 /*=====================================================*/
@@ -910,7 +897,6 @@ hr {
   @media only screen and (max-width: 900px) {
     .hero-slider .slide {
       background-attachment: scroll; } }
-
 /* Written for FlexSlider */
 .hero-slider .slider-viewport {
   height: calc(100vh - 100px); }
@@ -977,7 +963,6 @@ hr {
   @media only screen and (max-width: 600px) {
     .projects {
       margin-bottom: -40px; } }
-
 .projects .entry {
   flex-basis: 33.33%;
   padding: 0 20px 60px 20px; }
@@ -988,7 +973,6 @@ hr {
     .projects .entry {
       flex-basis: 100%;
       padding-bottom: 40px; } }
-
 .projects .entry h4 {
   margin: 0;
   padding: 0;
@@ -1020,7 +1004,6 @@ hr {
       flex-basis: 100%;
       padding: 0;
       margin-bottom: 40px; } }
-
 .project-header .title h1 {
   margin: 0;
   padding: 0; }
@@ -1037,7 +1020,6 @@ hr {
     .project-header .description {
       flex-basis: 100%;
       padding: 0; } }
-
 .project-header .description p {
   margin: 0;
   padding: 0;
@@ -1067,7 +1049,6 @@ hr {
   @media only screen and (max-width: 800px) {
     .project-images .group.is-3 {
       flex-wrap: wrap; } }
-
 .project-images .group img {
   padding: 0 20px 0 20px; }
 
@@ -1088,7 +1069,6 @@ hr {
       flex-basis: 100%;
       padding: 0;
       margin-bottom: 40px; } }
-
 .project-credits ul {
   margin: 0;
   padding: 0;
@@ -1130,7 +1110,6 @@ hr {
   @media only screen and (max-width: 600px) {
     .related-projects .entries {
       margin-bottom: -40px; } }
-
 .related-projects .entries .entry {
   flex-basis: 33.33%;
   padding: 0 20px 60px 20px; }
@@ -1141,7 +1120,6 @@ hr {
     .related-projects .entries .entry {
       flex-basis: 100%;
       padding-bottom: 40px; } }
-
 @media only screen and (max-width: 900px) {
   .related-projects .entries .entry:nth-child(n+3) {
     display: none; } }
@@ -1176,7 +1154,6 @@ hr {
   @media only screen and (max-width: 800px) {
     .about .columns.is-3 .column {
       flex-basis: 100%; } }
-
 .about .columns.is-4 .column {
   flex-basis: 25%;
   padding: 0 20px 40px 20px; }
@@ -1186,8 +1163,7 @@ hr {
   @media only screen and (max-width: 600px) {
     .about .columns.is-4 .column {
       flex-basis: 100%; } }
-
-.about .project-header .description p, .project-header .description .about p, .about .lede {
+.about .lede, .about .project-header .description p, .project-header .description .about p {
   margin: 0;
   padding: 0;
   margin-bottom: 40px; }
@@ -1244,7 +1220,6 @@ hr {
   @media only screen and (max-width: 800px) {
     .news .entry {
       flex-basis: 100%; } }
-
 .news h3 {
   margin: 0;
   padding: 0;
