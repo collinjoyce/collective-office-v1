@@ -106,13 +106,15 @@ body.--home .masthead {
   background-color: transparent;
   height: auto; }
   .hero-slider .slider-control-nav {
-    left: 0;
-    bottom: 10px;
-    right: initial; }
+    left: unset;
+    top: unset;
+    right: unset;
+    position: relative;
+    justify-content: flex-start;
+    padding-top: 20px; }
     @media only screen and (max-width: 960px) {
       .hero-slider .slider-control-nav {
-        left: 20px;
-        bottom: 30px; } }
+        padding-top: 5px; } }
     .hero-slider .slider-control-nav li a {
       width: 10px;
       height: 10px;
@@ -202,19 +204,23 @@ body.--home .masthead {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
-      padding: 15px 40px 0 50%;
+      padding: 10px 0px 0 50%;
       opacity: 0;
-      transition: opacity 0.2s linear; }
+      transition: opacity 0.2s linear;
+      font-size: 13px; }
       @media only screen and (min-width: 960px) {
         .home-hero__right .slide-details {
+          padding-top: 15px;
           padding-right: 30px;
-          padding-left: 20px; } }
+          padding-left: 20px;
+          font-size: 16px; } }
       .home-hero__right .slide-details span {
         margin-left: 15px;
         display: inline-block; }
         @media only screen and (max-width: 960px) {
           .home-hero__right .slide-details span {
-            width: 100%; } }
+            width: 100%;
+            margin-left: 0; } }
   .home-hero__logo {
     order: 3;
     background-color: #EBE6E2;
