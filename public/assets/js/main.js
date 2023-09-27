@@ -23,7 +23,7 @@ $(document).ready(function(){
         animation: "fade",
         selector: ".slides > a",
         slideshow: true,
-        slideshowSpeed: 6000,
+        slideshowSpeed: 3000,
         animationSpeed: 750,
         directionNav: false,
         namespace: "slider-",
