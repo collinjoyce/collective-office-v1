@@ -198,8 +198,8 @@ body.--home .masthead.is-up, body.--home .masthead.is-down {
     padding-left: 30px;
     padding-right: 5%;
     padding-top: 120px;
-    height: 60vh;
-    min-height: 500px;
+    height: 58vh;
+    min-height: 480px;
   }
 }
 .home-hero__left h1 {
@@ -254,14 +254,14 @@ body.--home .masthead.is-up, body.--home .masthead.is-down {
   }
 }
 .home-hero__right .slide img {
-  height: 60vh;
+  height: 58vh;
   width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
 }
 @media only screen and (min-width: 960px) {
   .home-hero__right .slide img {
-    min-height: 500px;
+    min-height: 480px;
   }
 }
 .home-hero__right .slide.slider-active-slide .slide-details {

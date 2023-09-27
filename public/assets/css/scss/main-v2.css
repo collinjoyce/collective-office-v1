@@ -150,8 +150,8 @@ body.--home .masthead {
         padding-left: 30px;
         padding-right: 5%;
         padding-top: 120px;
-        height: 60vh;
-        min-height: 500px; } }
+        height: 58vh;
+        min-height: 480px; } }
     .home-hero__left h1 {
       font-size: 2rem;
       font-weight: 500;
@@ -192,12 +192,12 @@ body.--home .masthead {
         padding-left: 10%;
         padding-bottom: 0; } }
     .home-hero__right .slide img {
-      height: 60vh;
+      height: 58vh;
       width: 100%;
       object-fit: cover; }
       @media only screen and (min-width: 960px) {
         .home-hero__right .slide img {
-          min-height: 500px; } }
+          min-height: 480px; } }
     .home-hero__right .slide.slider-active-slide .slide-details {
       opacity: 1; }
     .home-hero__right .slide-details {
