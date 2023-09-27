@@ -9,9 +9,9 @@
 
 $color-black: #000;
 $color-white: #fff;
-$color-magenta: #Ed2d8c;
-$color-grey: #999;
-$color-grey-light: #ccc;
+$color-magenta: #FF5CAA;
+$color-grey: #A39E9E;
+$color-grey-light: #EBE6E2;
 
 
 
@@ -210,7 +210,7 @@ body.has-overlay                                        { overflow: hidden; }
                                                         }
 .masthead .nav                                          { align-self: center; }
 .masthead .primary-nav                                  { display: block;
-                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 1100; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 30px 30px 30px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
+                                                            @include mq(below,600px) { display: none; position: fixed; z-index: 1100; top: 0; bottom: 0; left: 0; right: 0; padding: 120px 40px 30px 40px; background-color: rgba($color-magenta, 0.9); overflow: hidden; }
                                                             body.has-overlay & { display: block; }
                                                         }
 .masthead .primary-nav a                                { @extend .font-1; font-size: 14px; font-weight: 500; @include caps; color: $color-grey; margin-right: 20px;
@@ -255,12 +255,13 @@ body.has-overlay                                        { overflow: hidden; }
                                                             @include mq(below,600px) { flex-basis: 100%; }
                                                         }
 .footer .footer-social.social-buttons                   { display: flex; justify-content: flex-end; 
-                                                            @include mq(below,600px) { justify-content: center; }
+                                                            @include mq(below,600px) { justify-content: flex-start;
+                                                            margin-left: -8px; }
                                                         }                                                        
                                                         
 .footer .footer-legal                                   { flex-basis: 100%; padding-top: 40px; }
 .footer .footer-legal p                                 { @include reset(spacing); font-size: 10px; color: $color-grey; text-align: right; 
-                                                            @include mq(below,600px) { text-align: center; }
+                                                            @include mq(below,600px) { text-align: left; }
                                                         }
 
 
@@ -269,10 +270,10 @@ body.has-overlay                                        { overflow: hidden; }
 /* Layout
 /*=====================================================*/
 
-.section                                                { max-width: 1600px; padding: 0 100px; margin: 80px auto;
-                                                            @include mq(below,1200px) { padding: 0 80px; }
-                                                            @include mq(below,900px) { padding: 0 60px; } 
-                                                            @include mq(below,600px) { padding: 0 30px; margin: 60px auto; }
+.section                                                { max-width: 1600px; padding: 0 30px; margin: 80px auto;
+                                                            @include mq(below,1200px) { padding: 0 30px; }
+                                                            @include mq(below,900px) { padding: 0 40px; } 
+                                                            @include mq(below,600px) { padding: 0 40px; margin: 60px auto; }
                                                         }
 .section img                                            { opacity: 0.1; transition: 0.65s opacity ease-in-out;
                                                             &.is-visible { opacity: 1.0; }

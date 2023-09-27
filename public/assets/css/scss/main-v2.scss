@@ -1,0 +1,391 @@
+// =============================================================================
+// Variables
+// =============================================================================
+
+// Colors
+
+$color-black: #000000;
+$color-pink: #FF5CAA;
+$color-dark-gray: #A39E9E;
+$color-med-gray: #EBE6E2;
+$color-white: #ffffff;
+
+
+// =============================================================================
+// Mixins
+// =============================================================================
+
+@mixin mq($direction,$width)                            {
+  @if $direction == above {
+      @media only screen and (min-width: $width) { @content; }
+  }
+  @if $direction == below {
+      @media only screen and (max-width: $width) { @content; }
+  }
+}
+
+
+
+// =============================================================================
+// Typography
+// =============================================================================
+
+// Importing Fonts
+
+@font-face {
+  font-family: "Fakt";
+  src: url('/assets/webfonts/FaktProNormal.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Fakt";
+  src: url('/assets/webfonts/FaktProMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+
+// =============================================================================
+// Global
+// =============================================================================
+
+// Overwriting some global sites
+
+body.--home {
+  padding-top: 0;
+}
+
+html, body,
+.font-1, .masthead .primary-nav a, .subhead-small, .news h5, .about h5, .project-credits ul h5, .project-header .title p, .subhead, .about h3, .related-projects h2, .project-credits h4, .header-big, .about h2, .project-header .title h1, .header, .news h3, .related-projects .entries .entry h4, .projects .entry h4, .font-2, .projects-filter a, form input[type="submit"], form input[type="email"], form input[type="password"], form input[type="text"], a.button, .body-small, .news p.small, .about p.small, .body-big, .body, .news p, .about p, .project-credits ul p, .lede, .about .lede, .project-header .description p, body {
+  font-family: "Fakt", "Helvetica Neue", Helvetica, sans-serif;
+  // color: $color-black;
+}
+
+.body, .news p, .about p, .project-credits ul p, .lede, .about .lede, .project-header .description p {
+  color: $color-black;
+}
+
+b, strong {
+  font-weight: 500;
+}
+
+.projects-filter a {
+  color: $color-black;
+  
+  @media(min-width:700px) {
+    font-size: 18px;
+  }
+}
+
+hr {
+  padding: 0 30px;
+
+  @include mq(below,1200px) { padding: 0 30px; }
+  @include mq(below,960px) { padding: 0 30px; } 
+  @include mq(below,600px) { padding: 0 40px; }
+}
+
+.projects .entry {
+  padding: 0 30px 60px 30px;
+}
+
+.projects {
+  margin: 0 -30px -60px -30px;
+}
+
+.hero {
+  max-width: none;
+}
+
+// =============================================================================
+// Nav
+// =============================================================================
+
+.masthead {
+  transition: top 0.1s ease-in-out, background 0.1s linear;
+
+  &.is-up,
+  &.is-down {
+    background-color: $color-white;
+  }
+}
+
+body.--home {
+  .masthead {
+    background-color: transparent;
+    border-bottom-color: transparent;
+
+    &.is-up,
+    &.is-down {
+      background-color: $color-white;
+    }
+  }
+}
+
+.masthead .logo svg {
+  height: 54px;
+  width: 54px;
+}
+
+.masthead .primary-nav a {
+  text-transform: capitalize;
+  color: $color-black;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.masthead-inner {
+  padding: 0 40px;
+
+  @include mq(above, 960px) {
+    padding: 0 30px;
+    max-width: none;
+  }
+}
+
+.footer {
+  padding-left: 40px;
+  padding-right: 40px;
+
+  @include mq(above, 960px) {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .footer-contact p {
+    color: $color-black;
+    font-size: 16px;
+
+    @include mq(below,600px) { 
+      font-size: 16px; 
+      text-align: left; 
+    }
+  }
+
+  .footer-legal p {
+    color: $color-black;
+  }
+}
+
+.masthead .overlay-toggle .menu-icon {
+  width: 20px;
+}
+
+.masthead .overlay-toggle .menu-icon .line {
+  width: 20px;
+  background-color: $color-black;
+}
+
+
+
+// =============================================================================
+// Home Hero
+// =============================================================================
+
+.hero-slider {
+  background-color: transparent;
+  height: auto;
+
+  .slider-control-nav {
+    left: 0;
+    bottom: 10px;
+    right: initial;
+
+    @include mq(below, 960px) {
+      left: 20px;
+      bottom: 30px;
+    }
+
+    li a {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background-color: transparent;
+      border: 2px solid $color-black;
+
+      &.slider-active {
+        background-color: $color-black;
+      }
+    }
+  }
+}
+
+.slider-viewport {
+  height: auto !important;
+}
+
+.home-hero {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  font-size: 16px;
+  min-height: 100vh;
+  background-color: $color-med-gray;
+
+  &__logo,
+  &__left,
+  &__right {
+    width: 100%;
+  }
+
+  &__left {
+    padding: 40px 40px 0 40px;
+    background-color: $color-med-gray;
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @include mq(above, 960px) {
+      order: 1;
+      width: calc((100vw - 60px)/3 + 30px);
+      padding-left: 30px;
+      padding-right: 5%;
+      padding-top: 120px;
+      height: 60vh;
+      min-height: 500px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      max-width: 20rem;
+      margin: 0;
+      margin-bottom: 25px;
+
+      @include mq(above, 960px) {
+        font-size: 2.5rem;
+      }
+
+      @include mq(above, 1200px) {
+        font-size: 3rem;
+      }
+    }
+
+    p,a {
+      font-size: 15px;
+      margin: 0;
+    }
+
+    p {
+      margin-bottom: 25px;
+      max-width: 24rem;
+    }
+
+    a {
+      font-weight: 500;
+      border-bottom: 2px solid $color-pink;
+      color: $color-pink;
+      transition: border 0.2s linear;
+      display: inline-block;
+
+      &:hover {
+        border-bottom-color: transparent;
+      }
+    }
+  }
+
+  &__right {
+    padding-left: 20px;
+    background-color: $color-pink;
+    order: 1;
+    padding-bottom: 65px;
+
+    @include mq(above, 960px) {
+      order: 2;
+      width: calc(((100vw - 60px)/3)*2 + 30px);
+      padding-left: 10%;
+      padding-bottom: 0;
+    }
+
+    .slide {
+
+      img {
+        height: 60vh;
+        width: 100%;
+        object-fit: cover;
+
+        @include mq(above, 960px) {
+          min-height: 500px;
+        }
+      }
+
+      &.slider-active-slide {
+
+        .slide-details {
+          opacity: 1;
+        }
+      }
+    }
+
+    .slide-details {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding: 15px 40px 0 50%;
+      opacity: 0;
+      transition: opacity 0.2s linear;
+
+      @include mq(above, 960px) {
+        padding-right: 30px;
+        padding-left: 20px;
+      }
+
+      span {
+        margin-left: 15px;
+        display: inline-block;
+
+        @include mq(below, 960px) {
+          width: 100%;
+
+          & + span {
+            // margin-top: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  &__logo {
+    order: 3;
+    background-color: $color-med-gray;
+    padding: 80px 20px 0;
+    position: relative;
+    align-self: flex-end;
+    justify-self: flex-end;
+    display: flex;
+    align-items: flex-end;
+    align-self: stretch;
+    overflow: hidden;
+
+    svg {
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      display: block;
+      transform: translateY(0.5%);
+    }
+
+    @include mq(above, 960px) {
+      padding: 30px 30px 0;
+
+      &:after {
+        content: "";
+        width: 66.666%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: calc((100vw - 60px)/3 + 30px);
+        background-color: $color-pink;
+        z-index: 0;
+      }
+    }
+  }
+}

@@ -20,7 +20,7 @@ $(document).ready(function(){
     // Hero Slider - FlexSlider
     // Ref: https://gist.github.com/warrendholmes/9481310
     $('#slider').flexslider({
-        animation: "slide",
+        animation: "fade",
         selector: ".slides > a",
         slideshow: true,
         slideshowSpeed: 6000,
@@ -66,6 +66,10 @@ $(document).ready(function(){
             if(st + $(window).height() < $(document).height()) {
                 $('#masthead').removeClass('is-up').addClass('is-down');
             }
+        }
+
+        if (st <= 10) {
+            $('#masthead').removeClass('is-up').removeClass('is-down');
         }
         
         lastScrollTop = st;
