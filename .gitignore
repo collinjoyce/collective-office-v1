@@ -1,5 +1,62 @@
-/.env
-/.idea
-/env-backups
+# Craft 3
+# ---------------------------
+!/storage/
+/templates/_svg/**/*
+/config/project/
+/config/project/*
+/config/project/*/*
+
+/web/*
+!/web/favicons/
+!/web/lottie/
+!/web/fonts/
+!/web/.htaccess
+!/web/index.php
+!/web/*.txt
+!/web/*.png
+!/web/*.ico
+!/web/*.webmanifest
+!/web/*.svg
+!/web/*.xml
+/media/*
+/downloads/*
+!/media/.gitkeep
+!/downloads/.gitkeep
+
+# Package Managers
+# ---------------------------
+/vendor/
+/node_modules/
+
+# System
+# ---------------------------
 .DS_Store
-/public/assets/img
+Thumbs.db
+
+# Editors
+# ---------------------------
+*.esproj
+*.sublime-project
+*.sublime-workspace
+*.tmproj
+*.tmproject
+.idea
+.project
+.settings
+.vscode
+
+# Temp
+# ---------------------------
+.env
+*.log
+/tmp
+
+# VM
+# ---------------------------
+.vagrant/*
+
+# Compiled Files
+# ---------------------------
+!/web/dist/
+!/web/static/
+!/web/videos/
