@@ -136,6 +136,12 @@ body.--home .masthead {
   background-color: #EBE6E2; }
   .home-hero__logo, .home-hero__left, .home-hero__right {
     width: 100%; }
+  .home-hero__top {
+    display: flex;
+    align-items: stretch; }
+    @media only screen and (max-width: 960px) {
+      .home-hero__top {
+        flex-wrap: wrap; } }
   .home-hero__left {
     padding: 40px 40px 0 40px;
     background-color: #EBE6E2;

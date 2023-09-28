@@ -6,31 +6,33 @@
 
     <div class="home-hero">
 
-        <div class="home-hero__left">
-            <h1>Attention to detail is a sign of respect.</h1>
-            <div class="home-hero__left-bottom">
-                <p>We are an award-winning urban architecture firm focused on high-end residential, retail, and workplace projects.</p>
-                <a href="/work">Learn More</a>
-            </div>
-        </div>
-
-        <div class="home-hero__right">
-            <div class="home-hero__slider">
-                
-                <!-- Hero Slider -->
-                <div class="hero-slider" id="slider">
-                    <div class="slides">
-                        {% for row in entry.slides.all() %}
-                        <a href="{{ row.linkHref }}" class="slide">
-                            {% for image in row.image.limit(1).all() %}
-                                <img src="{{ image.url('ratioCropLarge') }}" alt="">
-                            {% endfor %}
-                                <div class="slide-details"><span><strong>{{ row.linkHref.getElement().title }}</strong></span><span>{{ row.linkHref.getElement().location }}</span></div>
-                        </a>
-                        {% endfor %}
-                    </div>
+        <div class="home-hero__top">
+            <div class="home-hero__left">
+                <h1>Attention to detail is a sign of respect.</h1>
+                <div class="home-hero__left-bottom">
+                    <p>We are an award-winning urban architecture firm focused on high-end residential, retail, and workplace projects.</p>
+                    <a href="/work">Learn More</a>
                 </div>
+            </div>
 
+            <div class="home-hero__right">
+                <div class="home-hero__slider">
+                    
+                    <!-- Hero Slider -->
+                    <div class="hero-slider" id="slider">
+                        <div class="slides">
+                            {% for row in entry.slides.all() %}
+                            <a href="{{ row.linkHref }}" class="slide">
+                                {% for image in row.image.limit(1).all() %}
+                                    <img src="{{ image.url('ratioCropLarge') }}" alt="">
+                                {% endfor %}
+                                    <div class="slide-details"><span><strong>{{ row.linkHref.getElement().title }}</strong></span><span>{{ row.linkHref.getElement().location }}</span></div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 

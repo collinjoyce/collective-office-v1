@@ -235,6 +235,15 @@ body.--home {
     width: 100%;
   }
 
+  &__top {
+    display: flex;
+    align-items: stretch;
+
+    @include mq(below, 960px) {
+      flex-wrap: wrap;
+    }
+  }
+
   &__left {
     padding: 40px 40px 0 40px;
     background-color: $color-med-gray;
